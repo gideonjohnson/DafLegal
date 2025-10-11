@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional
+from typing import Optional,ClassVar,Dict,Any
 
 
 class Settings(BaseSettings):
@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_MINUTE: int = 60
 
     # Plans Configuration
-    PLANS = {
+    PLANS: ClassVar[Dict[str, Any]] = {
         "free_trial": {
             "name": "Free Trial",
             "price": 0,
