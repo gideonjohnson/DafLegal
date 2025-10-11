@@ -8,14 +8,14 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# Copy requirements from backend directory
 COPY requirements.txt .
 
-# Install Python dependencies (without the heavy unstructured package first)
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt --use-pep517
 
-# Copy application
-COPY ./app ./app
+# Copy application from backend directory
+COPY app ./app
 
 # Expose port
 EXPOSE 8000
