@@ -39,6 +39,11 @@ class User(SQLModel, table=True):
     # Relationships
     api_keys: List["APIKey"] = Relationship(back_populates="user")
     contracts: List["Contract"] = Relationship(back_populates="user")
+    clauses: List["Clause"] = Relationship(back_populates="user")
+    playbooks: List["Playbook"] = Relationship(back_populates="user")
+    research_queries: List["ResearchQuery"] = Relationship(back_populates="user")
+    citations: List["Citation"] = Relationship(back_populates="user")
+    contract_templates: List["ContractTemplate"] = Relationship(back_populates="user")
 
 
 class APIKey(SQLModel, table=True):

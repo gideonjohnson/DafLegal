@@ -36,5 +36,6 @@ sentry-sdk[fastapi]==1.40.3
 # Utils
 pydantic==2.6.0
 pydantic-settings==2.1.0
+email-validator==2.1.0
 python-dotenv==1.0.1
 httpx==0.26.0

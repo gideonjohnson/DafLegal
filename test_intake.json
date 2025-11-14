@@ -1,0 +1,16 @@
+{
+  "client_name": "John Mwangi",
+  "client_email": "john@example.com",
+  "client_phone": "+254712345678",
+  "company": "Test Corp",
+  "is_existing_client": false,
+  "matter_title": "Property Purchase - Westlands",
+  "matter_description": "Client wants to purchase a residential property in Westlands, Nairobi for investment purposes. The property is valued at KES 25M.",
+  "matter_type": "real_estate",
+  "practice_area": "conveyancing",
+  "urgency": "medium",
+  "complexity": "moderate",
+  "estimated_value": 25000000,
+  "source": "web_form",
+  "referral_source": "Google Search"
+}

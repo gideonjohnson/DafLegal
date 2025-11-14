@@ -3,12 +3,13 @@ from datetime import datetime
 from sqlmodel import Session, select
 from app.workers.celery_app import celery_app
 from app.core.database import engine
-from app.models.contract import Contract, ContractAnalysis, ContractStatus, RiskLevel
+from app.models.contract import Contract, ContractAnalysis, ContractStatus, RiskLevel, ContractComparison
 from app.models.usage import UsageRecord
 from app.models.user import User
 from app.services.storage import S3Storage
 from app.services.document_processor import DocumentProcessor
 from app.services.ai_analyzer import AIContractAnalyzer
+from app.services.comparison_analyzer import ContractComparisonAnalyzer
 
 
 @celery_app.task(bind=True, name="process_contract")
@@ -106,6 +107,100 @@ def process_contract_task(self, contract_id: int):
             contract.status = ContractStatus.FAILED
             contract.error_message = str(e)
             session.add(contract)
+            session.commit()
+
+            return {"status": "failed", "error": str(e)}
+
+
+@celery_app.task(bind=True, name="process_comparison")
+def process_comparison_task(self, comparison_id: int):
+    """
+    Background task to compare two contract versions
+    """
+    start_time = time.time()
+
+    with Session(engine) as session:
+        # Get comparison record
+        comparison = session.get(ContractComparison, comparison_id)
+        if not comparison:
+            return {"error": "Comparison not found"}
+
+        try:
+            # Update status to processing
+            comparison.status = ContractStatus.PROCESSING
+            session.add(comparison)
+            session.commit()
+
+            # Get both contracts
+            original_contract = session.get(Contract, comparison.original_contract_id)
+            revised_contract = session.get(Contract, comparison.revised_contract_id)
+
+            if not original_contract or not revised_contract:
+                raise ValueError("One or both contracts not found")
+
+            # Ensure both contracts are processed
+            if original_contract.status != ContractStatus.COMPLETED or \
+               revised_contract.status != ContractStatus.COMPLETED:
+                raise ValueError("Both contracts must be fully analyzed first")
+
+            # Get analyses
+            original_analysis = session.exec(
+                select(ContractAnalysis).where(
+                    ContractAnalysis.contract_id == original_contract.id
+                )
+            ).first()
+
+            revised_analysis = session.exec(
+                select(ContractAnalysis).where(
+                    ContractAnalysis.contract_id == revised_contract.id
+                )
+            ).first()
+
+            if not original_analysis or not revised_analysis:
+                raise ValueError("Both contracts must have completed analyses")
+
+            # Run comparison
+            analyzer = ContractComparisonAnalyzer()
+            comparison_result = analyzer.compare_contracts(
+                original_text=original_analysis.extracted_text or "",
+                revised_text=revised_analysis.extracted_text or "",
+                original_analysis={
+                    "detected_clauses": original_analysis.detected_clauses,
+                    "risk_score": original_analysis.risk_score
+                },
+                revised_analysis={
+                    "detected_clauses": revised_analysis.detected_clauses,
+                    "risk_score": revised_analysis.risk_score
+                }
+            )
+
+            # Update comparison record
+            comparison.summary = comparison_result.get("summary")
+            comparison.additions = comparison_result.get("additions", [])
+            comparison.deletions = comparison_result.get("deletions", [])
+            comparison.modifications = comparison_result.get("modifications", [])
+            comparison.clause_changes = comparison_result.get("clause_changes", [])
+            comparison.risk_delta = comparison_result.get("risk_delta")
+            comparison.substantive_changes = comparison_result.get("substantive_changes", [])
+            comparison.cosmetic_changes = comparison_result.get("cosmetic_changes", [])
+            comparison.processing_time_seconds = time.time() - start_time
+            comparison.status = ContractStatus.COMPLETED
+            comparison.processed_at = datetime.utcnow()
+
+            session.add(comparison)
+            session.commit()
+
+            return {
+                "status": "completed",
+                "comparison_id": comparison.comparison_id,
+                "processing_time": time.time() - start_time
+            }
+
+        except Exception as e:
+            # Mark as failed
+            comparison.status = ContractStatus.FAILED
+            comparison.error_message = str(e)
+            session.add(comparison)
             session.commit()
 
             return {"status": "failed", "error": str(e)}

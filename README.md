@@ -1,8 +1,8 @@
-# DafLegal - AI Contract Intelligence API
+# DafLegal - AI Contract Intelligence for Law Firms
 
-**Upload contracts. Get intelligence. Simple API, powerful insights.**
+**Increase productivity by 10x. Review contracts in seconds, not hours.**
 
-DafLegal is a micro-SaaS that transforms legal contracts into actionable intelligence using AI. Upload a PDF or DOCX contract and receive:
+DafLegal is an AI-powered contract intelligence platform designed specifically for law firms and legal professionals. Focus on legal strategy while AI handles the heavy lifting. Upload a PDF or DOCX contract and receive:
 
 - Plain-English summaries
 - Risk analysis with explicit rubrics
@@ -14,13 +14,57 @@ DafLegal is a micro-SaaS that transforms legal contracts into actionable intelli
 
 ## Features
 
-### Core Functionality
-- **Document Upload**: PDF and DOCX support
-- **AI Analysis**: Powered by OpenAI GPT-4o mini
-- **Clause Detection**: Automatically identify key contract clauses
-- **Risk Scoring**: 0-10 risk assessment with explanations
-- **Missing Clause Detection**: Identify absent standard protections
-- **Usage Metering**: Track pages and files per billing period
+### Built for Lawyers, By Lawyers
+
+#### 🚀 **Instant Contract Review**
+- Upload PDF/DOCX contracts and get AI analysis in 10-20 seconds
+- Extract key terms, parties, dates, and obligations automatically
+- Get plain-English summaries without legal jargon
+- Support for contracts up to 25MB
+
+#### ⚠️ **Risk Scoring & Alerts**
+- Quantified risk scores (0-10) for every clause
+- Identify unfavorable terms and liability exposure
+- Missing clause detection (force majeure, indemnity, etc.)
+- Explicit explanations for every risk identified
+
+#### ✅ **Smart Clause Detection**
+- Automatically identify 20+ clause types:
+  - Termination & renewal clauses
+  - Indemnity & liability limitations
+  - Intellectual property provisions
+  - Confidentiality & non-compete
+  - Payment terms & pricing
+  - And many more...
+- Never miss a critical clause again
+
+#### 🔄 **Contract Comparison**
+- Compare two contract versions side-by-side
+- Identify substantive changes vs. cosmetic edits
+- Track revisions with risk implications
+- Perfect for reviewing redlines and amendments
+
+#### 📚 **Clause Library**
+- Build your firm's knowledge base
+- Store and categorize approved clauses
+- Search by keyword, category, or risk level
+- Get AI-powered clause suggestions based on contract context
+- Standardize best practices across your team
+
+#### 🛡️ **Compliance Playbooks** ✨ NEW
+- Create custom compliance rules for your firm or clients
+- Define mandatory clauses, forbidden terms, and approval workflows
+- Automatically check contracts against your playbook
+- Get 0-100% compliance scores with severity-weighted violations
+- Ensure policy adherence at scale
+
+### For Law Firms & Legal Teams
+- **10x faster** contract review process
+- **90% reduction** in manual contract analysis work
+- **24/7 availability** - no more bottlenecks waiting for senior review
+- **Consistent quality** - every contract gets the same thorough analysis
+- **Knowledge retention** - build institutional knowledge with clause library
+- **Client satisfaction** - deliver faster turnarounds without sacrificing quality
 
 ### Technical Stack
 - **Backend**: FastAPI (Python 3.11)
@@ -89,116 +133,6 @@ Expected response:
 }
 ```
 
----
-
-## API Usage
-
-### 1. Register User
-
-```bash
-curl -X POST http://localhost:8000/api/v1/users/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "securepassword",
-    "full_name": "John Doe"
-  }'
-```
-
-Response:
-```json
-{
-  "id": 1,
-  "email": "user@example.com",
-  "full_name": "John Doe",
-  "plan": "free_trial",
-  "pages_used_current_period": 0,
-  "files_used_current_period": 0,
-  "created_at": "2025-01-15T10:00:00"
-}
-```
-
-### 2. Create API Key
-
-```bash
-curl -X POST http://localhost:8000/api/v1/users/api-keys \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your-api-key>" \
-  -d '{
-    "name": "My API Key"
-  }'
-```
-
-Response:
-```json
-{
-  "id": 1,
-  "key": "dfk_abc123...",
-  "name": "My API Key",
-  "is_active": true,
-  "created_at": "2025-01-15T10:05:00"
-}
-```
-
-**⚠️ Save this key! It's only shown once.**
-
-### 3. Upload Contract for Analysis
-
-```bash
-curl -X POST http://localhost:8000/api/v1/contracts/analyze \
-  -H "Authorization: Bearer dfk_abc123..." \
-  -F "file=@contract.pdf"
-```
-
-Response:
-```json
-{
-  "contract_id": "ctr_xyz789",
-  "filename": "contract.pdf",
-  "status": "uploaded",
-  "eta_seconds": 15
-}
-```
-
-### 4. Get Analysis Results
-
-```bash
-curl http://localhost:8000/api/v1/contracts/ctr_xyz789 \
-  -H "Authorization: Bearer dfk_abc123..."
-```
-
-Response:
-```json
-{
-  "contract_id": "ctr_xyz789",
-  "status": "completed",
-  "executive_summary": [
-    "3-year SaaS agreement with ABC Corp for $50k/year",
-    "Auto-renews unless cancelled 90 days before end date",
-    "Liability capped at 12 months of fees paid"
-  ],
-  "key_terms": {
-    "parties": ["Your Company Inc.", "ABC Corp"],
-    "effective_date": "2024-01-15",
-    "term": "3 years",
-    "payment": "$50,000 annually"
-  },
-  "detected_clauses": [
-    {
-      "type": "termination",
-      "risk_level": "medium",
-      "text": "Either party may terminate with 90 days notice",
-      "explanation": "Long notice period may delay exit"
-    }
-  ],
-  "missing_clauses": ["force_majeure", "data_protection"],
-  "risk_score": 6.5,
-  "overall_risk_level": "medium",
-  "pages_processed": 12,
-  "processing_time_seconds": 8.3,
-  "created_at": "2025-01-15T10:10:00"
-}
-```
 
 ---
 
@@ -211,52 +145,7 @@ Response:
 | **Pro** | $49/mo | 300 | 120 |
 | **Team** | $99/mo | 1,000 | 400 |
 
-All plans include full API access and JSON responses.
 
----
-
-## Development
-
-### Project Structure
-
-```
-daflegal/
-├── backend/
-│   ├── app/
-│   │   ├── api/v1/          # API endpoints
-│   │   ├── core/            # Config, security, database
-│   │   ├── models/          # SQLModel database models
-│   │   ├── schemas/         # Pydantic schemas
-│   │   ├── services/        # Business logic
-│   │   └── workers/         # Celery tasks
-│   ├── tests/               # Pytest tests
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-│   └── (Next.js app)
-└── docker-compose.yml
-```
-
-### Running Locally
-
-```bash
-# Backend only
-cd backend
-python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-
-# Celery worker
-celery -A app.workers.celery_app worker --loglevel=info
-```
-
-### Running Tests
-
-```bash
-cd backend
-pytest
-```
 
 ---
 
@@ -304,96 +193,3 @@ docker tag daflegal-api your-registry.com/daflegal-api:latest
 docker push your-registry.com/daflegal-api:latest
 ```
 
----
-
-## API Reference
-
-Full interactive API docs available at:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-### Authentication
-
-All API requests require an API key in the `Authorization` header:
-
-```
-Authorization: Bearer dfk_your_api_key_here
-```
-
-### Rate Limits
-
-- 60 requests/minute per API key
-- Quota limits enforced per plan
-
-### Error Responses
-
-```json
-{
-  "detail": "Error message here"
-}
-```
-
-HTTP Status Codes:
-- `200` - Success
-- `202` - Accepted (processing)
-- `400` - Bad request
-- `401` - Unauthorized
-- `404` - Not found
-- `429` - Quota exceeded
-- `500` - Server error
-
----
-
-## Roadmap
-
-**MVP (Current)**
-- ✅ Contract summarization
-- ✅ Clause detection
-- ✅ Risk analysis
-- ✅ Usage metering
-- ✅ Stripe billing
-
-**Q2 2025**
-- [ ] Contract comparison (diff two versions)
-- [ ] Webhooks for async notifications
-- [ ] Batch processing API
-
-**Q3 2025**
-- [ ] Custom risk rubrics
-- [ ] Multi-language support
-- [ ] Zapier integration
-
-**Q4 2025**
-- [ ] Redlining assistant
-- [ ] Clause library search
-- [ ] Obligation tracker
-
----
-
-## Support
-
-- **Documentation**: https://docs.daflegal.com
-- **API Status**: https://status.daflegal.com
-- **Email**: support@daflegal.com
-- **Discord**: https://discord.gg/daflegal
-
----
-
-## License
-
-Proprietary - All Rights Reserved
-
----
-
-## Contributing
-
-This is a commercial product. Contributions are welcome for:
-- Bug fixes
-- Documentation improvements
-- Feature suggestions
-
-Please open an issue before submitting a PR.
-
----
-
-**Built with ❤️ for legal professionals and developers**

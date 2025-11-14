@@ -63,3 +63,65 @@ class ContractAnalysisResponse(BaseModel):
     pages_processed: int
     processing_time_seconds: Optional[float] = None
     created_at: datetime
+
+
+class TextChange(BaseModel):
+    """Individual text change in comparison"""
+    type: str  # addition, deletion, modification
+    original_text: Optional[str] = None
+    revised_text: Optional[str] = None
+    location: Optional[str] = None  # section/clause reference
+    is_substantive: bool = False
+
+
+class ClauseChange(BaseModel):
+    """Clause-level change"""
+    clause_type: str
+    change_type: str  # added, removed, modified
+    original_clause: Optional[dict] = None
+    revised_clause: Optional[dict] = None
+    impact_summary: str
+
+
+class ComparisonCreateRequest(BaseModel):
+    """Request to compare two contracts"""
+    original_contract_id: str
+    revised_contract_id: str
+
+
+class ComparisonUploadResponse(BaseModel):
+    """Response when comparison is initiated"""
+    comparison_id: str
+    status: ContractStatus
+    eta_seconds: int
+
+
+class ContractComparisonResponse(BaseModel):
+    """Full comparison response"""
+    comparison_id: str
+    status: ContractStatus
+
+    # Contract references
+    original_contract_id: str
+    revised_contract_id: str
+
+    # High-level summary
+    summary: Optional[str] = None
+
+    # Changes
+    additions: List[TextChange]
+    deletions: List[TextChange]
+    modifications: List[TextChange]
+
+    # Clause-level changes
+    clause_changes: List[ClauseChange]
+
+    # Risk analysis
+    risk_delta: Optional[float] = None
+    substantive_changes: List[TextChange]
+    cosmetic_changes: List[TextChange]
+
+    # Metadata
+    processing_time_seconds: Optional[float] = None
+    created_at: datetime
+    processed_at: Optional[datetime] = None

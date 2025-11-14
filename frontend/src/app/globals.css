@@ -4,10 +4,605 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
+  --background-rgb: 245, 241, 232;
+
+  /* Exact Brown and Green Color Palette - NO OTHER COLORS */
+  --dark-brown: #3D2F28;
+  --medium-brown: #5C4A3D;
+  --light-brown: #8B7355;
+  --tan: #C9965F;
+
+  --dark-green: #3D4A3A;
+  --sage-green: #526450;
+  --medium-green: #6B7A68;
+
+  --cream: #F5F1E8;
+  --off-white: #E8E0D5;
+
+  --black: #000000;
+  --white: #FFFFFF;
+
+  --gradient-brown: linear-gradient(135deg, #3D2F28 0%, #5C4A3D 100%);
+  --gradient-green: linear-gradient(135deg, #526450 0%, #6B7A68 100%);
+  --gradient-brown-green: linear-gradient(180deg, #3D2F28 0%, #526450 100%);
+
+  --shadow-3d: 0 10px 40px rgba(61, 47, 40, 0.15), 0 2px 8px rgba(61, 47, 40, 0.08);
+  --shadow-3d-hover: 0 20px 60px rgba(61, 47, 40, 0.2), 0 4px 12px rgba(61, 47, 40, 0.1);
+  --shadow-3d-inset: inset 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
+@layer base {
+  body {
+    color: #000000;
+    background: #F5F1E8;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* Advanced 3D Card System */
+  .card-3d {
+    @apply bg-white rounded-2xl shadow-lg transition-all duration-500 ease-out;
+    background: linear-gradient(145deg, #FFFFFF 0%, #F5F1E8 100%);
+    box-shadow:
+      0 20px 60px -12px rgba(61, 47, 40, 0.25),
+      0 10px 30px -8px rgba(61, 47, 40, 0.15),
+      0 0 0 1px rgba(61, 47, 40, 0.05),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(0) translateZ(0);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-3d::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .card-3d:hover {
+    box-shadow:
+      0 30px 90px -15px rgba(61, 47, 40, 0.35),
+      0 15px 45px -10px rgba(61, 47, 40, 0.2),
+      0 0 0 1px rgba(61, 47, 40, 0.08),
+      inset 0 1px 0 0 rgba(255, 255, 255, 1);
+    transform: translateY(-12px) translateZ(20px);
+  }
+
+  .card-3d:hover::before {
+    opacity: 1;
+  }
+
+  /* Enhanced Glassmorphism */
+  .glass {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.85) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 8px 32px 0 rgba(61, 47, 40, 0.12),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+    position: relative;
+  }
+
+  .glass::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .glass-dark {
+    background: linear-gradient(
+      135deg,
+      rgba(61, 47, 40, 0.95) 0%,
+      rgba(61, 47, 40, 0.85) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* 3D Button Effects */
+  .btn-3d {
+    @apply relative overflow-hidden transition-all duration-300;
+    box-shadow: 0 4px 15px rgba(61, 47, 40, 0.2), 0 1px 3px rgba(61, 47, 40, 0.1);
+    transform: translateY(0);
+  }
+
+  .btn-3d:hover {
+    box-shadow: 0 8px 25px rgba(61, 47, 40, 0.25), 0 2px 5px rgba(61, 47, 40, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .btn-3d:active {
+    box-shadow: 0 2px 8px rgba(61, 47, 40, 0.15);
+    transform: translateY(0);
+  }
+
+  .btn-3d::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-3d:hover::before {
+    left: 100%;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #3D2F28 0%, #526450 100%);
+  }
+
+  /* Floating Animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* Pulse Glow */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(82, 100, 80, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(82, 100, 80, 0.5);
+    }
+  }
+
+  /* 3D Input Fields */
+  .input-3d {
+    @apply w-full px-4 py-3 rounded-xl transition-all duration-300;
+    background: #FFFFFF;
+    border: 2px solid #8B7355;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .input-3d:focus {
+    outline: none;
+    border-color: #3D2F28;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06), 0 0 0 3px rgba(61, 47, 40, 0.1);
+    transform: translateY(-1px);
+  }
+
+  /* Neumorphism Card */
+  .neuro-card {
+    background: #F5F1E8;
+    border-radius: 20px;
+    box-shadow: 9px 9px 16px rgba(212, 197, 169, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+  }
+
+  .neuro-card-inset {
+    background: #F5F1E8;
+    border-radius: 20px;
+    box-shadow: inset 6px 6px 12px rgba(212, 197, 169, 0.5), inset -6px -6px 12px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Gradient Background Animations */
+  .gradient-animated {
+    background: linear-gradient(45deg, #3D2F28, #526450, #6B7A68, #3D2F28);
+    background-size: 300% 300%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Shimmer Effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  /* Badge 3D */
+  .badge-3d {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    box-shadow: 0 2px 8px rgba(61, 47, 40, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* Stats Card */
+  .stat-card {
+    @apply bg-white rounded-2xl p-6 transition-all duration-300;
+    background: #FFFFFF;
+    box-shadow: 0 4px 20px rgba(61, 47, 40, 0.08);
+  }
+
+  .stat-card:hover {
+    box-shadow: 0 8px 30px rgba(61, 47, 40, 0.12);
+    transform: translateY(-4px) scale(1.02);
+  }
+
+  /* Icon Container 3D */
+  .icon-3d {
+    @apply rounded-xl flex items-center justify-center transition-all duration-500;
+    box-shadow:
+      0 8px 20px rgba(61, 47, 40, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform-style: preserve-3d;
+    position: relative;
+  }
+
+  .icon-3d::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .icon-3d:hover {
+    box-shadow:
+      0 12px 30px rgba(61, 47, 40, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transform: translateY(-4px) scale(1.05) rotateY(5deg);
+  }
+
+  .icon-3d:hover::before {
+    opacity: 1;
+  }
+
+  /* Futuristic Feature Card */
+  .feature-card {
+    @apply relative overflow-hidden rounded-2xl p-8 transition-all duration-500;
+    background: linear-gradient(145deg, #FFFFFF 0%, #F5F1E8 100%);
+    box-shadow:
+      0 20px 60px -15px rgba(61, 47, 40, 0.2),
+      0 0 0 1px rgba(61, 47, 40, 0.05);
+    transform-style: preserve-3d;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 180deg,
+      transparent,
+      rgba(139, 115, 85, 0.05),
+      transparent 120deg
+    );
+    opacity: 0;
+    transition: all 0.8s ease;
+    animation: rotate 6s linear infinite;
+  }
+
+  .feature-card:hover {
+    box-shadow:
+      0 30px 80px -20px rgba(61, 47, 40, 0.3),
+      0 0 0 1px rgba(61, 47, 40, 0.08);
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  .feature-card:hover::before {
+    opacity: 1;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Layered Depth Card */
+  .depth-card {
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  .depth-card::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    background: linear-gradient(145deg, rgba(61, 47, 40, 0.03), transparent);
+    border-radius: inherit;
+    transform: translateZ(-10px);
+    z-index: -1;
+  }
+
+  .depth-card::after {
+    content: '';
+    position: absolute;
+    inset: 16px;
+    background: linear-gradient(145deg, rgba(61, 47, 40, 0.02), transparent);
+    border-radius: inherit;
+    transform: translateZ(-20px);
+    z-index: -2;
+  }
+
+  /* Slide in animations */
+  .slide-in-bottom {
+    animation: slide-in-bottom 0.6s ease-out;
+  }
+
+  @keyframes slide-in-bottom {
+    0% {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .slide-in-right {
+    animation: slide-in-right 0.6s ease-out;
+  }
+
+  @keyframes slide-in-right {
+    0% {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Fade in scale */
+  .fade-in-scale {
+    animation: fade-in-scale 0.5s ease-out;
+  }
+
+  @keyframes fade-in-scale {
+    0% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Modern Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #E8E0D5;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #3D2F28 0%, #526450 100%);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #526450 0%, #3D2F28 100%);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Loading Spinner 3D */
+.spinner-3d {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(82, 100, 80, 0.3);
+  border-top-color: #3D2F28;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Professional Lawyer-Focused Components */
+
+/* Data Display Card */
+.data-card {
+  @apply relative overflow-hidden rounded-xl p-6 transition-all duration-300;
+  background: linear-gradient(145deg, #FFFFFF 0%, #F5F1E8 100%);
+  border-left: 4px solid #3D2F28;
+  box-shadow: 0 4px 20px rgba(61, 47, 40, 0.08);
+}
+
+.data-card:hover {
+  box-shadow: 0 8px 30px rgba(61, 47, 40, 0.15);
+  transform: translateX(4px);
+}
+
+/* Status Indicator */
+.status-dot {
+  @apply inline-block w-2 h-2 rounded-full;
+  box-shadow: 0 0 0 3px currentColor;
+  opacity: 0.3;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Professional Metric Display */
+.metric-display {
+  @apply text-center p-6 rounded-xl transition-all duration-300;
+  background: linear-gradient(145deg, #FFFFFF, #F5F1E8);
+  box-shadow:
+    0 10px 40px -15px rgba(61, 47, 40, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.metric-display:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow:
+    0 15px 50px -20px rgba(61, 47, 40, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.metric-value {
+  @apply text-5xl font-black mb-2;
+  background: linear-gradient(135deg, #3D2F28 0%, #526450 50%, #3D2F28 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Floating Action Button */
+.fab {
+  @apply fixed bottom-8 right-8 w-16 h-16 rounded-full shadow-2xl;
+  @apply flex items-center justify-center transition-all duration-500;
+  background: linear-gradient(135deg, #3D2F28 0%, #526450 100%);
+  box-shadow:
+    0 10px 40px rgba(61, 47, 40, 0.4),
+    0 0 0 0 rgba(61, 47, 40, 0.5);
+  animation: fab-float 3s ease-in-out infinite;
+  z-index: 50;
+}
+
+.fab:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow:
+    0 15px 50px rgba(61, 47, 40, 0.5),
+    0 0 0 8px rgba(61, 47, 40, 0.1);
+}
+
+@keyframes fab-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Timeline Component for Case History */
+.timeline-item {
+  @apply relative pl-8 pb-8 border-l-2 border-[#8B7355];
+}
+
+.timeline-item::before {
+  content: '';
+  @apply absolute left-0 top-0 w-4 h-4 rounded-full bg-[#3D2F28];
+  transform: translateX(-50%) translateX(-1px);
+  box-shadow: 0 0 0 4px #F5F1E8, 0 0 0 6px #8B7355;
+}
+
+.timeline-item:hover::before {
+  @apply bg-[#526450];
+  box-shadow: 0 0 0 4px #F5F1E8, 0 0 0 8px #526450;
+}
+
+/* Professional Tag/Badge */
+.pro-tag {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold;
+  background: linear-gradient(135deg, rgba(61, 47, 40, 0.1), rgba(82, 100, 80, 0.1));
+  border: 1px solid rgba(61, 47, 40, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.pro-tag:hover {
+  background: linear-gradient(135deg, rgba(61, 47, 40, 0.15), rgba(82, 100, 80, 0.15));
+  border-color: rgba(61, 47, 40, 0.3);
+  transform: translateY(-2px);
 }

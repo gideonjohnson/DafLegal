@@ -11,7 +11,7 @@ A complete **AI-powered contract analysis micro-SaaS** with:
 ✅ **Stripe billing** with 3 subscription tiers
 ✅ **Usage metering** and quota enforcement
 ✅ **Docker deployment** with docker-compose
-✅ **API-first design** with comprehensive docs
+✅ **Intuitive UI** designed for legal professionals
 
 ---
 
@@ -217,10 +217,10 @@ GET    /redoc                           # ReDoc
 
 | Tier | Price | Pages | Files | Target Customer |
 |------|-------|-------|-------|-----------------|
-| **Free Trial** | $0 | 30 | 3 | Trial users |
-| **Starter** | $19/mo | 50 | 20 | Freelancers |
-| **Pro** | $49/mo | 300 | 120 | Small teams |
-| **Team** | $99/mo | 1000 | 400 | Companies |
+| **Free Trial** | $0 | 30 | 3 | Lawyers & Legal Professionals |
+| **Starter** | $19/mo | 50 | 20 | Solo Practitioners |
+| **Pro** | $49/mo | 300 | 120 | Small Law Firms |
+| **Team** | $99/mo | 1000 | 400 | Legal Teams |
 
 **Page = 800 words of extracted text**
 
@@ -228,13 +228,13 @@ GET    /redoc                           # ReDoc
 
 ## How It Works
 
-1. **User uploads contract** (PDF/DOCX) via frontend or API
+1. **User uploads contract** (PDF/DOCX) via the intuitive web interface
 2. **File saved to S3** with encryption at rest
 3. **Celery worker** picks up processing task
 4. **Text extraction** using pypdf/python-docx
 5. **OpenAI analysis** with explicit risk rubric
 6. **Results saved** to Postgres database
-7. **User polls API** to get completed analysis
+7. **User views the analysis** in the web interface
 8. **Usage recorded** and quota updated
 9. **Stripe billing** triggers monthly based on plan
 
@@ -346,18 +346,15 @@ pytest
 - [ ] Add analytics (Mixpanel/Amplitude)
 - [ ] Implement feature #2 (based on user feedback)
 - [ ] Build marketing site
-- [ ] Write API client libraries (Python, Node.js)
-- [ ] Create Zapier integration
+
 
 ---
 
 ## Competitive Advantages
 
-1. **API-First** - Most competitors are UI-only
-2. **Transparent Rubric** - Users know why clauses are flagged
-3. **Developer-Friendly** - Clear docs, JSON responses, no SDK required
-4. **Affordable Pricing** - $19 entry point vs. enterprise-only competitors
-5. **Fast Processing** - 10-20 seconds vs. minutes for some tools
+1. **Transparent Rubric** - Users know why clauses are flagged
+2. **Affordable Pricing** - $19 entry point vs. enterprise-only competitors
+3. **Fast Processing** - 10-20 seconds vs. minutes for some tools
 
 ---
 
@@ -453,7 +450,7 @@ You now have a **complete, production-ready micro-SaaS** that:
 ✅ Has a clear business model ($19-99/month SaaS)
 ✅ Uses proven tech (FastAPI, Next.js, OpenAI, Stripe)
 ✅ Can scale (Celery workers, S3 storage, managed DBs)
-✅ Is API-first (developers can integrate)
+✅ Has a user-friendly interface for legal professionals
 ✅ Has documentation (README, Quickstart, API docs)
 
 **Time to ship and get your first paying customers! 🚀**

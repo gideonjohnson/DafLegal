@@ -190,3 +190,48 @@ async def list_contracts(
         )
         for c in contracts
     ]
+
+
+@router.get("/{contract_id}/clause-suggestions")
+async def get_clause_suggestions(
+    contract_id: str,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    """
+    Get clause suggestions for a contract based on its analysis
+    """
+    from app.services.clause_suggester import ClauseSuggester
+
+    # Find contract
+    statement = select(Contract).where(
+        Contract.contract_id == contract_id,
+        Contract.user_id == current_user.id
+    )
+    contract = session.exec(statement).first()
+
+    if not contract:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Contract not found"
+        )
+
+    # Get existing suggestions if any
+    suggestions = ClauseSuggester.get_suggestions_for_contract(
+        session, contract.id, current_user.id
+    )
+
+    # If no suggestions exist and contract is completed, generate them
+    if not suggestions and contract.status == ContractStatus.COMPLETED:
+        analysis = session.exec(
+            select(ContractAnalysis).where(
+                ContractAnalysis.contract_id == contract.id
+            )
+        ).first()
+
+        if analysis:
+            suggestions = ClauseSuggester.suggest_clauses_for_contract(
+                session, contract.id, current_user.id, analysis
+            )
+
+    return {"suggestions": suggestions}
