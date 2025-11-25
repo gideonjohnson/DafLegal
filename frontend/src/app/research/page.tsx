@@ -1,417 +1,426 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Navigation } from '@/components/Navigation'
 
-interface ResearchResult {
-  result_id: string
+interface Citation {
+  id: string
+  type: string
   title: string
   citation: string
-  document_type: string
-  jurisdiction: string
   court?: string
-  date_decided?: string
-  summary: string
-  key_points: string[]
-  relevance_score: number
-  ai_summary?: string
-  precedent_value?: string
-  is_saved: boolean
-  notes?: string
+  date?: string
+  jurisdiction?: string
+  relevance: string
+  key_quote?: string
+  url?: string
+  verified: boolean
+  format_valid?: boolean
 }
 
-interface Citation {
-  citation_id: string
-  citation_text: string
-  document_type: string
-  title: string
-  tags: string[]
-  folder?: string
-  notes?: string
+interface ResearchSummary {
+  query_type: string
+  jurisdiction: string
+  sources_searched: string[]
+  confidence_level: string
+  limitations?: string
+}
+
+interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+  citations?: Citation[]
+  follow_up_questions?: string[]
+  research_summary?: ResearchSummary
+  timestamp: Date
 }
 
 export default function ResearchPage() {
-  const [queryText, setQueryText] = useState('')
-  const [queryType, setQueryType] = useState('case_law')
-  const [jurisdiction, setJurisdiction] = useState('Kenya')
-  const [results, setResults] = useState<ResearchResult[]>([])
-  const [citations, setCitations] = useState<Citation[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [inputValue, setInputValue] = useState('')
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<'search' | 'citations'>('search')
-  const [selectedResult, setSelectedResult] = useState<ResearchResult | null>(null)
+  const [conversationId, setConversationId] = useState<string | null>(null)
+  const [jurisdiction, setJurisdiction] = useState('AU')
+  const [showSettings, setShowSettings] = useState(false)
+  const [includeCases, setIncludeCases] = useState(true)
+  const [includeStatutes, setIncludeStatutes] = useState(true)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const handleSearch = async () => {
-    if (!queryText.trim()) return
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const handleSendMessage = async (query?: string) => {
+    const messageText = query || inputValue.trim()
+    if (!messageText || loading) return
+
+    // Add user message
+    const userMessage: ChatMessage = {
+      role: 'user',
+      content: messageText,
+      timestamp: new Date()
+    }
+    setMessages(prev => [...prev, userMessage])
+    setInputValue('')
     setLoading(true)
+
     try {
-      const createRes = await fetch('http://localhost:8000/api/v1/research/search', {
+      const response = await fetch('http://localhost:8000/api/v1/research/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer demo-key'
         },
         body: JSON.stringify({
-          query_text: queryText,
-          query_type: queryType,
-          jurisdiction: jurisdiction,
-          filters: {}
+          query: messageText,
+          conversation_id: conversationId,
+          jurisdiction,
+          include_cases: includeCases,
+          include_statutes: includeStatutes
         })
       })
 
-      const query = await createRes.json()
+      if (!response.ok) {
+        throw new Error('Research request failed')
+      }
 
-      const executeRes = await fetch(`http://localhost:8000/api/v1/research/${query.query_id}/execute?max_results=10`, {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer demo-key'
-        }
-      })
+      const data = await response.json()
+      setConversationId(data.conversation_id)
 
-      const data = await executeRes.json()
-      setResults(data.results || [])
+      // Add assistant message
+      const assistantMessage: ChatMessage = {
+        role: 'assistant',
+        content: data.response,
+        citations: data.citations,
+        follow_up_questions: data.follow_up_questions,
+        research_summary: data.research_summary,
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, assistantMessage])
     } catch (error) {
-      console.error('Research failed:', error)
-      setResults([])
+      console.error('Research error:', error)
+      const errorMessage: ChatMessage = {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error processing your research request. Please try again.',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMessage])
     } finally {
       setLoading(false)
     }
   }
 
-  const handleSaveResult = async (resultId: string) => {
-    try {
-      await fetch(`http://localhost:8000/api/v1/research/results/${resultId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer demo-key'
-        },
-        body: JSON.stringify({ is_saved: true })
-      })
-
-      setResults(results.map(r =>
-        r.result_id === resultId ? { ...r, is_saved: true } : r
-      ))
-    } catch (error) {
-      console.error('Failed to save result:', error)
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
     }
   }
 
-  const handleCreateCitation = async (result: ResearchResult) => {
-    try {
-      const res = await fetch('http://localhost:8000/api/v1/research/citations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer demo-key'
-        },
-        body: JSON.stringify({
-          result_id: result.result_id,
-          citation_text: result.citation,
-          document_type: result.document_type,
-          title: result.title,
-          tags: [],
-          notes: ''
-        })
-      })
-
-      const citation = await res.json()
-      setCitations([citation, ...citations])
-    } catch (error) {
-      console.error('Failed to create citation:', error)
-    }
+  const resetConversation = () => {
+    setMessages([])
+    setConversationId(null)
+    setInputValue('')
   }
 
-  const loadCitations = async () => {
-    try {
-      const res = await fetch('http://localhost:8000/api/v1/research/citations', {
-        headers: {
-          'Authorization': 'Bearer demo-key'
-        }
-      })
-      const data = await res.json()
-      setCitations(data || [])
-    } catch (error) {
-      console.error('Failed to load citations:', error)
-    }
-  }
+  const jurisdictions = [
+    { value: 'AU', label: 'Australia', flag: '🇦🇺' },
+    { value: 'UK', label: 'United Kingdom', flag: '🇬🇧' },
+    { value: 'US', label: 'United States', flag: '🇺🇸' },
+    { value: 'CA', label: 'Canada', flag: '🇨🇦' }
+  ]
 
-  const getRelevanceColor = (score: number) => {
-    if (score >= 8) return 'text-green-600'
-    if (score >= 6) return 'text-blue-600'
-    if (score >= 4) return 'text-yellow-600'
-    return 'text-gray-600'
-  }
-
-  const getDocumentIcon = (type: string) => {
-    const icons: Record<string, string> = {
-      'case_law': '⚖️',
-      'statute': '📜',
-      'regulation': '📋',
-      'treaty': '🤝'
-    }
-    return icons[type] || '📄'
-  }
+  const exampleQueries = [
+    "What is the test for negligence in tort law?",
+    "Summarize recent developments in contract interpretation",
+    "What are the requirements for valid consideration?",
+    "Find cases on duty of care in professional negligence"
+  ]
 
   return (
-    <div>
+    <div className="min-h-screen leather-bg">
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] p-8">
+      <main className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-[#3D2F28] to-[#526450] bg-clip-text text-transparent mb-2">
-              🔍 Legal Research
-            </h1>
-            <p className="text-gray-600 text-lg">AI-powered case law, statute, and regulation search</p>
-          </div>
-
-          {/* Tab Navigation */}
-          <div className="glass rounded-2xl p-2 mb-8 inline-flex">
-            <button
-              onClick={() => setActiveTab('search')}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
-                activeTab === 'search'
-                  ? 'btn-3d bg-gradient-to-r from-[#3D2F28] to-[#526450] text-white'
-                  : 'text-gray-700 hover:bg-white/50'
-              }`}
-            >
-              🔍 Search
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab('citations')
-                loadCitations()
-              }}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
-                activeTab === 'citations'
-                  ? 'btn-3d bg-gradient-to-r from-[#3D2F28] to-[#526450] text-white'
-                  : 'text-gray-700 hover:bg-white/50'
-              }`}
-            >
-              📚 Citations ({citations.length})
-            </button>
-          </div>
-
-          {/* Search Tab */}
-          {activeTab === 'search' && (
-            <div className="space-y-6">
-              {/* Search Form */}
-              <div className="glass rounded-3xl p-8 space-y-6">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <div className="icon-box-3d w-14 h-14">
+                  <svg className="w-7 h-7 text-[#f5edd8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                  </svg>
+                </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
-                    Search Query
-                  </label>
-                  <textarea
-                    value={queryText}
-                    onChange={(e) => setQueryText(e.target.value)}
-                    placeholder="Enter your legal research query (e.g., 'contract breach remedies', 'employment discrimination cases', 'data privacy statutes')"
-                    rows={4}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#526450] focus:border-transparent transition-all"
-                  />
+                  <h1 className="heading-lg">Legal Research AI</h1>
+                  <p className="text-[#a8c4a8] text-lg mt-1">Conversational research with verified citations</p>
                 </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Document Type
-                    </label>
-                    <select
-                      value={queryType}
-                      onChange={(e) => setQueryType(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#526450] focus:border-transparent transition-all"
-                    >
-                      <option value="case_law">⚖️ Case Law</option>
-                      <option value="statute">📜 Statute</option>
-                      <option value="regulation">📋 Regulation</option>
-                      <option value="treaty">🤝 Treaty</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Jurisdiction
-                    </label>
-                    <select
-                      value={jurisdiction}
-                      onChange={(e) => setJurisdiction(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#526450] focus:border-transparent transition-all"
-                    >
-                      <option value="Kenya">🇰🇪 Kenya</option>
-                      <option value="US">🇺🇸 United States</option>
-                      <option value="UK">🇬🇧 United Kingdom</option>
-                      <option value="Canada">🇨🇦 Canada</option>
-                      <option value="Australia">🇦🇺 Australia</option>
-                    </select>
-                  </div>
-                </div>
-
+              </div>
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={handleSearch}
-                  disabled={loading || !queryText.trim()}
-                  className="btn-3d w-full bg-gradient-to-r from-[#3D2F28] to-[#526450] text-white px-8 py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="btn-ghost flex items-center gap-2"
                 >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Searching Legal Database...
-                    </span>
-                  ) : (
-                    '🔍 Search Legal Database'
-                  )}
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Settings
                 </button>
+                {messages.length > 0 && (
+                  <button onClick={resetConversation} className="btn-ghost flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    New Conversation
+                  </button>
+                )}
               </div>
-
-              {/* Results */}
-              {results.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      Research Results ({results.length})
-                    </h3>
-                  </div>
-
-                  {results.map((result) => (
-                    <div key={result.result_id} className="glass rounded-3xl p-8 hover:shadow-2xl transition-all">
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="text-3xl">{getDocumentIcon(result.document_type)}</span>
-                            <h4 className="text-xl font-bold text-[#3D2F28]">{result.title}</h4>
-                          </div>
-                          <p className="text-sm text-gray-600 font-mono mb-3">{result.citation}</p>
-                          <div className="flex flex-wrap items-center gap-3">
-                            <span className="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold rounded-full">
-                              {result.document_type.replace('_', ' ').toUpperCase()}
-                            </span>
-                            {result.court && (
-                              <span className="text-xs text-gray-600 font-semibold">
-                                🏛️ {result.court}
-                              </span>
-                            )}
-                            {result.date_decided && (
-                              <span className="text-xs text-gray-600 font-semibold">
-                                📅 {result.date_decided}
-                              </span>
-                            )}
-                            <span className={`text-xs font-bold ${getRelevanceColor(result.relevance_score)}`}>
-                              ⭐ Relevance: {result.relevance_score}/10
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleSaveResult(result.result_id)}
-                            disabled={result.is_saved}
-                            className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${
-                              result.is_saved
-                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                                : 'btn-3d bg-gradient-to-r from-green-500 to-green-600 text-white hover:scale-105'
-                            }`}
-                          >
-                            {result.is_saved ? '✓ Saved' : '💾 Save'}
-                          </button>
-                          <button
-                            onClick={() => handleCreateCitation(result)}
-                            className="btn-3d bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:scale-105 transition-all"
-                          >
-                            📝 Cite
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Summary */}
-                      <div className="mb-4">
-                        <p className="text-gray-700 leading-relaxed">{result.summary}</p>
-                      </div>
-
-                      {/* Key Points */}
-                      {result.key_points && result.key_points.length > 0 && (
-                        <div className="mb-4">
-                          <h5 className="text-sm font-bold text-gray-900 mb-3">Key Points:</h5>
-                          <ul className="space-y-2">
-                            {result.key_points.map((point, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <span className="text-[#526450] font-bold mt-0.5">•</span>
-                                <span className="text-sm text-gray-700">{point}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* AI Analysis */}
-                      {result.ai_summary && (
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-2xl border-2 border-blue-200">
-                          <h5 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
-                            <span>🤖</span> AI Analysis
-                          </h5>
-                          <p className="text-sm text-blue-800 leading-relaxed">{result.ai_summary}</p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Empty State */}
-              {!loading && results.length === 0 && queryText && (
-                <div className="glass rounded-3xl p-12 text-center">
-                  <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Results Found</h3>
-                  <p className="text-gray-600">Try adjusting your search query or filters</p>
-                </div>
-              )}
             </div>
-          )}
+          </div>
 
-          {/* Citations Tab */}
-          {activeTab === 'citations' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-900">
-                  Saved Citations ({citations.length})
+          <div className="grid lg:grid-cols-4 gap-6">
+            {/* Sidebar - Settings & Info */}
+            <div className="lg:col-span-1 space-y-4">
+              {/* Jurisdiction Selector */}
+              <div className="card-dark p-5">
+                <h3 className="font-bold text-[#f5edd8] mb-4 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                  </svg>
+                  Jurisdiction
                 </h3>
+                <div className="space-y-2">
+                  {jurisdictions.map(j => (
+                    <button
+                      key={j.value}
+                      onClick={() => setJurisdiction(j.value)}
+                      className={`w-full px-4 py-3 rounded-lg text-left transition-all flex items-center gap-3 ${
+                        jurisdiction === j.value
+                          ? 'bg-[#3d6b3d] text-[#f5edd8]'
+                          : 'bg-[#1a2e1a]/30 text-[#a8c4a8] hover:bg-[#2d5a2d]/50'
+                      }`}
+                    >
+                      <span className="text-2xl">{j.flag}</span>
+                      <span className="font-medium">{j.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {citations.length === 0 ? (
-                <div className="glass rounded-3xl p-12 text-center">
-                  <div className="text-6xl mb-4">📚</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Citations Saved</h3>
-                  <p className="text-gray-600">Citations you save from search results will appear here</p>
+              {/* Source Filters */}
+              <div className="card-dark p-5">
+                <h3 className="font-bold text-[#f5edd8] mb-4">Source Filters</h3>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includeCases}
+                      onChange={(e) => setIncludeCases(e.target.checked)}
+                      className="w-5 h-5 rounded accent-[#d4b377]"
+                    />
+                    <span className="text-[#a8c4a8]">Case Law</span>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includeStatutes}
+                      onChange={(e) => setIncludeStatutes(e.target.checked)}
+                      className="w-5 h-5 rounded accent-[#d4b377]"
+                    />
+                    <span className="text-[#a8c4a8]">Statutes & Legislation</span>
+                  </label>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {citations.map((citation) => (
-                    <div key={citation.citation_id} className="glass rounded-2xl p-6 hover:shadow-xl transition-all">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="font-bold text-lg text-[#3D2F28] mb-2">{citation.title}</p>
-                          <p className="text-sm text-gray-600 font-mono mb-3">{citation.citation_text}</p>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-xs bg-gradient-to-r from-gray-500 to-gray-600 text-white px-3 py-1 rounded-full font-semibold">
-                              {citation.document_type}
-                            </span>
-                            {citation.tags.map((tag, idx) => (
-                              <span key={idx} className="text-xs bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded-full font-semibold">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+              </div>
+
+              {/* Stats */}
+              {conversationId && (
+                <div className="card-glass p-4">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-[#f5edd8]">{messages.filter(m => m.role === 'user').length}</p>
+                    <p className="text-sm text-[#a8c4a8]">Questions Asked</p>
+                  </div>
                 </div>
               )}
             </div>
-          )}
+
+            {/* Main Chat Area */}
+            <div className="lg:col-span-3">
+              <div className="card-dark flex flex-col" style={{ height: 'calc(100vh - 250px)' }}>
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+                  {messages.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="icon-box-3d w-20 h-20 mx-auto mb-6">
+                        <svg className="w-10 h-10 text-[#f5edd8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-[#f5edd8] mb-3">Start Your Legal Research</h3>
+                      <p className="text-[#a8c4a8] mb-8 max-w-2xl mx-auto">
+                        Ask me anything about law in your jurisdiction. I'll provide answers with verified citations from trusted legal databases.
+                      </p>
+                      <div className="grid md:grid-cols-2 gap-3 max-w-3xl mx-auto">
+                        {exampleQueries.map((q, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleSendMessage(q)}
+                            className="card-glass p-4 text-left hover:bg-[#3d6b3d]/30 transition-all text-[#a8c4a8] hover:text-[#f5edd8]"
+                          >
+                            {q}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    messages.map((msg, idx) => (
+                      <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-3xl ${msg.role === 'user' ? 'w-full' : 'w-full'}`}>
+                          {msg.role === 'user' ? (
+                            <div className="card-beige p-4 ml-12">
+                              <p className="text-[#1a2e1a] whitespace-pre-wrap">{msg.content}</p>
+                            </div>
+                          ) : (
+                            <div className="space-y-4">
+                              <div className="card-glass p-6">
+                                <p className="text-[#f5edd8] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                              </div>
+
+                              {/* Citations */}
+                              {msg.citations && msg.citations.length > 0 && (
+                                <div className="space-y-3">
+                                  <h4 className="text-sm font-bold text-[#d4b377] uppercase">Citations</h4>
+                                  {msg.citations.map((cite, cidx) => (
+                                    <div key={cidx} className="card-glass p-4 border-l-4 border-[#d4b377]">
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div className="flex-1">
+                                          <p className="font-bold text-[#f5edd8]">{cite.title}</p>
+                                          <p className="text-sm text-[#d4b377] font-mono mt-1">{cite.citation}</p>
+                                        </div>
+                                        {cite.verified && (
+                                          <span className="badge-success text-xs">Verified</span>
+                                        )}
+                                      </div>
+                                      {cite.court && <p className="text-xs text-[#a8c4a8] mb-1">{cite.court} • {cite.date}</p>}
+                                      <p className="text-sm text-[#a8c4a8] mt-2">{cite.relevance}</p>
+                                      {cite.key_quote && (
+                                        <blockquote className="mt-3 pl-4 border-l-2 border-[#3d6b3d] text-sm italic text-[#e5d9c3]">
+                                          "{cite.key_quote}"
+                                        </blockquote>
+                                      )}
+                                      {cite.url && (
+                                        <a
+                                          href={cite.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-2 mt-3 text-sm text-[#d4b377] hover:text-[#b8965a]"
+                                        >
+                                          View Source
+                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                          </svg>
+                                        </a>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Follow-up Questions */}
+                              {msg.follow_up_questions && msg.follow_up_questions.length > 0 && (
+                                <div>
+                                  <h4 className="text-sm font-bold text-[#d4b377] uppercase mb-3">Follow-up Questions</h4>
+                                  <div className="grid gap-2">
+                                    {msg.follow_up_questions.map((q, qidx) => (
+                                      <button
+                                        key={qidx}
+                                        onClick={() => handleSendMessage(q)}
+                                        className="card-glass p-3 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all"
+                                      >
+                                        {q}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Research Summary */}
+                              {msg.research_summary && (
+                                <div className="card-glass p-4 text-xs text-[#a8c4a8]">
+                                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div>
+                                      <span className="font-semibold block mb-1">Query Type</span>
+                                      <span className="capitalize">{msg.research_summary.query_type}</span>
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold block mb-1">Jurisdiction</span>
+                                      <span>{msg.research_summary.jurisdiction}</span>
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold block mb-1">Sources</span>
+                                      <span>{msg.research_summary.sources_searched.join(', ')}</span>
+                                    </div>
+                                    <div>
+                                      <span className="font-semibold block mb-1">Confidence</span>
+                                      <span className="capitalize">{msg.research_summary.confidence_level}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  {loading && (
+                    <div className="flex justify-start">
+                      <div className="card-glass p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="spinner" />
+                          <span className="text-[#a8c4a8]">Researching...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input Area */}
+                <div className="border-t border-[#3d6b3d]/30 p-6">
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Ask a legal research question..."
+                      className="input flex-1"
+                      disabled={loading}
+                    />
+                    <button
+                      onClick={() => handleSendMessage()}
+                      disabled={!inputValue.trim() || loading}
+                      className="btn-gold px-6"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="text-xs text-[#a8c4a8] mt-3 text-center">
+                    All citations are verified against trusted legal databases
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

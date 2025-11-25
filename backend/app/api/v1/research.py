@@ -2,11 +2,13 @@
 Legal Research API Endpoints
 
 AI-powered legal research for finding case law, statutes, and regulations.
+Includes conversational research with verified citations.
 """
 
-from typing import Optional
+from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
+from pydantic import BaseModel
 
 from app.core.database import get_session
 from app.api.dependencies import get_current_user
@@ -23,7 +25,59 @@ from app.schemas.research import (
     ResearchTemplateResponse
 )
 from app.services.research_service import ResearchService
+from app.services.legal_research_chat import LegalResearchChat
 from app.core.config import settings
+
+
+# Pydantic models for conversational research
+class ChatResearchRequest(BaseModel):
+    query: str
+    conversation_id: Optional[str] = None
+    jurisdiction: str = "AU"
+    include_statutes: bool = True
+    include_cases: bool = True
+    date_from: Optional[str] = None
+    date_to: Optional[str] = None
+
+
+class CitationDetail(BaseModel):
+    id: str
+    type: str
+    title: str
+    citation: str
+    court: Optional[str] = None
+    date: Optional[str] = None
+    jurisdiction: Optional[str] = None
+    relevance: str
+    key_quote: Optional[str] = None
+    url: Optional[str] = None
+    verified: bool
+    format_valid: Optional[bool] = None
+
+
+class ResearchSummary(BaseModel):
+    query_type: str
+    jurisdiction: str
+    sources_searched: List[str]
+    confidence_level: str
+    limitations: Optional[str] = None
+
+
+class ChatResearchResponse(BaseModel):
+    conversation_id: str
+    response: str
+    citations: List[CitationDetail]
+    follow_up_questions: List[str]
+    research_summary: ResearchSummary
+
+
+class SuggestedQuery(BaseModel):
+    category: str
+    queries: List[str]
+
+
+# Global instance for conversation persistence (use Redis in production)
+research_chat_instance = LegalResearchChat()
 
 router = APIRouter(prefix="/research", tags=["research"])
 
@@ -383,3 +437,158 @@ async def get_research_templates(
         )
         for t in templates
     ]
+
+
+# =============================================================================
+# CONVERSATIONAL RESEARCH ENDPOINTS (ChatGPT-style with citations)
+# =============================================================================
+
+@router.post("/chat", response_model=ChatResearchResponse)
+async def chat_research(
+    request: ChatResearchRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Conversational legal research with verified citations.
+
+    Features:
+    - Natural language questions
+    - Full citation support with links to sources
+    - Follow-up question suggestions
+    - Conversation history for context
+    - Zero hallucination design - all citations are flagged as verified/unverified
+
+    Supported jurisdictions: AU, UK, US, CA
+    """
+    try:
+        result = research_chat_instance.research(
+            query=request.query,
+            conversation_id=request.conversation_id,
+            jurisdiction=request.jurisdiction,
+            include_statutes=request.include_statutes,
+            include_cases=request.include_cases,
+            date_from=request.date_from,
+            date_to=request.date_to
+        )
+
+        # Convert citations to proper format
+        citations = [
+            CitationDetail(
+                id=c.get("id", ""),
+                type=c.get("type", "unknown"),
+                title=c.get("title", ""),
+                citation=c.get("citation", ""),
+                court=c.get("court"),
+                date=c.get("date"),
+                jurisdiction=c.get("jurisdiction"),
+                relevance=c.get("relevance", ""),
+                key_quote=c.get("key_quote"),
+                url=c.get("url"),
+                verified=c.get("verified", False),
+                format_valid=c.get("format_valid")
+            )
+            for c in result.get("citations", [])
+        ]
+
+        summary = result.get("research_summary", {})
+
+        return ChatResearchResponse(
+            conversation_id=result.get("conversation_id", ""),
+            response=result.get("response", ""),
+            citations=citations,
+            follow_up_questions=result.get("follow_up_questions", []),
+            research_summary=ResearchSummary(
+                query_type=summary.get("query_type", "general"),
+                jurisdiction=summary.get("jurisdiction", request.jurisdiction),
+                sources_searched=summary.get("sources_searched", []),
+                confidence_level=summary.get("confidence_level", "medium"),
+                limitations=summary.get("limitations")
+            )
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Research failed: {str(e)}")
+
+
+@router.get("/chat/{conversation_id}/history")
+async def get_chat_history(
+    conversation_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Get conversation history for a research session"""
+    history = research_chat_instance.get_conversation_history(conversation_id)
+
+    return {
+        "conversation_id": conversation_id,
+        "messages": [
+            {
+                "role": msg["role"],
+                "content": msg["content"][:500] + "..." if len(msg["content"]) > 500 else msg["content"]
+            }
+            for msg in history
+        ],
+        "message_count": len(history)
+    }
+
+
+@router.delete("/chat/{conversation_id}")
+async def clear_chat_history(
+    conversation_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Clear a research conversation"""
+    success = research_chat_instance.clear_conversation(conversation_id)
+
+    if success:
+        return {"message": "Conversation cleared", "conversation_id": conversation_id}
+    else:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+
+@router.get("/chat/suggestions", response_model=List[SuggestedQuery])
+async def get_suggested_queries(
+    jurisdiction: str = Query("AU", description="Jurisdiction code: AU, UK, US, CA"),
+    current_user: User = Depends(get_current_user)
+):
+    """Get suggested research queries for a jurisdiction"""
+    suggestions = research_chat_instance.get_suggested_queries(jurisdiction)
+
+    return [
+        SuggestedQuery(category=s["category"], queries=s["queries"])
+        for s in suggestions
+    ]
+
+
+@router.get("/chat/jurisdictions")
+async def get_available_jurisdictions(
+    current_user: User = Depends(get_current_user)
+):
+    """Get list of supported jurisdictions"""
+    return {
+        "jurisdictions": [
+            {
+                "code": "AU",
+                "name": "Australia",
+                "description": "Australian federal and state law",
+                "databases": ["AustLII", "Federal Court", "High Court", "State Courts"]
+            },
+            {
+                "code": "UK",
+                "name": "United Kingdom",
+                "description": "UK law including England & Wales, Scotland, Northern Ireland",
+                "databases": ["BAILII", "UK Legislation", "Courts and Tribunals"]
+            },
+            {
+                "code": "US",
+                "name": "United States",
+                "description": "US federal and state law",
+                "databases": ["CourtListener", "Google Scholar", "Justia"]
+            },
+            {
+                "code": "CA",
+                "name": "Canada",
+                "description": "Canadian federal and provincial law",
+                "databases": ["CanLII", "Supreme Court of Canada"]
+            }
+        ]
+    }
