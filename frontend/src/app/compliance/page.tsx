@@ -193,7 +193,7 @@ export default function CompliancePage() {
   return (
     <div>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-white py-12 px-4">
+      <div className="min-h-screen leather-bg">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

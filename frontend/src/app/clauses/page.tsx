@@ -130,9 +130,9 @@ export default function ClausesPage() {
   ]
 
   return (
-    <div>
+    <div className="min-h-screen leather-bg">
       <Navigation />
-      <main className="min-h-screen bg-gradient-to-br from-[#F8F9FA] via-white to-[#F1F3F5] py-8 px-4">
+      <main className="py-8 px-4">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <div className="text-center mb-12">

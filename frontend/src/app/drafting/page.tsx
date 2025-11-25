@@ -150,7 +150,7 @@ export default function DraftingPage() {
   return (
     <div>
       <Navigation />
-      <div className="min-h-screen bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] p-8">
+      <div className="min-h-screen leather-bg">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
