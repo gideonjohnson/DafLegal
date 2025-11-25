@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1 import contracts, users, billing, comparisons, clauses, compliance, research, drafting, analytics, citations, intake, conveyancing, instant_analysis, timeline
+from app.api.v1 import contracts, users, billing, comparisons, clauses, compliance, research, drafting, analytics, citations, intake, conveyancing, instant_analysis, timeline, universal_ask
 
 api_router = APIRouter()
 
@@ -17,3 +17,4 @@ api_router.include_router(intake.router)
 api_router.include_router(conveyancing.router)
 api_router.include_router(instant_analysis.router)
 api_router.include_router(timeline.router)
+api_router.include_router(universal_ask.router)

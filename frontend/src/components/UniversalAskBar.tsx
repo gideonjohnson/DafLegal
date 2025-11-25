@@ -1,0 +1,619 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
+  streaming?: boolean
+}
+
+interface AskBarProps {
+  matterId?: string
+  matterName?: string
+}
+
+interface ConversationHistory {
+  id: string
+  title: string
+  messages: Message[]
+  timestamp: Date
+}
+
+export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [inputValue, setInputValue] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
+  const [conversationHistory, setConversationHistory] = useState<ConversationHistory[]>([])
+  const [historySearch, setHistorySearch] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const pathname = usePathname()
+
+  // Get context from current page
+  const getPageContext = () => {
+    if (pathname === '/analyze') return 'document_analysis'
+    if (pathname === '/timeline') return 'timeline_builder'
+    if (pathname === '/compare') return 'contract_comparison'
+    if (pathname === '/research') return 'legal_research'
+    if (pathname === '/drafting') return 'contract_drafting'
+    if (pathname === '/compliance') return 'compliance_checking'
+    if (pathname === '/clauses') return 'clause_library'
+    if (pathname === '/conveyancing') return 'property_conveyancing'
+    if (pathname === '/citations') return 'citation_checking'
+    if (pathname === '/intake') return 'client_intake'
+    return 'general'
+  }
+
+  // Keyboard shortcut: Cmd/Ctrl + K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setIsExpanded(true)
+        setTimeout(() => inputRef.current?.focus(), 100)
+      }
+      // Escape to collapse
+      if (e.key === 'Escape' && isExpanded) {
+        setIsExpanded(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isExpanded])
+
+  // Auto-focus input when expanded
+  useEffect(() => {
+    if (isExpanded) {
+      inputRef.current?.focus()
+      loadSuggestions()
+      loadConversationHistory()
+    }
+  }, [isExpanded])
+
+  // Scroll to bottom of messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  // Listen for programmatic triggers from pages
+  useEffect(() => {
+    const handleTriggerAsk = (e: Event) => {
+      const customEvent = e as CustomEvent
+      const { question } = customEvent.detail
+      setIsExpanded(true)
+      setInputValue(question)
+      setTimeout(() => inputRef.current?.focus(), 100)
+    }
+
+    window.addEventListener('trigger-ask', handleTriggerAsk)
+    return () => window.removeEventListener('trigger-ask', handleTriggerAsk)
+  }, [])
+
+  const loadSuggestions = () => {
+    const context = getPageContext()
+    const suggestionMap: Record<string, string[]> = {
+      document_analysis: [
+        "Summarize the key risks in this document",
+        "What are the payment terms?",
+        "Identify all obligations of Party A",
+        "Are there any unusual clauses?"
+      ],
+      timeline_builder: [
+        "What are the critical dates in this matter?",
+        "Show me all events involving [party name]",
+        "Which documents are most important?",
+        "Create a summary timeline"
+      ],
+      contract_comparison: [
+        "What are the key differences?",
+        "Which version is more favorable?",
+        "List all changes to liability clauses",
+        "Summarize revisions"
+      ],
+      legal_research: [
+        "Find cases on [topic]",
+        "What's the leading authority on [issue]?",
+        "Summarize recent developments in [area]",
+        "Compare jurisdictions on [topic]"
+      ],
+      compliance_checking: [
+        "Does this comply with [regulation]?",
+        "What compliance issues exist?",
+        "Check against [jurisdiction] standards",
+        "List all non-compliant clauses"
+      ],
+      general: [
+        "How do I use this feature?",
+        "Show me an example",
+        "What can I do here?",
+        "Help me get started"
+      ]
+    }
+    setSuggestions(suggestionMap[context] || suggestionMap.general)
+  }
+
+  const loadConversationHistory = () => {
+    const saved = localStorage.getItem('askbar-history')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        setConversationHistory(parsed.map((c: any) => ({
+          ...c,
+          timestamp: new Date(c.timestamp),
+          messages: c.messages.map((m: any) => ({
+            ...m,
+            timestamp: new Date(m.timestamp)
+          }))
+        })))
+      } catch (e) {
+        console.error('Failed to load history:', e)
+      }
+    }
+  }
+
+  const saveConversationHistory = (newMessages: Message[]) => {
+    if (newMessages.length === 0) return
+
+    const newConversation: ConversationHistory = {
+      id: Date.now().toString(),
+      title: newMessages[0].content.substring(0, 50) + '...',
+      messages: newMessages,
+      timestamp: new Date()
+    }
+
+    const updated = [newConversation, ...conversationHistory].slice(0, 20)
+    setConversationHistory(updated)
+    localStorage.setItem('askbar-history', JSON.stringify(updated))
+  }
+
+  const loadHistoryConversation = (conversation: ConversationHistory) => {
+    setMessages(conversation.messages)
+    setShowHistory(false)
+  }
+
+  const formatCitations = (text: string): React.ReactNode => {
+    const citationRegex = /\[(\d{4})\]\s+([A-Z]+)\s+(\d+)/g
+    const parts = text.split(citationRegex)
+
+    if (parts.length === 1) return text
+
+    return parts.map((part, i) => {
+      if (i % 4 === 0) return part
+      if (i % 4 === 1) {
+        const year = part
+        const court = parts[i + 1]
+        const number = parts[i + 2]
+        const citation = `[${year}] ${court} ${number}`
+        return (
+          <a
+            key={i}
+            href={`#`}
+            className="text-[#d4b377] hover:text-[#b8965a] underline"
+            onClick={(e) => {
+              e.preventDefault()
+              alert(`Would open: ${citation}`)
+            }}
+          >
+            {citation}
+          </a>
+        )
+      }
+      return null
+    })
+  }
+
+  const simulateStreaming = async (fullText: string, messageIndex: number) => {
+    const words = fullText.split(' ')
+    let currentText = ''
+
+    for (let i = 0; i < words.length; i++) {
+      currentText += (i > 0 ? ' ' : '') + words[i]
+
+      setMessages(prev => {
+        const newMessages = [...prev]
+        newMessages[messageIndex] = {
+          ...newMessages[messageIndex],
+          content: currentText,
+          streaming: i < words.length - 1
+        }
+        return newMessages
+      })
+
+      await new Promise(resolve => setTimeout(resolve, 30 + Math.random() * 30))
+    }
+
+    setMessages(prev => {
+      const newMessages = [...prev]
+      newMessages[messageIndex] = {
+        ...newMessages[messageIndex],
+        streaming: false
+      }
+      return newMessages
+    })
+  }
+
+  const handleSend = async (queryText?: string) => {
+    const query = queryText || inputValue.trim()
+    if (!query || loading) return
+
+    const userMessage: Message = {
+      role: 'user',
+      content: query,
+      timestamp: new Date()
+    }
+    setMessages(prev => [...prev, userMessage])
+    setInputValue('')
+    setLoading(true)
+    setIsTyping(true)
+    setUploadedFile(null)
+
+    // Auto-expand if collapsed
+    if (!isExpanded) setIsExpanded(true)
+
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/universal-ask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer demo-key'
+        },
+        body: JSON.stringify({
+          query,
+          context: getPageContext(),
+          matter_id: matterId,
+          current_page: pathname
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Ask request failed')
+      }
+
+      const data = await response.json()
+
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: '',
+        timestamp: new Date(),
+        streaming: true
+      }
+      setMessages(prev => [...prev, assistantMessage])
+      setIsTyping(false)
+
+      const messageIndex = messages.length + 1
+      await simulateStreaming(data.response, messageIndex)
+
+      saveConversationHistory([...messages, userMessage, { ...assistantMessage, content: data.response }])
+
+    } catch (error) {
+      console.error('Ask error:', error)
+      setIsTyping(false)
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+
+    const files = Array.from(e.dataTransfer.files)
+    if (files.length > 0) {
+      setUploadedFile(files[0])
+    }
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      setUploadedFile(files[0])
+    }
+  }
+
+  return (
+    <>
+      {/* Bottom Ask Bar */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
+          isExpanded ? 'h-[60vh]' : 'h-20'
+        }`}
+        style={{
+          background: 'linear-gradient(180deg, rgba(26, 46, 26, 0.95) 0%, rgba(29, 52, 29, 0.98) 100%)',
+          backdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(168, 196, 168, 0.2)',
+          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        {/* History Sidebar */}
+        {showHistory && isExpanded && (
+          <div className="absolute left-0 top-0 bottom-0 w-72 bg-[#1a2e1a]/95 border-r border-[#3d6b3d]/30 z-10">
+            <div className="p-4 border-b border-[#3d6b3d]/30">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-[#f5edd8]">History</h3>
+                <button
+                  onClick={() => setShowHistory(false)}
+                  className="p-1 hover:bg-[#3d6b3d]/30 rounded transition-colors"
+                >
+                  <svg className="w-4 h-4 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <input
+                type="text"
+                placeholder="Search conversations..."
+                value={historySearch}
+                onChange={(e) => setHistorySearch(e.target.value)}
+                className="input w-full text-sm"
+              />
+            </div>
+            <div className="overflow-y-auto custom-scrollbar" style={{ height: 'calc(100% - 100px)' }}>
+              {conversationHistory
+                .filter(c =>
+                  historySearch === '' ||
+                  c.title.toLowerCase().includes(historySearch.toLowerCase())
+                )
+                .map((conversation) => (
+                  <button
+                    key={conversation.id}
+                    onClick={() => loadHistoryConversation(conversation)}
+                    className="w-full p-3 text-left hover:bg-[#3d6b3d]/30 border-b border-[#3d6b3d]/10 transition-colors"
+                  >
+                    <p className="text-sm text-[#f5edd8] truncate">{conversation.title}</p>
+                    <p className="text-xs text-[#a8c4a8] mt-1">
+                      {conversation.timestamp.toLocaleDateString()}
+                    </p>
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="h-full flex flex-col max-w-7xl mx-auto">
+          {/* Header - Always Visible */}
+          <div className="flex items-center justify-between px-6 py-3 border-b border-[#3d6b3d]/20">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-all group"
+              >
+                <svg
+                  className={`w-5 h-5 text-[#d4b377] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                </svg>
+              </button>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#d4b377] to-[#b8965a] flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[#1a2e1a]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-bold text-[#f5edd8] text-lg">Ask DafLegal</h3>
+                  <p className="text-xs text-[#a8c4a8]">
+                    {matterId && matterName ? `${matterName}` : `${getPageContext().replace(/_/g, ' ')}`}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {isExpanded && (
+                <>
+                  <button
+                    onClick={() => setShowHistory(!showHistory)}
+                    className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors"
+                    title="Conversation History"
+                  >
+                    <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMessages([])
+                      setInputValue('')
+                    }}
+                    className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors"
+                    title="New Conversation"
+                  >
+                    <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </button>
+                </>
+              )}
+              <kbd className="hidden sm:inline-block px-3 py-1.5 text-xs font-mono bg-[#3d6b3d]/30 text-[#d4b377] rounded-lg border border-[#3d6b3d]/40">
+                {typeof window !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}K
+              </kbd>
+            </div>
+          </div>
+
+          {/* Messages - Only visible when expanded */}
+          {isExpanded && (
+            <div
+              className="flex-1 overflow-y-auto px-6 py-4 space-y-4 custom-scrollbar"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              {isDragging && (
+                <div className="absolute inset-4 border-2 border-dashed border-[#d4b377] rounded-2xl bg-[#1a2e1a]/90 flex items-center justify-center z-20">
+                  <div className="text-center">
+                    <svg className="w-16 h-16 text-[#d4b377] mx-auto mb-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <p className="text-[#d4b377] font-bold text-lg">Drop document to analyze</p>
+                    <p className="text-[#a8c4a8] text-sm mt-2">PDF, DOCX, TXT supported</p>
+                  </div>
+                </div>
+              )}
+
+              {messages.length === 0 ? (
+                <div className="py-8 max-w-3xl mx-auto">
+                  <p className="text-center text-[#a8c4a8] mb-6 text-lg">
+                    Ask me anything about your legal work. I'm aware of your current context and can help with specific tasks.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {suggestions.map((suggestion, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleSend(suggestion)}
+                        className="card-glass p-4 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all hover:scale-105"
+                      >
+                        <svg className="w-4 h-4 mb-2 text-[#d4b377]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-4xl mx-auto space-y-4">
+                  {messages.map((msg, idx) => (
+                    <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      {msg.role === 'user' ? (
+                        <div className="card-beige p-4 max-w-[75%] rounded-2xl">
+                          <p className="text-[#1a2e1a] text-sm leading-relaxed">{msg.content}</p>
+                        </div>
+                      ) : (
+                        <div className="card-glass p-4 max-w-[85%] rounded-2xl">
+                          <p className="text-[#f5edd8] text-sm whitespace-pre-wrap leading-relaxed">
+                            {formatCitations(msg.content)}
+                            {msg.streaming && <span className="inline-block w-2 h-4 bg-[#d4b377] ml-1 animate-pulse"></span>}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="card-glass p-4 flex items-center gap-3 rounded-2xl">
+                        <div className="flex gap-1">
+                          <div className="w-2 h-2 bg-[#d4b377] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                          <div className="w-2 h-2 bg-[#d4b377] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                          <div className="w-2 h-2 bg-[#d4b377] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        </div>
+                        <span className="text-sm text-[#a8c4a8]">Thinking...</span>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* File Upload Preview */}
+          {uploadedFile && (
+            <div className="px-6 py-2 border-t border-[#3d6b3d]/20">
+              <div className="flex items-center justify-between max-w-4xl mx-auto">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-[#d4b377]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="text-sm text-[#f5edd8]">{uploadedFile.name}</span>
+                  <span className="text-xs text-[#a8c4a8]">({(uploadedFile.size / 1024).toFixed(1)} KB)</span>
+                </div>
+                <button
+                  onClick={() => setUploadedFile(null)}
+                  className="p-1 hover:bg-[#3d6b3d]/30 rounded"
+                >
+                  <svg className="w-4 h-4 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Input Bar - Always Visible */}
+          <div className="px-6 py-4 border-t border-[#3d6b3d]/20">
+            <div className="flex gap-3 max-w-4xl mx-auto">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                className="hidden"
+                accept=".pdf,.docx,.txt"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-colors flex-shrink-0"
+                title="Upload document"
+              >
+                <svg className="w-6 h-6 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
+              </button>
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                onFocus={() => !isExpanded && setIsExpanded(true)}
+                placeholder="Ask anything... (Cmd/Ctrl+K)"
+                className="flex-1 bg-[#234023]/50 text-[#f5edd8] placeholder-[#a8c4a8] px-6 py-4 rounded-2xl border border-[#3d6b3d]/30 focus:border-[#d4b377] focus:ring-2 focus:ring-[#d4b377]/20 transition-all text-base"
+                disabled={loading}
+              />
+              <button
+                onClick={() => handleSend()}
+                disabled={!inputValue.trim() || loading}
+                className="btn-gold px-8 py-4 rounded-2xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 hover:scale-105 transition-transform"
+              >
+                <span className="font-bold">Send</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Spacer to prevent content from being hidden behind the bar */}
+      <div className="h-20" />
+    </>
+  )
+}
