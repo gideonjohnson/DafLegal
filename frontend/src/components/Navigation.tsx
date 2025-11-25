@@ -2,44 +2,60 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   const features = [
-    { href: '/compare', label: 'Compare', icon: '⚖️' },
-    { href: '/clauses', label: 'Clauses', icon: '📋' },
-    { href: '/compliance', label: 'Compliance', icon: '✓' },
-    { href: '/drafting', label: 'Drafting', icon: '✍️' },
-    { href: '/conveyancing', label: 'Property', icon: '🏡' },
-    { href: '/research', label: 'Research', icon: '🔍' },
-    { href: '/citations', label: 'Citations', icon: '📝' },
-    { href: '/intake', label: 'Intake', icon: '📥' },
-    { href: '/admin', label: 'Admin', icon: '📊' },
+    { href: '/analyze', label: 'Analyze', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
+    { href: '/timeline', label: 'Timeline', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { href: '/compare', label: 'Compare', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+    { href: '/clauses', label: 'Clauses', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+    { href: '/compliance', label: 'Compliance', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { href: '/drafting', label: 'Drafting', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
   ]
 
+  const moreFeatures = [
+    { href: '/conveyancing', label: 'Property', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+    { href: '/research', label: 'Research', icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
+    { href: '/citations', label: 'Citations', icon: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z' },
+    { href: '/intake', label: 'Intake', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01' },
+  ]
+
+  const isActive = (href: string) => pathname === href
+
   return (
-    <nav className="glass sticky top-0 z-50 border-b border-[#6B7A68]/20 backdrop-blur-xl">
+    <nav className="nav-leather sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="icon-3d w-14 h-14 bg-gradient-to-br from-[#3D2F28] to-[#526450] rounded-2xl flex items-center justify-center group-hover:scale-110 transition-all">
-              <span className="text-2xl">⚖️</span>
+            <div className="icon-box-3d w-12 h-12 group-hover:scale-105 transition-transform duration-300">
+              <svg className="w-6 h-6 text-[#f5edd8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z" />
+              </svg>
             </div>
             <div>
-              <div className="text-2xl font-bold bg-gradient-to-r from-[#3D2F28] to-[#526450] bg-clip-text text-transparent">
+              <div className="text-xl font-bold text-[#f5edd8] tracking-tight">
                 DafLegal
               </div>
-              <div className="text-xs text-gray-600 font-medium -mt-1">AI Legal Assistant</div>
+              <div className="text-xs text-[#a8c4a8] font-medium tracking-wide">
+                AI Legal Assistant
+              </div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden lg:flex items-center gap-1">
             <Link
               href="/"
-              className="px-4 py-2 rounded-xl font-semibold text-gray-700 hover:text-[#3D2F28] hover:bg-white/50 transition-all"
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                pathname === '/'
+                  ? 'bg-[#b8965a]/20 text-[#d4b377]'
+                  : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+              }`}
             >
               Home
             </Link>
@@ -47,31 +63,77 @@ export function Navigation() {
               <Link
                 key={feature.href}
                 href={feature.href}
-                className="px-4 py-2 rounded-xl font-semibold text-gray-700 hover:text-[#3D2F28] hover:bg-white/50 transition-all flex items-center gap-2"
+                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                  isActive(feature.href)
+                    ? 'bg-[#b8965a]/20 text-[#d4b377]'
+                    : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                }`}
               >
-                <span>{feature.icon}</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
+                </svg>
                 {feature.label}
               </Link>
             ))}
+
+            {/* More Dropdown */}
+            <div className="relative group">
+              <button className="px-3 py-2 rounded-lg font-medium text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all duration-200 flex items-center gap-1">
+                More
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className="absolute top-full right-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="glass-leather rounded-xl p-2 shadow-xl">
+                  {moreFeatures.map((feature) => (
+                    <Link
+                      key={feature.href}
+                      href={feature.href}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                        isActive(feature.href)
+                          ? 'bg-[#2d5a2d] text-[#d4b377]'
+                          : 'text-[#1a2e1a] hover:bg-[#2d5a2d]/10'
+                      }`}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
+                      </svg>
+                      {feature.label}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#1a2e1a] hover:bg-[#2d5a2d]/10 transition-all border-t border-[#b8965a]/20 mt-2 pt-3"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Admin
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* CTA Button */}
-          <div className="hidden md:flex">
-            <button className="btn-3d bg-gradient-to-r from-[#3D2F28] to-[#526450] text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-all">
+          <div className="hidden lg:flex">
+            <Link href="/analyze" className="btn-gold text-sm">
               Get Started
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-3 rounded-xl hover:bg-white/50 transition-all"
+            className="lg:hidden p-2 rounded-lg hover:bg-[#3d6b3d]/30 transition-colors"
           >
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-[#d4b377]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
@@ -79,28 +141,44 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-[#6B7A68]/20">
-            <div className="flex flex-col space-y-2">
+          <div className="lg:hidden py-6 border-t border-[#3d6b3d]/30">
+            <div className="flex flex-col gap-1">
               <Link
                 href="/"
-                className="px-4 py-3 rounded-xl font-semibold text-gray-700 hover:bg-white/50 transition-all"
+                onClick={() => setIsMenuOpen(false)}
+                className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                  pathname === '/'
+                    ? 'bg-[#b8965a]/20 text-[#d4b377]'
+                    : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                }`}
               >
                 Home
               </Link>
-              {features.map((feature) => (
+              {[...features, ...moreFeatures].map((feature) => (
                 <Link
                   key={feature.href}
                   href={feature.href}
-                  className="px-4 py-3 rounded-xl font-semibold text-gray-700 hover:bg-white/50 transition-all flex items-center gap-2"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-3 ${
+                    isActive(feature.href)
+                      ? 'bg-[#b8965a]/20 text-[#d4b377]'
+                      : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                  }`}
                 >
-                  <span>{feature.icon}</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
+                  </svg>
                   {feature.label}
                 </Link>
               ))}
-              <hr className="border-gray-200/50 my-2" />
-              <button className="btn-3d bg-gradient-to-r from-[#3D2F28] to-[#526450] text-white px-6 py-3 rounded-xl font-semibold text-center">
+              <div className="border-t border-[#3d6b3d]/30 my-4" />
+              <Link
+                href="/analyze"
+                onClick={() => setIsMenuOpen(false)}
+                className="btn-gold text-center"
+              >
                 Get Started
-              </button>
+              </Link>
             </div>
           </div>
         )}
