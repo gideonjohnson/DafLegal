@@ -159,3 +159,66 @@ class UniversalAssistant:
         }
 
         return suggestions.get(context, suggestions["general"])
+
+    def get_follow_up_questions(
+        self,
+        conversation_history: list[Dict[str, str]],
+        context: str = "general"
+    ) -> list[str]:
+        """
+        Generate intelligent follow-up questions based on conversation history.
+
+        Args:
+            conversation_history: Recent conversation messages (role, content)
+            context: Page context for context-aware suggestions
+
+        Returns:
+            List of 3-4 relevant follow-up questions
+        """
+        # Build system prompt
+        system_prompt = f"""You are an intelligent legal assistant analyzing a conversation.
+Based on the conversation history, generate 3-4 relevant follow-up questions that the user
+might want to ask next. Make them specific, actionable, and contextually relevant.
+
+Context: {context}
+
+Guidelines:
+- Keep questions concise (under 60 characters)
+- Make them specific to the conversation topic
+- Anticipate logical next steps or clarifications
+- Use professional but approachable language
+- Return ONLY the questions, one per line, without numbers or bullets"""
+
+        # Build conversation context
+        conversation_text = "\n".join([
+            f"{msg['role'].upper()}: {msg['content']}"
+            for msg in conversation_history[-6:]  # Last 6 messages
+        ])
+
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Conversation:\n{conversation_text}\n\nGenerate 3-4 follow-up questions:"}
+        ]
+
+        try:
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",  # Fast and cost-effective
+                messages=messages,
+                temperature=0.8,
+                max_tokens=200
+            )
+
+            # Parse questions from response
+            questions_text = response.choices[0].message.content.strip()
+            questions = [
+                q.strip().lstrip('1234567890.-•*) ')
+                for q in questions_text.split('\n')
+                if q.strip() and len(q.strip()) > 10
+            ]
+
+            return questions[:4]  # Return max 4 questions
+
+        except Exception as e:
+            # Return empty list on error to avoid breaking the UI
+            print(f"Error generating follow-up questions: {str(e)}")
+            return []

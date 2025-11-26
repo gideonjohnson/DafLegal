@@ -34,6 +34,17 @@ class UniversalAskResponse(BaseModel):
     suggestions: list[str]
 
 
+class FollowUpRequest(BaseModel):
+    """Request model for follow-up questions"""
+    conversation_history: list[Dict[str, str]]
+    context: str = "general"
+
+
+class FollowUpResponse(BaseModel):
+    """Response model for follow-up questions"""
+    follow_ups: list[str]
+
+
 # Global assistant instance
 assistant = UniversalAssistant(openai_api_key=settings.OPENAI_API_KEY)
 
@@ -163,3 +174,32 @@ async def get_available_contexts(
             }
         ]
     }
+
+
+@router.post("/follow-ups", response_model=FollowUpResponse)
+async def get_follow_up_questions(
+    request: FollowUpRequest,
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Generate intelligent follow-up questions based on conversation history.
+
+    This endpoint analyzes the recent conversation and suggests 3-4 relevant
+    follow-up questions the user might want to ask next. Uses GPT-4o-mini
+    for fast, cost-effective generation.
+
+    The suggestions are context-aware and adapt to the current conversation flow.
+    """
+    try:
+        follow_ups = assistant.get_follow_up_questions(
+            conversation_history=request.conversation_history,
+            context=request.context
+        )
+
+        return FollowUpResponse(follow_ups=follow_ups)
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate follow-up questions: {str(e)}"
+        )

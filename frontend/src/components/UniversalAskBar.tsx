@@ -34,9 +34,12 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
   const [showHistory, setShowHistory] = useState(false)
   const [conversationHistory, setConversationHistory] = useState<ConversationHistory[]>([])
   const [historySearch, setHistorySearch] = useState('')
+  const [isRecording, setIsRecording] = useState(false)
+  const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const recognitionRef = useRef<any>(null)
   const pathname = usePathname()
 
   // Get context from current page
@@ -98,6 +101,40 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
 
     window.addEventListener('trigger-ask', handleTriggerAsk)
     return () => window.removeEventListener('trigger-ask', handleTriggerAsk)
+  }, [])
+
+  // Initialize Web Speech API for voice input
+  useEffect(() => {
+    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition
+      const recognition = new SpeechRecognition()
+
+      recognition.continuous = false
+      recognition.interimResults = false
+      recognition.lang = 'en-US'
+
+      recognition.onstart = () => {
+        setIsRecording(true)
+      }
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript
+        setInputValue(transcript)
+        setIsExpanded(true)
+        setTimeout(() => inputRef.current?.focus(), 100)
+      }
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error)
+        setIsRecording(false)
+      }
+
+      recognition.onend = () => {
+        setIsRecording(false)
+      }
+
+      recognitionRef.current = recognition
+    }
   }, [])
 
   const loadSuggestions = () => {
@@ -180,6 +217,76 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
   const loadHistoryConversation = (conversation: ConversationHistory) => {
     setMessages(conversation.messages)
     setShowHistory(false)
+  }
+
+  const exportConversation = () => {
+    if (messages.length === 0) return
+
+    // Create markdown format
+    const markdown = [
+      `# DafLegal Conversation`,
+      `**Date:** ${new Date().toLocaleString()}`,
+      `**Context:** ${getPageContext().replace(/_/g, ' ')}`,
+      matterId && matterName ? `**Matter:** ${matterName} (${matterId})` : '',
+      '',
+      '---',
+      '',
+      ...messages.map(m =>
+        `### ${m.role === 'user' ? '👤 User' : '🤖 Assistant'}\n\n${m.content}\n\n---\n`
+      )
+    ].filter(Boolean).join('\n')
+
+    // Create and download file
+    const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `daflegal-conversation-${Date.now()}.md`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const fetchFollowUpQuestions = async (lastMessages: Message[]) => {
+    if (lastMessages.length < 2) return
+
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/universal-ask/follow-ups', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer demo-key'
+        },
+        body: JSON.stringify({
+          conversation_history: lastMessages.slice(-6).map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          context: getPageContext()
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setFollowUpQuestions(data.follow_ups || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch follow-ups:', error)
+    }
+  }
+
+  const toggleVoiceRecording = () => {
+    if (!recognitionRef.current) {
+      alert('Voice input is not supported in your browser. Please use Chrome, Edge, or Safari.')
+      return
+    }
+
+    if (isRecording) {
+      recognitionRef.current.stop()
+    } else {
+      recognitionRef.current.start()
+    }
   }
 
   const formatCitations = (text: string): React.ReactNode => {
@@ -294,7 +401,11 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
       const messageIndex = messages.length + 1
       await simulateStreaming(data.response, messageIndex)
 
-      saveConversationHistory([...messages, userMessage, { ...assistantMessage, content: data.response }])
+      const finalMessages = [...messages, userMessage, { ...assistantMessage, content: data.response }]
+      saveConversationHistory(finalMessages)
+
+      // Fetch AI-powered follow-up suggestions
+      await fetchFollowUpQuestions(finalMessages)
 
     } catch (error) {
       console.error('Ask error:', error)
@@ -349,7 +460,7 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
       {/* Bottom Ask Bar */}
       <div
         className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
-          isExpanded ? 'h-[60vh]' : 'h-20'
+          isExpanded ? 'h-[75vh] sm:h-[60vh]' : 'h-24 sm:h-20'
         }`}
         style={{
           background: 'linear-gradient(180deg, rgba(26, 46, 26, 0.95) 0%, rgba(29, 52, 29, 0.98) 100%)',
@@ -452,12 +563,23 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                     onClick={() => {
                       setMessages([])
                       setInputValue('')
+                      setFollowUpQuestions([])
                     }}
                     className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors"
                     title="New Conversation"
                   >
                     <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={exportConversation}
+                    disabled={messages.length === 0}
+                    className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Export Conversation"
+                  >
+                    <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                   </button>
                 </>
@@ -538,6 +660,28 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                       </div>
                     </div>
                   )}
+
+                  {/* Smart Follow-up Suggestions */}
+                  {followUpQuestions.length > 0 && !isTyping && !loading && (
+                    <div className="mt-6 max-w-4xl mx-auto">
+                      <p className="text-sm text-[#a8c4a8] mb-3 font-semibold">💡 Follow-up questions:</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {followUpQuestions.map((question, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleSend(question)}
+                            className="card-glass p-3 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all hover:scale-105 flex items-center gap-2"
+                          >
+                            <svg className="w-4 h-4 text-[#d4b377] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                            <span>{question}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div ref={messagesEndRef} />
                 </div>
               )}
@@ -584,6 +728,17 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
               >
                 <svg className="w-6 h-6 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
+              </button>
+              <button
+                onClick={toggleVoiceRecording}
+                className={`p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-all flex-shrink-0 ${
+                  isRecording ? 'bg-red-500/20 animate-pulse' : ''
+                }`}
+                title={isRecording ? "Stop recording" : "Voice input"}
+              >
+                <svg className={`w-6 h-6 ${isRecording ? 'text-red-500' : 'text-[#a8c4a8]'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
                 </svg>
               </button>
               <input
