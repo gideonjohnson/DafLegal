@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
 import { Navigation } from '@/components/Navigation'
+import { useAskBar } from '@/hooks/useAskBar'
 
 interface ComparisonResult {
   comparison_id: string
@@ -23,6 +24,8 @@ export default function ComparePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [comparison, setComparison] = useState<ComparisonResult | null>(null)
+  const [showSideBySide, setShowSideBySide] = useState(false)
+  const { triggerAsk } = useAskBar()
 
   // Original file dropzone
   const originalDropzone = useDropzone({

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Navigation } from '@/components/Navigation'
+import { useAskBar } from '@/hooks/useAskBar'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 const API_KEY = 'dfk_test1234567890123456789012345678901234567890' // Demo key
@@ -41,6 +42,7 @@ interface ComplianceResult {
 }
 
 export default function CompliancePage() {
+  const { triggerAsk } = useAskBar()
   const [activeTab, setActiveTab] = useState<'playbooks' | 'check'>('check')
 
   // Playbooks state

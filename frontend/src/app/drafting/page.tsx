@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Navigation } from '@/components/Navigation'
+import { useAskBar } from '@/hooks/useAskBar'
 
 interface Template {
   template_id: string
@@ -35,6 +36,7 @@ export default function DraftingPage() {
   const [generatedContract, setGeneratedContract] = useState<GeneratedContract | null>(null)
   const [myContracts, setMyContracts] = useState<GeneratedContract[]>([])
   const [showPreview, setShowPreview] = useState(false)
+  const { triggerAsk } = useAskBar()
 
   useEffect(() => {
     loadTemplates()

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Navigation } from '@/components/Navigation'
+import { useAskBar } from '@/hooks/useAskBar'
 
 interface Clause {
   clause_id: string
@@ -31,6 +32,7 @@ export default function ClausesPage() {
   const [selectedClause, setSelectedClause] = useState<Clause | null>(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const { triggerAsk } = useAskBar()
 
   // Search filters
   const [searchQuery, setSearchQuery] = useState('')
