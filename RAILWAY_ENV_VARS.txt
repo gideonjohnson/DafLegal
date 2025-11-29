@@ -1,0 +1,50 @@
+# Railway Environment Variables for DafLegal
+# Copy and paste these into Railway
+
+========================================
+BACKEND SERVICE VARIABLES:
+========================================
+
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+SECRET_KEY=hQzMfV9ppbuc6zliTQVmMVT84B9z28HId63Z5cT8FXk
+ENVIRONMENT=staging
+OPENAI_API_KEY=YOUR_OPENAI_KEY_HERE
+
+# Optional (can skip for now):
+# AWS_ACCESS_KEY_ID=
+# AWS_SECRET_ACCESS_KEY=
+# AWS_REGION=us-east-1
+# S3_BUCKET_NAME=daflegal-staging
+# STRIPE_SECRET_KEY=
+# STRIPE_WEBHOOK_SECRET=
+# STRIPE_STARTER_PRICE_ID=
+# STRIPE_PRO_PRICE_ID=
+# STRIPE_TEAM_PRICE_ID=
+
+========================================
+WORKER SERVICE VARIABLES:
+========================================
+
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+SECRET_KEY=hQzMfV9ppbuc6zliTQVmMVT84B9z28HId63Z5cT8FXk
+ENVIRONMENT=staging
+OPENAI_API_KEY=YOUR_OPENAI_KEY_HERE
+
+========================================
+FRONTEND SERVICE VARIABLES:
+========================================
+
+NEXT_PUBLIC_API_URL=https://${{Backend.RAILWAY_PUBLIC_DOMAIN}}
+
+========================================
+INSTRUCTIONS:
+========================================
+
+1. Replace YOUR_OPENAI_KEY_HERE with your actual OpenAI API key
+2. The ${{Postgres.DATABASE_URL}} and similar will auto-fill in Railway
+3. Add these variables in Railway → Service → Variables tab
+4. Click "Deploy" after adding variables to each service
+
+========================================

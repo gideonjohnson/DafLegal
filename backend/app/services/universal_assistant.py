@@ -202,7 +202,7 @@ Guidelines:
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",  # Fast and cost-effective
+                model="gpt-5-mini",  # Fast and cost-effective
                 messages=messages,
                 temperature=0.8,
                 max_tokens=200

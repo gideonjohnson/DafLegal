@@ -70,7 +70,7 @@ class LegalResearchChat:
 
     def __init__(self):
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model = "gpt-4o"  # Use GPT-4 for better legal reasoning
+        self.model = "gpt-5.1"  # Use GPT-4 for better legal reasoning
         self.conversations: Dict[str, List[Dict]] = {}
 
     def research(

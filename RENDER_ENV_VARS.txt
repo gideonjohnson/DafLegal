@@ -1,0 +1,81 @@
+# Render Environment Variables for DafLegal
+# Generated: January 26, 2025
+
+========================================
+STEP 1: CREATE DATABASES FIRST
+========================================
+
+1. Create PostgreSQL database in Render
+   - Name: daflegal-staging-db
+   - Plan: Free
+   - Copy the "Internal Database URL"
+
+2. Create Redis instance in Render
+   - Name: daflegal-staging-redis
+   - Plan: Free
+   - Copy the "Internal Redis URL"
+
+========================================
+BACKEND SERVICE VARIABLES:
+========================================
+
+DATABASE_URL=[PASTE INTERNAL DATABASE URL FROM POSTGRESQL]
+
+REDIS_URL=[PASTE INTERNAL REDIS URL FROM REDIS]
+
+SECRET_KEY=hQzMfV9ppbuc6zliTQVmMVT84B9z28HId63Z5cT8FXk
+
+ENVIRONMENT=staging
+
+OPENAI_API_KEY=[PASTE YOUR OPENAI API KEY]
+
+========================================
+WORKER SERVICE VARIABLES:
+========================================
+
+(Use EXACT SAME values as Backend)
+
+DATABASE_URL=[SAME AS BACKEND]
+
+REDIS_URL=[SAME AS BACKEND]
+
+SECRET_KEY=hQzMfV9ppbuc6zliTQVmMVT84B9z28HId63Z5cT8FXk
+
+ENVIRONMENT=staging
+
+OPENAI_API_KEY=[SAME AS BACKEND]
+
+========================================
+FRONTEND SERVICE VARIABLES:
+========================================
+
+NEXT_PUBLIC_API_URL=[PASTE BACKEND URL FROM RENDER]
+
+Example: https://daflegal-backend-xxx.onrender.com
+(NO trailing slash!)
+
+========================================
+IMPORTANT NOTES:
+========================================
+
+✅ Use "Internal" URLs for DATABASE_URL and REDIS_URL (not External!)
+✅ Paste your actual OpenAI API key (starts with sk-proj or sk-)
+✅ Backend and Worker must have IDENTICAL variables
+✅ Frontend URL must start with https://
+✅ Choose same region for all services (for best performance)
+
+========================================
+YOUR DEPLOYMENT ORDER:
+========================================
+
+1. Sign up at render.com with GitHub
+2. Create PostgreSQL database → copy Internal URL
+3. Create Redis instance → copy Internal URL
+4. Deploy Backend service → add variables above → copy URL
+5. Deploy Worker service → add variables above
+6. Deploy Frontend service → add NEXT_PUBLIC_API_URL with Backend URL
+
+Total time: ~45-60 minutes
+Cost: $0 (free for 90 days)
+
+========================================
