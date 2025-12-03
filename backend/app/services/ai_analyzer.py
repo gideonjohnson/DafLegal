@@ -10,7 +10,7 @@ class AIContractAnalyzer:
 
     def __init__(self):
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model = "gpt-4o-mini"
+        self.model = "gpt-5.1"
 
     def analyze_contract(self, extracted_text: str) -> Dict[str, Any]:
         """

@@ -163,7 +163,7 @@ Return ONLY valid JSON."""
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-5-mini",
                 messages=[
                     {"role": "system", "content": "You are a legal citation expert. Return only valid JSON."},
                     {"role": "user", "content": prompt}

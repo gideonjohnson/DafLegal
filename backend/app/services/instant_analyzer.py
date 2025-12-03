@@ -1,6 +1,6 @@
 """
 Instant Document Analyzer Service
-Extracts obligations, risks, summary, and suggested revisions using GPT-4o mini.
+Extracts obligations, risks, summary, and suggested revisions using GPT-5.1.
 """
 import json
 from typing import Dict, Any
@@ -13,7 +13,7 @@ class InstantDocumentAnalyzer:
 
     def __init__(self):
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model = "gpt-4o-mini"
+        self.model = "gpt-5.1"
 
     def analyze(self, text: str, filename: str = "") -> Dict[str, Any]:
         """

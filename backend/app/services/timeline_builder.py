@@ -14,7 +14,7 @@ class TimelineBuilder:
 
     def __init__(self):
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model = "gpt-4o-mini"
+        self.model = "gpt-5.1"
 
     def extract_events_from_document(self, text: str, filename: str, doc_id: str) -> Dict[str, Any]:
         """
