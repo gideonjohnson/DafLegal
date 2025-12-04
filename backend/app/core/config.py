@@ -18,11 +18,10 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str
 
-    # AWS S3
-    AWS_ACCESS_KEY_ID: str
-    AWS_SECRET_ACCESS_KEY: str
-    AWS_REGION: str = "us-east-1"
-    S3_BUCKET_NAME: str
+    # Cloudinary Storage
+    CLOUDINARY_CLOUD_NAME: str
+    CLOUDINARY_API_KEY: str
+    CLOUDINARY_API_SECRET: str
 
     # OpenAI
     OPENAI_API_KEY: str
