@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -120,7 +121,21 @@ export default function ComparePage() {
   }
 
   return (
-    <div className="min-h-screen leather-bg">
+    <div className="min-h-screen leather-bg relative overflow-hidden">
+      {/* Background Image with Green Blend */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src="/webimg2.jpeg"
+          alt="Background"
+          fill
+          className="object-cover opacity-10"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2e1a]/90 via-[#234023]/85 to-[#2d5a2d]/90"></div>
+      </div>
+
+      <div className="relative z-10">
+        <Navigation />
       <Navigation />
       <main className="py-8 px-4">
         <div className="container mx-auto max-w-7xl">
@@ -381,5 +396,6 @@ export default function ComparePage() {
         </div>
       </main>
     </div>
+      </div>
   )
 }

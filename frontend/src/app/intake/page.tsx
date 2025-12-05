@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 
 import { useState } from 'react'
 import { Navigation } from '@/components/Navigation'
@@ -154,7 +155,21 @@ export default function IntakePage() {
   return (
     <div>
       <Navigation />
-      <div className="min-h-screen leather-bg">
+    <div className="min-h-screen leather-bg relative overflow-hidden">
+      {/* Background Image with Green Blend */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src="/webimg2.jpeg"
+          alt="Background"
+          fill
+          className="object-cover opacity-10"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2e1a]/90 via-[#234023]/85 to-[#2d5a2d]/90"></div>
+      </div>
+
+      <div className="relative z-10">
+        <Navigation />
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
@@ -525,5 +540,6 @@ export default function IntakePage() {
         </div>
       </div>
     </div>
+      </div>
   )
 }
