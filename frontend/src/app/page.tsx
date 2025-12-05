@@ -2,6 +2,7 @@
 
 import { Navigation } from '@/components/Navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 
 export default function Home() {
@@ -743,6 +744,52 @@ export default function Home() {
                 <div className="text-xs text-[#c4d4c4]">{badge.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Showcase Image Section */}
+      <section className="container mx-auto px-4 py-16 scroll-animate">
+        <div className="max-w-6xl mx-auto">
+          <div className="card-beige p-6 md:p-8 overflow-hidden">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div className="order-2 md:order-1">
+                <h3 className="text-2xl md:text-3xl font-bold text-[#1a2e1a] mb-4">
+                  Modern AI-Powered Legal Technology
+                </h3>
+                <p className="text-base text-[#5c4a3d] mb-6 leading-relaxed">
+                  Experience the future of legal work with our cutting-edge AI platform.
+                  Streamline your practice with intelligent document analysis, automated compliance checking,
+                  and powerful legal research tools designed specifically for modern law firms.
+                </p>
+                <div className="space-y-3">
+                  {[
+                    { icon: '🚀', text: 'Lightning-fast document processing' },
+                    { icon: '🎯', text: 'Precision AI analysis and insights' },
+                    { icon: '🔒', text: 'Enterprise-grade security' },
+                    { icon: '📊', text: 'Comprehensive analytics dashboard' }
+                  ].map((feature) => (
+                    <div key={feature.text} className="flex items-center gap-3">
+                      <span className="text-2xl">{feature.icon}</span>
+                      <span className="text-sm text-[#1a2e1a] font-medium">{feature.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="order-1 md:order-2 relative">
+                <div className="relative rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300">
+                  <Image
+                    src="/webimg.webp"
+                    alt="DafLegal Platform Interface"
+                    width={600}
+                    height={400}
+                    className="w-full h-auto object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a2e1a]/20 to-transparent pointer-events-none"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
