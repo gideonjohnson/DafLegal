@@ -294,7 +294,6 @@ export default function TimelinePage() {
 
       <div className="relative z-10">
         <Navigation />
-      <Navigation />
       <main className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

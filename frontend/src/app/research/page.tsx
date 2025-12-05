@@ -158,7 +158,6 @@ export default function ResearchPage() {
 
       <div className="relative z-10">
         <Navigation />
-      <Navigation />
       <main className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
