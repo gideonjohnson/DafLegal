@@ -435,7 +435,7 @@ export default function ResearchPage() {
           </div>
         </div>
       </main>
-    </div>
       </div>
+    </div>
   )
 }

@@ -394,7 +394,7 @@ export default function ComparePage() {
         )}
         </div>
       </main>
-    </div>
       </div>
+    </div>
   )
 }

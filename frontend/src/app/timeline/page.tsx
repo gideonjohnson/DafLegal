@@ -739,7 +739,7 @@ export default function TimelinePage() {
           )}
         </div>
       </main>
-    </div>
       </div>
+    </div>
   )
 }
