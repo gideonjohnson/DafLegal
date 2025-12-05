@@ -53,8 +53,8 @@ export function Navigation() {
               href="/"
               className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
                 pathname === '/'
-                  ? 'bg-[#d4a561] text-[#1a2e1a] shadow-lg shadow-[#d4a561]/30'
-                  : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:shadow-md'
+                  ? 'nav-btn-3d-active text-[#1a2e1a]'
+                  : 'nav-btn-3d text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40'
               }`}
             >
               Home
@@ -65,8 +65,8 @@ export function Navigation() {
                 href={feature.href}
                 className={`px-3 py-2.5 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${
                   isActive(feature.href)
-                    ? 'bg-[#d4a561] text-[#1a2e1a] shadow-lg shadow-[#d4a561]/30'
-                    : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:shadow-md'
+                    ? 'nav-btn-3d-active text-[#1a2e1a]'
+                    : 'nav-btn-3d text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40'
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -78,7 +78,7 @@ export function Navigation() {
 
             {/* More Dropdown */}
             <div className="relative group">
-              <button className="px-3 py-2.5 rounded-xl font-semibold text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:shadow-md transition-all duration-300 flex items-center gap-1">
+              <button className="nav-btn-3d px-3 py-2.5 rounded-xl font-semibold text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 transition-all duration-300 flex items-center gap-1">
                 More
                 <svg className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
