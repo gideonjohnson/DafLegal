@@ -100,23 +100,32 @@ export default function Home() {
     {
       name: 'Sarah Kimani',
       role: 'Partner, Kimani & Associates',
+      company: 'Law Firm',
       image: '👩‍💼',
       quote: 'DafLegal has reduced our contract review time by 80%. The AI insights are incredibly accurate and save us hours of manual work.',
-      rating: 5
+      rating: 5,
+      metric: '80% time saved',
+      caseStudy: 'Reviewed 200+ contracts in first month'
     },
     {
       name: 'David Ochieng',
       role: 'Corporate Counsel, Tech Startup',
+      company: 'Technology',
       image: '👨‍💼',
       quote: 'The compliance checker is a game-changer. It catches regulatory issues we might have missed and gives us peace of mind.',
-      rating: 5
+      rating: 5,
+      metric: 'Zero compliance issues',
+      caseStudy: 'Prevented 3 major legal risks'
     },
     {
       name: 'Grace Wanjiku',
       role: 'Solo Practitioner',
+      company: 'Independent',
       image: '👩‍⚖️',
       quote: 'As a solo practitioner, DafLegal is like having a team of associates. The drafting assistant alone pays for itself.',
-      rating: 5
+      rating: 5,
+      metric: '5x client capacity',
+      caseStudy: 'Handles 5x more clients alone'
     }
   ]
 
@@ -283,6 +292,83 @@ export default function Home() {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-20 scroll-animate">
+              <h2 className="text-3xl md:text-4xl font-bold text-beige mb-4">
+                How It Works
+              </h2>
+              <p className="text-lg text-[#c4d4c4] max-w-2xl mx-auto">
+                Get started in minutes with our simple 3-step process
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 relative">
+              {/* Connection Lines */}
+              <div className="hidden md:block absolute top-24 left-1/4 right-1/4 h-1 bg-gradient-to-r from-[#d4a561] via-[#d4a561] to-[#d4a561] opacity-30"></div>
+
+              {[
+                {
+                  step: '01',
+                  title: 'Upload Document',
+                  description: 'Drag & drop your contract or legal document in any format - PDF, DOCX, or TXT.',
+                  icon: 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12',
+                  color: 'from-blue-500/20 to-blue-600/20'
+                },
+                {
+                  step: '02',
+                  title: 'AI Analysis',
+                  description: 'Our AI extracts key clauses, identifies risks, and provides compliance insights in seconds.',
+                  icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+                  color: 'from-purple-500/20 to-purple-600/20'
+                },
+                {
+                  step: '03',
+                  title: 'Get Results',
+                  description: 'Review comprehensive analysis, export reports, and take action with AI-powered recommendations.',
+                  icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+                  color: 'from-green-500/20 to-green-600/20'
+                }
+              ].map((item, index) => (
+                <div key={item.step} className="scroll-animate" style={{ animationDelay: `${index * 0.2}s` }}>
+                  <div className="card-beige p-8 text-center relative group hover:scale-105 transition-all duration-300">
+                    {/* Step Number Badge */}
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-br from-[#e8c589] to-[#d4a561] flex items-center justify-center shadow-lg">
+                      <span className="text-[#1a2e1a] font-black text-sm">{item.step}</span>
+                    </div>
+
+                    {/* Gradient overlay */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
+
+                    <div className="relative z-10 mt-6">
+                      <div className="icon-box-3d w-20 h-20 mx-auto mb-6 text-[#f5edd8] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                        <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-[#1a2e1a] mb-4">{item.title}</h3>
+                      <p className="text-[#5c4a3d] leading-relaxed">{item.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div className="text-center mt-12 scroll-animate">
+              <Link href="/analyze" className="btn-gold text-lg inline-flex items-center gap-2 group">
+                Try It Now - It's Free
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Grid */}
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-7xl mx-auto">
@@ -360,18 +446,19 @@ export default function Home() {
             <h3 className="text-3xl md:text-4xl font-bold text-center mb-16 text-beige">
               Trusted by Legal Professionals
             </h3>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-4 gap-8">
               {[
-                { value: '10x', label: 'Faster Review', desc: 'Review contracts in minutes, not hours' },
-                { value: '95%', label: 'Accuracy', desc: 'AI-powered analysis you can trust' },
-                { value: '24/7', label: 'Available', desc: 'Access your legal tools anytime' },
+                { value: '500+', label: 'Law Firms', desc: 'Trust our platform' },
+                { value: '10,000+', label: 'Contracts', desc: 'Analyzed monthly' },
+                { value: '95%', label: 'Accuracy', desc: 'AI-powered analysis' },
+                { value: '10x', label: 'Faster', desc: 'Review in minutes' },
               ].map((stat, index) => (
-                <div key={stat.label} className="stat-3d text-center group hover:scale-105 transition-transform" style={{ animationDelay: `${index * 0.2}s` }}>
-                  <div className={`text-6xl font-black mb-3 gradient-text-gold ${statsAnimated ? 'animate-counter' : ''}`}>
+                <div key={stat.label} className="stat-3d text-center group hover:scale-105 transition-transform" style={{ animationDelay: `${index * 0.15}s` }}>
+                  <div className={`text-5xl md:text-6xl font-black mb-3 gradient-text-gold ${statsAnimated ? 'animate-counter' : ''}`}>
                     {stat.value}
                   </div>
                   <div className="text-xl font-semibold mb-2 text-beige">{stat.label}</div>
-                  <div className="text-[#a8c4a8]">{stat.desc}</div>
+                  <div className="text-[#c4d4c4]">{stat.desc}</div>
                 </div>
               ))}
             </div>
@@ -379,31 +466,253 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Carousel */}
-      <section className="container mx-auto px-4 py-20 scroll-animate">
-        <div className="max-w-4xl mx-auto">
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-16 text-beige">
-            What Our Clients Say
-          </h3>
-          <div className="relative">
-            <div className="card-beige p-10 md:p-12">
-              <div className="flex items-center mb-6">
-                <div className="text-6xl mr-4">{testimonials[activeTestimonial].image}</div>
-                <div>
-                  <div className="font-bold text-xl text-[#1a2e1a]">{testimonials[activeTestimonial].name}</div>
-                  <div className="text-[#5c4a3d]">{testimonials[activeTestimonial].role}</div>
+      {/* Pricing Preview Section */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16 scroll-animate">
+              <h2 className="text-3xl md:text-4xl font-bold text-beige mb-4">
+                Simple, Transparent Pricing
+              </h2>
+              <p className="text-lg text-[#c4d4c4]">
+                Choose the plan that fits your needs. All plans include 14-day free trial.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  name: 'Starter',
+                  price: '$29',
+                  period: '/month',
+                  description: 'Perfect for solo practitioners',
+                  features: [
+                    '10 contract analyses/month',
+                    'Basic compliance checking',
+                    'Clause library access',
+                    'Email support',
+                    'Export to PDF'
+                  ],
+                  cta: 'Start Free Trial',
+                  highlight: false
+                },
+                {
+                  name: 'Professional',
+                  price: '$49',
+                  period: '/month',
+                  description: 'For growing legal teams',
+                  features: [
+                    'Unlimited contract analyses',
+                    'Advanced compliance playbooks',
+                    'Document comparison',
+                    'Priority support',
+                    'API access',
+                    'Custom templates'
+                  ],
+                  cta: 'Start Free Trial',
+                  highlight: true,
+                  badge: 'Most Popular'
+                },
+                {
+                  name: 'Enterprise',
+                  price: '$99',
+                  period: '/month',
+                  description: 'For large firms and corporations',
+                  features: [
+                    'Everything in Professional',
+                    'Unlimited team members',
+                    'Custom integrations',
+                    'Dedicated account manager',
+                    'SLA guarantee',
+                    'Advanced analytics'
+                  ],
+                  cta: 'Contact Sales',
+                  highlight: false
+                }
+              ].map((plan, index) => (
+                <div
+                  key={plan.name}
+                  className={`scroll-animate ${plan.highlight ? 'md:-mt-4 md:mb-4' : ''}`}
+                  style={{ animationDelay: `${index * 0.15}s` }}
+                >
+                  <div className={`card-beige p-8 relative ${plan.highlight ? 'border-4 border-[#d4a561] shadow-2xl' : ''} group hover:scale-105 transition-all duration-300`}>
+                    {/* Most Popular Badge */}
+                    {plan.badge && (
+                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#e8c589] to-[#d4a561] text-[#1a2e1a] px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+                        {plan.badge}
+                      </div>
+                    )}
+
+                    <div className={plan.badge ? 'mt-4' : ''}>
+                      <h3 className="text-2xl font-bold text-[#1a2e1a] mb-2">{plan.name}</h3>
+                      <p className="text-[#5c4a3d] text-sm mb-6">{plan.description}</p>
+
+                      <div className="mb-6">
+                        <span className="text-5xl font-black text-[#1a2e1a]">{plan.price}</span>
+                        <span className="text-[#5c4a3d]">{plan.period}</span>
+                      </div>
+
+                      <Link
+                        href="/analyze"
+                        className={`block w-full text-center py-3 rounded-xl font-semibold transition-all duration-300 mb-6 ${
+                          plan.highlight
+                            ? 'btn-gold'
+                            : 'glass-leather text-[#1a2e1a] hover:bg-[#3d6b3d]/10 border-2 border-[#d4a561]/30'
+                        }`}
+                      >
+                        {plan.cta}
+                      </Link>
+
+                      <div className="space-y-3">
+                        {plan.features.map((feature, i) => (
+                          <div key={i} className="flex items-start gap-3">
+                            <svg className="w-5 h-5 text-[#d4a561] mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span className="text-[#5c4a3d] text-sm">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="ml-auto flex gap-1">
-                  {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-[#b8965a]" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
+              ))}
+            </div>
+
+            <div className="text-center mt-12 scroll-animate">
+              <p className="text-[#c4d4c4] mb-4">All plans include 14-day free trial • No credit card required • Cancel anytime</p>
+              <Link href="/analyze" className="text-[#d4a561] hover:text-[#e8c589] font-semibold transition-colors">
+                Compare all features →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Security Section */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16 scroll-animate">
+              <h2 className="text-3xl md:text-4xl font-bold text-beige mb-4">
+                Enterprise-Grade Security
+              </h2>
+              <p className="text-lg text-[#c4d4c4]">
+                Your data security and confidentiality is our top priority
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
+                  title: 'AES-256 Encryption',
+                  description: 'Military-grade encryption for all data at rest and in transit'
+                },
+                {
+                  icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+                  title: 'GDPR Compliant',
+                  description: 'Full compliance with data protection regulations'
+                },
+                {
+                  icon: 'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z',
+                  title: 'ISO 27001 Certified',
+                  description: 'International standard for information security'
+                },
+                {
+                  icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z',
+                  title: 'Confidential',
+                  description: 'We never train AI models on your documents'
+                }
+              ].map((item, index) => (
+                <div key={item.title} className="scroll-animate" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div className="card-beige p-6 text-center group hover:scale-105 transition-all duration-300">
+                    <div className="icon-box-3d w-16 h-16 mx-auto mb-4 text-[#f5edd8] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                      </svg>
+                    </div>
+                    <h4 className="font-bold text-[#1a2e1a] mb-2">{item.title}</h4>
+                    <p className="text-sm text-[#5c4a3d]">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 scroll-animate">
+              <div className="card-beige p-8 text-center">
+                <h3 className="text-2xl font-bold text-[#1a2e1a] mb-4">Additional Security Features</h3>
+                <div className="grid md:grid-cols-3 gap-6 text-left">
+                  {[
+                    { label: 'Two-Factor Authentication', icon: '✓' },
+                    { label: 'Role-Based Access Control', icon: '✓' },
+                    { label: 'Audit Logs & Monitoring', icon: '✓' },
+                    { label: 'Regular Security Audits', icon: '✓' },
+                    { label: 'Data Backup & Recovery', icon: '✓' },
+                    { label: 'SOC 2 Type II Compliance', icon: '✓' }
+                  ].map((feature) => (
+                    <div key={feature.label} className="flex items-center gap-3">
+                      <span className="text-[#d4a561] text-xl font-bold">{feature.icon}</span>
+                      <span className="text-[#5c4a3d]">{feature.label}</span>
+                    </div>
                   ))}
                 </div>
               </div>
-              <p className="text-lg text-[#5c4a3d] italic leading-relaxed">
-                "{testimonials[activeTestimonial].quote}"
-              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Carousel - Enhanced */}
+      <section className="container mx-auto px-4 py-20 scroll-animate">
+        <div className="max-w-5xl mx-auto">
+          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 text-beige">
+            What Our Clients Say
+          </h3>
+          <p className="text-center text-[#c4d4c4] mb-16">Join 500+ legal professionals who trust DafLegal</p>
+
+          <div className="relative">
+            <div className="card-beige p-10 md:p-12 relative overflow-hidden">
+              {/* Quote Icon */}
+              <svg className="absolute top-6 right-6 w-16 h-16 text-[#d4a561] opacity-20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+
+              <div className="relative z-10">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="text-6xl">{testimonials[activeTestimonial].image}</div>
+                    <div>
+                      <div className="font-bold text-xl text-[#1a2e1a]">{testimonials[activeTestimonial].name}</div>
+                      <div className="text-[#5c4a3d]">{testimonials[activeTestimonial].role}</div>
+                      <div className="text-sm text-[#8b7355]">{testimonials[activeTestimonial].company}</div>
+                    </div>
+                  </div>
+                  <div className="md:ml-auto flex flex-col items-start md:items-end gap-2">
+                    <div className="flex gap-1">
+                      {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
+                        <svg key={i} className="w-5 h-5 text-[#d4a561]" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <div className="bg-[#d4a561]/20 px-3 py-1 rounded-full text-sm font-semibold text-[#1a2e1a]">
+                      {testimonials[activeTestimonial].metric}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-lg text-[#5c4a3d] italic leading-relaxed mb-4">
+                  "{testimonials[activeTestimonial].quote}"
+                </p>
+
+                <div className="flex items-center gap-2 text-sm text-[#8b7355]">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>{testimonials[activeTestimonial].caseStudy}</span>
+                </div>
+              </div>
             </div>
 
             {/* Navigation dots */}
@@ -412,12 +721,28 @@ export default function Home() {
                 <button
                   key={index}
                   onClick={() => setActiveTestimonial(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    index === activeTestimonial ? 'bg-[#b8965a] w-8' : 'bg-[#b8965a]/30'
+                  className={`h-2 rounded-full transition-all ${
+                    index === activeTestimonial ? 'bg-[#d4a561] w-8' : 'bg-[#d4a561]/30 w-2'
                   }`}
                 />
               ))}
             </div>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { label: 'Verified Reviews', value: '4.9/5.0', icon: '⭐' },
+              { label: 'Active Users', value: '2,000+', icon: '👥' },
+              { label: 'Success Rate', value: '99.8%', icon: '✓' },
+              { label: 'Uptime', value: '99.9%', icon: '⚡' }
+            ].map((badge) => (
+              <div key={badge.label} className="text-center">
+                <div className="text-3xl mb-2">{badge.icon}</div>
+                <div className="text-2xl font-bold text-[#d4a561]">{badge.value}</div>
+                <div className="text-sm text-[#c4d4c4]">{badge.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
