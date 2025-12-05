@@ -41,7 +41,7 @@ export function Navigation() {
               <div className="text-xl font-bold text-[#f5edd8] tracking-tight">
                 DafLegal
               </div>
-              <div className="text-xs text-[#a8c4a8] font-medium tracking-wide">
+              <div className="text-xs text-[#d4a561] font-semibold tracking-wide">
                 AI Legal Assistant
               </div>
             </div>
@@ -51,10 +51,10 @@ export function Navigation() {
           <div className="hidden lg:flex items-center gap-1">
             <Link
               href="/"
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
                 pathname === '/'
-                  ? 'bg-[#b8965a]/20 text-[#d4b377]'
-                  : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                  ? 'bg-[#d4a561] text-[#1a2e1a] shadow-lg shadow-[#d4a561]/30'
+                  : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:shadow-md'
               }`}
             >
               Home
@@ -63,13 +63,13 @@ export function Navigation() {
               <Link
                 key={feature.href}
                 href={feature.href}
-                className={`px-3 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+                className={`px-3 py-2.5 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${
                   isActive(feature.href)
-                    ? 'bg-[#b8965a]/20 text-[#d4b377]'
-                    : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                    ? 'bg-[#d4a561] text-[#1a2e1a] shadow-lg shadow-[#d4a561]/30'
+                    : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:shadow-md'
                 }`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
                 </svg>
                 {feature.label}
@@ -78,35 +78,36 @@ export function Navigation() {
 
             {/* More Dropdown */}
             <div className="relative group">
-              <button className="px-3 py-2 rounded-lg font-medium text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all duration-200 flex items-center gap-1">
+              <button className="px-3 py-2.5 rounded-xl font-semibold text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:shadow-md transition-all duration-300 flex items-center gap-1">
                 More
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <svg className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className="absolute top-full right-0 mt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div className="glass-leather rounded-xl p-2 shadow-xl">
+              <div className="absolute top-full right-0 mt-3 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2">
+                <div className="glass-leather rounded-2xl p-3 shadow-2xl border border-[#d4a561]/20">
                   {moreFeatures.map((feature) => (
                     <Link
                       key={feature.href}
                       href={feature.href}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-semibold ${
                         isActive(feature.href)
-                          ? 'bg-[#2d5a2d] text-[#d4b377]'
-                          : 'text-[#1a2e1a] hover:bg-[#2d5a2d]/10'
+                          ? 'bg-[#d4a561] text-[#1a2e1a] shadow-md'
+                          : 'text-[#1a2e1a] hover:bg-[#3d6b3d]/15 hover:pl-5'
                       }`}
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
                       </svg>
                       {feature.label}
                     </Link>
                   ))}
+                  <div className="border-t border-[#d4a561]/30 my-2" />
                   <Link
                     href="/admin"
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#1a2e1a] hover:bg-[#2d5a2d]/10 transition-all border-t border-[#b8965a]/20 mt-2 pt-3"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-[#1a2e1a] hover:bg-[#3d6b3d]/15 hover:pl-5 transition-all duration-200 font-semibold"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -119,17 +120,17 @@ export function Navigation() {
 
           {/* CTA Button */}
           <div className="hidden lg:flex">
-            <Link href="/analyze" className="btn-gold text-sm">
-              Get Started
+            <Link href="/analyze" className="btn-gold text-sm font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+              Get Started Free →
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-[#3d6b3d]/30 transition-colors"
+            className="lg:hidden p-3 rounded-xl hover:bg-[#3d6b3d]/40 transition-all duration-300 hover:shadow-md"
           >
-            <svg className="w-6 h-6 text-[#d4b377]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-[#d4a561]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -141,15 +142,15 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-6 border-t border-[#3d6b3d]/30">
-            <div className="flex flex-col gap-1">
+          <div className="lg:hidden py-6 border-t border-[#3d6b3d]/30 animate-fade-in-up">
+            <div className="flex flex-col gap-2">
               <Link
                 href="/"
                 onClick={() => setIsMenuOpen(false)}
-                className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                className={`px-4 py-3.5 rounded-xl font-semibold transition-all duration-300 ${
                   pathname === '/'
-                    ? 'bg-[#b8965a]/20 text-[#d4b377]'
-                    : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                    ? 'bg-[#d4a561] text-[#1a2e1a] shadow-lg'
+                    : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:pl-6'
                 }`}
               >
                 Home
@@ -159,25 +160,25 @@ export function Navigation() {
                   key={feature.href}
                   href={feature.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-3 ${
+                  className={`px-4 py-3.5 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 ${
                     isActive(feature.href)
-                      ? 'bg-[#b8965a]/20 text-[#d4b377]'
-                      : 'text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+                      ? 'bg-[#d4a561] text-[#1a2e1a] shadow-lg'
+                      : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/40 hover:pl-6'
                   }`}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
                   </svg>
                   {feature.label}
                 </Link>
               ))}
-              <div className="border-t border-[#3d6b3d]/30 my-4" />
+              <div className="border-t border-[#d4a561]/30 my-4" />
               <Link
                 href="/analyze"
                 onClick={() => setIsMenuOpen(false)}
-                className="btn-gold text-center"
+                className="btn-gold text-center font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Get Started
+                Get Started Free →
               </Link>
             </div>
           </div>
