@@ -228,18 +228,30 @@ export default function Home() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative container mx-auto px-4 pt-16 pb-12 scroll-animate">
+      <section className="relative container mx-auto px-4 pt-16 pb-12 scroll-animate overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/webimg.webp"
+            alt="Legal Technology Background"
+            fill
+            className="object-cover opacity-15"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a2e1a]/80 via-[#1a2e1a]/60 to-[#1a2e1a]/90"></div>
+        </div>
+
         {/* Decorative elements with parallax */}
         <div
-          className="absolute top-20 left-10 w-72 h-72 bg-[#4a7c4a]/10 rounded-full blur-3xl"
+          className="absolute top-20 left-10 w-72 h-72 bg-[#4a7c4a]/10 rounded-full blur-3xl z-0"
           style={{ transform: `translateY(${typeof window !== 'undefined' ? window.scrollY * 0.3 : 0}px)` }}
         ></div>
         <div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-[#b8965a]/5 rounded-full blur-3xl"
+          className="absolute bottom-20 right-10 w-96 h-96 bg-[#b8965a]/5 rounded-full blur-3xl z-0"
           style={{ transform: `translateY(${typeof window !== 'undefined' ? window.scrollY * 0.2 : 0}px)` }}
         ></div>
 
-        <div className="relative max-w-5xl mx-auto text-center">
+        <div className="relative max-w-5xl mx-auto text-center z-10">
           {/* Premium Badge */}
           <div className="inline-flex items-center gap-2 glass-leather px-4 py-2 rounded-full mb-6 animate-fade-in">
             <div className="w-1.5 h-1.5 rounded-full bg-[#b8965a] animate-pulse shadow-[0_0_8px_rgba(184,150,90,0.5)]"></div>
