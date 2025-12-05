@@ -33,13 +33,14 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo - More Compact */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-all relative">
+            <div className="w-9 h-9 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-all relative bg-white p-0.5">
               <Image
                 src="/logo.png"
                 alt="DafLegal Logo"
                 width={36}
                 height={36}
-                className="object-cover w-full h-full"
+                className="object-contain w-full h-full"
+                priority
               />
             </div>
             <div>

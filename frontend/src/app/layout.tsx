@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   description: 'AI-powered legal assistant for law firms and legal professionals. Automate contract comparison, clause management, compliance checking, document drafting, and property conveyancing.',
   keywords: 'AI legal assistant, legal automation, contract comparison, compliance checker, legal drafting, conveyancing, Kenya legal tech, law firm software',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 }
 
 export default function RootLayout({
