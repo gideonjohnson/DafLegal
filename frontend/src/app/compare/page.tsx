@@ -128,10 +128,10 @@ export default function ComparePage() {
           src="/webimg2.jpeg"
           alt="Background"
           fill
-          className="object-cover opacity-10"
+          className="object-cover opacity-20"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2e1a]/90 via-[#234023]/85 to-[#2d5a2d]/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a2e1a]/70 via-[#234023]/65 to-[#2d5a2d]/70"></div>
       </div>
 
       <div className="relative z-10">
