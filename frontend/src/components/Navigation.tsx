@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 export function Navigation() {
@@ -32,10 +33,14 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo - More Compact */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#e8c589] to-[#d4a561] flex items-center justify-center shadow-md group-hover:shadow-lg transition-all">
-              <svg className="w-5 h-5 text-[#1a2e1a]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-              </svg>
+            <div className="w-9 h-9 rounded-lg overflow-hidden shadow-md group-hover:shadow-lg transition-all relative">
+              <Image
+                src="/logo.png"
+                alt="DafLegal Logo"
+                width={36}
+                height={36}
+                className="object-cover w-full h-full"
+              />
             </div>
             <div>
               <div className="text-base font-bold text-[#f5edd8] tracking-tight leading-none">
