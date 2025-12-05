@@ -6,21 +6,21 @@
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 245, 241, 232;
 
-  /* Premium Green Leather & Beige Palette */
+  /* Premium Green Leather & Beige Palette - Enhanced Contrast */
   --leather-dark: #1a2e1a;
   --leather-main: #234023;
   --leather-mid: #2d5a2d;
   --leather-light: #3d6b3d;
   --leather-highlight: #4a7c4a;
 
-  --beige-dark: #c4a574;
-  --beige-main: #d4b896;
-  --beige-light: #e8d5b7;
-  --beige-cream: #f5edd8;
-  --beige-white: #faf7f0;
+  --beige-dark: #b8965a;
+  --beige-main: #e8d5b7;
+  --beige-light: #f5edd8;
+  --beige-cream: #faf7f0;
+  --beige-white: #ffffff;
 
-  --gold-accent: #b8965a;
-  --gold-light: #d4b377;
+  --gold-accent: #d4a561;
+  --gold-light: #e8b977;
 
   --black: #000000;
   --white: #FFFFFF;

@@ -237,7 +237,7 @@ export default function Home() {
           </div>
 
           {/* Main Headline with typing effect */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <h1 className="text-3xl md:text-5xl font-bold mb-8 leading-tight animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <span className="text-beige drop-shadow-lg">
               Your AI Legal Assistant
             </span>
@@ -246,7 +246,7 @@ export default function Home() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-[#a8c4a8] mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <p className="text-lg md:text-xl text-[#c4d4c4] mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             Automate routine legal work with AI-powered document analysis, drafting, compliance checking, and property conveyancing.
           </p>
 
@@ -270,10 +270,10 @@ export default function Home() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[#a8c4a8] animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+          <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-[#c4d4c4] animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
             {['No credit card required', 'Start in 2 minutes', 'Enterprise security'].map((text) => (
               <div key={text} className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#b8965a]" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-[#d4a561]" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span className="font-medium">{text}</span>
@@ -287,10 +287,10 @@ export default function Home() {
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 scroll-animate">
-            <h2 className="text-4xl md:text-5xl font-bold text-beige mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-beige mb-4">
               Everything You Need
             </h2>
-            <p className="text-xl text-[#a8c4a8]">
+            <p className="text-lg text-[#c4d4c4]">
               Powerful tools for modern legal practice
             </p>
           </div>
