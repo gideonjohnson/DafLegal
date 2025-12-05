@@ -130,8 +130,6 @@ export default function ConveyancingPage() {
     : transactions.filter(t => t.status === activeFilter)
 
   return (
-    <div>
-      <Navigation />
     <div className="min-h-screen leather-bg relative overflow-hidden">
       {/* Background Image with Green Blend */}
       <div className="fixed inset-0 z-0">
@@ -490,6 +488,5 @@ export default function ConveyancingPage() {
       </div>
     </div>
     </div>
-      </div>
   )
 }

@@ -169,8 +169,6 @@ export default function CitationsPage() {
   const uniqueFormats = [...new Set(availableFormats.map(f => f.name))]
 
   return (
-    <div>
-      <Navigation />
     <div className="min-h-screen leather-bg relative overflow-hidden">
       {/* Background Image with Green Blend */}
       <div className="fixed inset-0 z-0">
@@ -510,6 +508,5 @@ export default function CitationsPage() {
         </div>
       </div>
     </div>
-      </div>
   )
 }

@@ -153,8 +153,6 @@ export default function IntakePage() {
   }
 
   return (
-    <div>
-      <Navigation />
     <div className="min-h-screen leather-bg relative overflow-hidden">
       {/* Background Image with Green Blend */}
       <div className="fixed inset-0 z-0">
@@ -540,6 +538,5 @@ export default function IntakePage() {
         </div>
       </div>
     </div>
-      </div>
   )
 }
