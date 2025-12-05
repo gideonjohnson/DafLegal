@@ -235,7 +235,7 @@ export default function Home() {
             src="/webimg1.jpg"
             alt="Legal Technology Background"
             fill
-            className="object-cover opacity-15"
+            className="object-contain opacity-20"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a2e1a]/80 via-[#1a2e1a]/60 to-[#1a2e1a]/90"></div>
@@ -260,7 +260,7 @@ export default function Home() {
 
           {/* Main Headline with typing effect */}
           <h1 className="text-xl md:text-3xl font-bold mb-4 leading-tight animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <span className="text-beige drop-shadow-lg">
+            <span className="text-white drop-shadow-lg">
               Your AI Legal Assistant
             </span>
             <br />
@@ -268,7 +268,7 @@ export default function Home() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-sm md:text-base text-[#c4d4c4] mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <p className="text-sm md:text-base text-white mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             Automate routine legal work with AI-powered document analysis, drafting, compliance checking, and property conveyancing.
           </p>
 
