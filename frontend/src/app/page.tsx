@@ -232,7 +232,7 @@ export default function Home() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/webimg.webp"
+            src="/webimg1.jpg"
             alt="Legal Technology Background"
             fill
             className="object-cover opacity-15"
