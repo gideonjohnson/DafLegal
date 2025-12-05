@@ -402,11 +402,22 @@ export default function Home() {
                 className="card-beige p-6 group cursor-pointer relative overflow-hidden scroll-animate"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
+                {/* Background Image with Green Blend */}
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src="/webimg2.jpeg"
+                    alt="Feature Background"
+                    fill
+                    className="object-cover opacity-10"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3d6b3d]/80 to-[#2d5a2d]/60"></div>
+                </div>
+
                 {/* Gradient overlay on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-[1]`}></div>
 
                 {/* Badge */}
-                <div className="absolute top-3 right-3 bg-[#b8965a]/20 text-[#8b7355] text-xs font-semibold px-2.5 py-1 rounded-full">
+                <div className="absolute top-3 right-3 bg-[#b8965a]/20 text-[#8b7355] text-xs font-semibold px-2.5 py-1 rounded-full z-10">
                   {feature.highlight}
                 </div>
 
