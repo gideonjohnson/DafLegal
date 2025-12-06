@@ -503,7 +503,7 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
       {/* Backdrop overlay for mobile when expanded */}
       {isExpanded && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/20 z-40 md:hidden transition-opacity duration-300"
           onClick={() => setIsExpanded(false)}
           style={{ opacity: isExpanded ? 1 : 0 }}
         />
@@ -517,8 +517,8 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
         } ease-out`}
         style={{
           bottom: 0,
-          height: isExpanded ? 'calc(92vh - env(safe-area-inset-bottom))' : '72px',
-          maxHeight: isExpanded ? 'calc(92vh - env(safe-area-inset-bottom))' : '72px',
+          height: isExpanded ? '60vh' : '72px',
+          maxHeight: isExpanded ? '60vh' : '72px',
           transform: isDraggingSheet ? `translateY(${dragOffset}px)` : 'translateY(0)',
           background: 'linear-gradient(180deg, rgba(26, 46, 26, 0.98) 0%, rgba(29, 52, 29, 0.99) 100%)',
           backdropFilter: 'blur(20px)',

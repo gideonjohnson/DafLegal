@@ -235,8 +235,10 @@ export default function Home() {
             src="/webimg1.jpg"
             alt="Legal Technology Background"
             fill
-            className="object-contain opacity-20"
+            className="object-cover opacity-30"
             priority
+            quality={100}
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#1a2e1a]/80 via-[#1a2e1a]/60 to-[#1a2e1a]/90"></div>
         </div>
@@ -386,10 +388,10 @@ export default function Home() {
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 scroll-animate">
-            <h2 className="text-2xl md:text-3xl font-bold text-beige mb-3">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
               Everything You Need
             </h2>
-            <p className="text-base text-[#c4d4c4]">
+            <p className="text-base text-white">
               Powerful tools for modern legal practice
             </p>
           </div>
@@ -408,9 +410,11 @@ export default function Home() {
                     src="/webimg2.jpeg"
                     alt="Feature Background"
                     fill
-                    className="object-cover opacity-10"
+                    className="object-cover opacity-20"
+                    quality={100}
+                    sizes="(max-width: 768px) 50vw, 33vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3d6b3d]/80 to-[#2d5a2d]/60"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3d6b3d]/70 to-[#2d5a2d]/50"></div>
                 </div>
 
                 {/* Gradient overlay on hover */}
@@ -808,8 +812,10 @@ export default function Home() {
                     height={400}
                     className="w-full h-auto object-cover"
                     priority
+                    quality={100}
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a2e1a]/20 to-transparent pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a2e1a]/10 to-transparent pointer-events-none"></div>
                 </div>
               </div>
             </div>
