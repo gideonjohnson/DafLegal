@@ -228,19 +228,19 @@ export default function Home() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative container mx-auto px-4 pt-16 pb-12 scroll-animate overflow-hidden">
+      <section className="relative container mx-auto px-4 pt-12 pb-10 scroll-animate overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/webimg1.jpg"
             alt="Legal Technology Background"
             fill
-            className="object-cover opacity-30"
+            className="object-cover opacity-50"
             priority
             quality={100}
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1a2e1a]/80 via-[#1a2e1a]/60 to-[#1a2e1a]/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a2e1a]/70 via-[#1a2e1a]/50 to-[#1a2e1a]/75"></div>
         </div>
 
         {/* Decorative elements with parallax */}
@@ -261,7 +261,7 @@ export default function Home() {
           </div>
 
           {/* Main Headline with typing effect */}
-          <h1 className="text-xl md:text-3xl font-bold mb-4 leading-tight animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-3 leading-tight animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <span className="text-white drop-shadow-lg">
               Your AI Legal Assistant
             </span>
@@ -270,7 +270,7 @@ export default function Home() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-sm md:text-base text-white mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <p className="text-sm md:text-base text-white mb-6 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             Automate routine legal work with AI-powered document analysis, drafting, compliance checking, and property conveyancing.
           </p>
 
@@ -308,14 +308,14 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12 scroll-animate">
-              <h2 className="text-2xl md:text-3xl font-bold text-beige mb-3">
+            <div className="text-center mb-10 scroll-animate">
+              <h2 className="text-xl md:text-2xl font-bold text-beige mb-2">
                 How It Works
               </h2>
-              <p className="text-base text-[#c4d4c4] max-w-2xl mx-auto">
+              <p className="text-sm text-[#c4d4c4] max-w-2xl mx-auto">
                 Get started in minutes with our simple 3-step process
               </p>
             </div>
@@ -385,13 +385,13 @@ export default function Home() {
       </section>
 
       {/* Features Grid */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 scroll-animate">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          <div className="text-center mb-10 scroll-animate">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">
               Everything You Need
             </h2>
-            <p className="text-base text-white">
+            <p className="text-sm text-white">
               Powerful tools for modern legal practice
             </p>
           </div>
@@ -410,11 +410,11 @@ export default function Home() {
                     src="/webimg2.jpeg"
                     alt="Feature Background"
                     fill
-                    className="object-cover opacity-20"
+                    className="object-cover opacity-35"
                     quality={100}
                     sizes="(max-width: 768px) 50vw, 33vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3d6b3d]/70 to-[#2d5a2d]/50"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#3d6b3d]/60 to-[#2d5a2d]/40"></div>
                 </div>
 
                 {/* Gradient overlay on hover */}
@@ -426,13 +426,13 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10">
-                  <div className="icon-box-3d w-12 h-12 text-[#f5edd8] mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <div className="icon-box-3d w-11 h-11 text-[#f5edd8] mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     {feature.icon}
                   </div>
-                  <h3 className="text-lg font-bold text-[#1a2e1a] mb-2 group-hover:text-[#2d5a2d] transition-colors">
+                  <h3 className="text-base font-bold text-[#1a2e1a] mb-2 group-hover:text-[#2d5a2d] transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-[#5c4a3d] leading-relaxed mb-3">
+                  <p className="text-xs text-[#5c4a3d] leading-relaxed mb-2">
                     {feature.description}
                   </p>
                   <div className="flex items-center text-sm text-[#2d5a2d] font-semibold group-hover:translate-x-2 transition-transform">
