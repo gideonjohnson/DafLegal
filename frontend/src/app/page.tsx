@@ -318,9 +318,9 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 relative">
               {/* Connection Lines */}
-              <div className="hidden md:block absolute top-24 left-1/4 right-1/4 h-1 bg-gradient-to-r from-[#d4a561] via-[#d4a561] to-[#d4a561] opacity-30"></div>
+              <div className="hidden lg:block absolute top-24 left-1/4 right-1/4 h-1 bg-gradient-to-r from-[#d4a561] via-[#d4a561] to-[#d4a561] opacity-30"></div>
 
               {[
                 {
@@ -346,7 +346,7 @@ export default function Home() {
                 }
               ].map((item, index) => (
                 <div key={item.step} className="scroll-animate" style={{ animationDelay: `${index * 0.2}s` }}>
-                  <div className="card-beige p-6 text-center relative group hover:scale-105 transition-all duration-300">
+                  <div className="card-beige p-5 md:p-6 text-center relative group hover:scale-105 transition-all duration-300 min-h-[200px] flex flex-col">
                     {/* Step Number Badge */}
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full bg-gradient-to-br from-[#e8c589] to-[#d4a561] flex items-center justify-center shadow-lg">
                       <span className="text-[#1a2e1a] font-black text-xs">{item.step}</span>
@@ -355,14 +355,14 @@ export default function Home() {
                     {/* Gradient overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
 
-                    <div className="relative z-10 mt-4">
-                      <div className="icon-box-3d w-14 h-14 mx-auto mb-4 text-[#f5edd8] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <div className="relative z-10 mt-4 flex-1 flex flex-col">
+                      <div className="icon-box-3d w-12 h-12 md:w-14 md:h-14 mx-auto mb-3 md:mb-4 text-[#f5edd8] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                        <svg className="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                         </svg>
                       </div>
-                      <h3 className="text-lg font-bold text-[#1a2e1a] mb-3">{item.title}</h3>
-                      <p className="text-sm text-[#5c4a3d] leading-relaxed">{item.description}</p>
+                      <h3 className="text-base md:text-lg font-bold text-[#1a2e1a] mb-2 md:mb-3">{item.title}</h3>
+                      <p className="text-xs md:text-sm text-[#5c4a3d] leading-relaxed">{item.description}</p>
                     </div>
                   </div>
                 </div>
@@ -394,12 +394,12 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {features.map((feature, index) => (
               <Link
                 key={feature.href}
                 href={feature.href}
-                className="card-beige p-6 group cursor-pointer relative overflow-hidden scroll-animate"
+                className="card-beige p-4 md:p-6 group cursor-pointer relative overflow-hidden scroll-animate min-h-[180px] flex flex-col"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Background Image with Green Blend */}
@@ -626,7 +626,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {[
                 {
                   icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
@@ -650,8 +650,8 @@ export default function Home() {
                 }
               ].map((item, index) => (
                 <div key={item.title} className="scroll-animate" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div className="card-beige p-5 text-center group hover:scale-105 transition-all duration-300">
-                    <div className="icon-box-3d w-12 h-12 mx-auto mb-3 text-[#f5edd8] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  <div className="card-beige p-4 md:p-5 text-center group hover:scale-105 transition-all duration-300 min-h-[160px] flex flex-col">
+                    <div className="icon-box-3d w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 text-[#f5edd8] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                       </svg>
