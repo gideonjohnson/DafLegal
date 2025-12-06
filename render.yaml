@@ -15,7 +15,7 @@ services:
     autoDeploy: true
     branch: main
 
-  # Frontend Service
+  # Frontend Service - Updated with tightened UI
   - type: web
     name: daflegal-frontend
     env: node
