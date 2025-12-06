@@ -457,16 +457,21 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
 
   return (
     <>
-      {/* Bottom Ask Bar */}
+      {/* Ask Bar - Swaps position on mobile/tablet when expanded */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
-          isExpanded ? 'h-[75vh] sm:h-[60vh]' : 'h-24 sm:h-20'
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 ease-out ${
+          isExpanded
+            ? 'top-0 h-[85vh] sm:h-[75vh] lg:bottom-0 lg:top-auto lg:h-[60vh]'
+            : 'bottom-0 h-24 sm:h-20'
         }`}
         style={{
           background: 'linear-gradient(180deg, rgba(26, 46, 26, 0.95) 0%, rgba(29, 52, 29, 0.98) 100%)',
           backdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(168, 196, 168, 0.2)',
-          boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.3)'
+          borderTop: isExpanded ? 'none' : '1px solid rgba(168, 196, 168, 0.2)',
+          borderBottom: isExpanded ? '1px solid rgba(168, 196, 168, 0.2)' : 'none',
+          boxShadow: isExpanded
+            ? '0 10px 40px rgba(0, 0, 0, 0.3)'
+            : '0 -10px 40px rgba(0, 0, 0, 0.3)'
         }}
       >
         {/* History Sidebar */}
