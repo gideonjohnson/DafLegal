@@ -1,0 +1,30 @@
+services:
+  # Backend API Service
+  - type: web
+    name: daflegal-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+    autoDeploy: true
+    branch: main
+
+  # Frontend Service
+  - type: web
+    name: daflegal-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://daflegal-backend.onrender.com
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true
+    branch: main
