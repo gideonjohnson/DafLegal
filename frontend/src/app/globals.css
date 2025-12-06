@@ -1339,3 +1339,47 @@ body {
     z-index: 100;
   }
 }
+
+/* Safe area support for mobile devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Touch manipulation for better mobile responsiveness */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Smooth scrolling with momentum on mobile */
+.custom-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Bottom sheet specific styles */
+@media (max-width: 768px) {
+  /* Prevent body scroll when Ask bar is expanded */
+  body:has(.ask-bar-expanded) {
+    overflow: hidden;
+  }
+
+  /* Optimize animations on mobile */
+  .transition-all,
+  .transition-transform,
+  .transition-opacity {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Better active states for mobile */
+  button:active,
+  .btn-gold:active,
+  .card-glass:active {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
+  }
+}

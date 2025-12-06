@@ -36,10 +36,14 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
   const [historySearch, setHistorySearch] = useState('')
   const [isRecording, setIsRecording] = useState(false)
   const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([])
+  const [dragStartY, setDragStartY] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDraggingSheet, setIsDraggingSheet] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const recognitionRef = useRef<any>(null)
+  const sheetRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
   // Get context from current page
@@ -136,6 +140,45 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
       recognitionRef.current = recognition
     }
   }, [])
+
+  // Swipe gesture handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0]
+    setDragStartY(touch.clientY)
+    setIsDraggingSheet(true)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDraggingSheet) return
+
+    const touch = e.touches[0]
+    const diff = touch.clientY - dragStartY
+
+    // Only allow dragging down when expanded, or up when collapsed
+    if (isExpanded && diff > 0) {
+      setDragOffset(diff)
+    } else if (!isExpanded && diff < 0) {
+      setDragOffset(diff)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    setIsDraggingSheet(false)
+
+    // Threshold for toggling: 80px
+    const threshold = 80
+
+    if (isExpanded && dragOffset > threshold) {
+      // Swiped down while expanded - collapse
+      setIsExpanded(false)
+    } else if (!isExpanded && dragOffset < -threshold) {
+      // Swiped up while collapsed - expand
+      setIsExpanded(true)
+    }
+
+    // Reset drag offset with smooth transition
+    setDragOffset(0)
+  }
 
   const loadSuggestions = () => {
     const context = getPageContext()
@@ -457,21 +500,33 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
 
   return (
     <>
-      {/* Ask Bar - Swaps position on mobile/tablet when expanded */}
+      {/* Backdrop overlay for mobile when expanded */}
+      {isExpanded && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          onClick={() => setIsExpanded(false)}
+          style={{ opacity: isExpanded ? 1 : 0 }}
+        />
+      )}
+
+      {/* Ask Bar - Bottom sheet on mobile, traditional on desktop */}
       <div
-        className={`fixed left-0 right-0 z-50 transition-all duration-500 ease-out ${
-          isExpanded
-            ? 'top-0 h-[85vh] sm:h-[75vh] lg:bottom-0 lg:top-auto lg:h-[60vh]'
-            : 'bottom-0 h-24 sm:h-20'
-        }`}
+        ref={sheetRef}
+        className={`fixed left-0 right-0 z-50 transition-all ${
+          isDraggingSheet ? 'duration-0' : 'duration-300'
+        } ease-out`}
         style={{
-          background: 'linear-gradient(180deg, rgba(26, 46, 26, 0.95) 0%, rgba(29, 52, 29, 0.98) 100%)',
+          bottom: 0,
+          height: isExpanded ? 'calc(92vh - env(safe-area-inset-bottom))' : '72px',
+          maxHeight: isExpanded ? 'calc(92vh - env(safe-area-inset-bottom))' : '72px',
+          transform: isDraggingSheet ? `translateY(${dragOffset}px)` : 'translateY(0)',
+          background: 'linear-gradient(180deg, rgba(26, 46, 26, 0.98) 0%, rgba(29, 52, 29, 0.99) 100%)',
           backdropFilter: 'blur(20px)',
-          borderTop: isExpanded ? 'none' : '1px solid rgba(168, 196, 168, 0.2)',
-          borderBottom: isExpanded ? '1px solid rgba(168, 196, 168, 0.2)' : 'none',
+          borderTopLeftRadius: isExpanded ? '24px' : '20px',
+          borderTopRightRadius: isExpanded ? '24px' : '20px',
           boxShadow: isExpanded
-            ? '0 10px 40px rgba(0, 0, 0, 0.3)'
-            : '0 -10px 40px rgba(0, 0, 0, 0.3)'
+            ? '0 -20px 60px rgba(0, 0, 0, 0.5), 0 -4px 12px rgba(0, 0, 0, 0.3)'
+            : '0 -10px 30px rgba(0, 0, 0, 0.3)'
         }}
       >
         {/* History Sidebar */}
@@ -521,12 +576,86 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
 
         {/* Main Content */}
         <div className="h-full flex flex-col max-w-7xl mx-auto">
-          {/* Header - Always Visible */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-[#3d6b3d]/20">
-            <div className="flex items-center gap-4">
+          {/* Mobile Drag Handle - Only visible on mobile */}
+          <div
+            className="md:hidden pt-3 pb-2 flex justify-center cursor-grab active:cursor-grabbing"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className="w-12 h-1.5 bg-[#a8c4a8]/40 rounded-full" />
+          </div>
+
+          {/* Input Bar - At TOP when expanded on MOBILE ONLY */}
+          {isExpanded && (
+            <div className="md:hidden px-3 py-3 border-b border-[#3d6b3d]/20 order-first">
+              <div className="flex gap-2 items-end">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  accept=".pdf,.docx,.txt"
+                />
+
+                {/* Left action buttons - stacked vertically on mobile for better reach */}
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-colors flex-shrink-0 touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
+                    title="Upload"
+                  >
+                    <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={toggleVoiceRecording}
+                    className={`p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-all flex-shrink-0 touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center ${
+                      isRecording ? 'bg-red-500/20 animate-pulse' : ''
+                    }`}
+                    title={isRecording ? "Stop" : "Voice"}
+                  >
+                    <svg className={`w-5 h-5 ${isRecording ? 'text-red-500' : 'text-[#a8c4a8]'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Input field - larger touch target on mobile */}
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ask anything..."
+                  className="flex-1 bg-[#234023]/50 text-[#f5edd8] placeholder-[#a8c4a8] px-4 py-3.5 rounded-2xl border border-[#3d6b3d]/30 focus:border-[#d4b377] focus:ring-2 focus:ring-[#d4b377]/20 transition-all text-base touch-manipulation min-h-[48px]"
+                  disabled={loading}
+                  style={{ fontSize: '16px' }}
+                />
+
+                {/* Send button - optimized for right-thumb on mobile */}
+                <button
+                  onClick={() => handleSend()}
+                  disabled={!inputValue.trim() || loading}
+                  className="btn-gold px-5 py-3.5 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 hover:scale-105 transition-transform touch-manipulation min-w-[48px] min-h-[48px]"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Compact Header for Mobile (at bottom when expanded), Full Header for Desktop */}
+          <div className={`flex items-center justify-between px-4 md:px-6 py-2 md:py-3 ${isExpanded ? 'md:border-b' : 'border-b'} border-[#3d6b3d]/20 ${isExpanded ? 'order-last md:order-first' : ''}`}>
+            {/* Left side - Logo and Title */}
+            <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-all group"
+                className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-all flex-shrink-0 touch-manipulation"
               >
                 <svg
                   className={`w-5 h-5 text-[#d4b377] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
@@ -538,27 +667,29 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                 </svg>
               </button>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#d4b377] to-[#b8965a] flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[#1a2e1a]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-[#f5edd8] text-lg">Ask DafLegal</h3>
-                  <p className="text-xs text-[#a8c4a8]">
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-gradient-to-br from-[#d4b377] to-[#b8965a] flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-[#1a2e1a]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                </svg>
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-[#f5edd8] text-base md:text-lg truncate">Ask DafLegal</h3>
+                {isExpanded && (
+                  <p className="text-xs text-[#a8c4a8] truncate">
                     {matterId && matterName ? `${matterName}` : `${getPageContext().replace(/_/g, ' ')}`}
                   </p>
-                </div>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Right side - Action buttons */}
+            <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
               {isExpanded && (
                 <>
                   <button
                     onClick={() => setShowHistory(!showHistory)}
-                    className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors"
-                    title="Conversation History"
+                    className="p-2.5 md:p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors touch-manipulation"
+                    title="History"
                   >
                     <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -570,8 +701,8 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                       setInputValue('')
                       setFollowUpQuestions([])
                     }}
-                    className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors"
-                    title="New Conversation"
+                    className="p-2.5 md:p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors touch-manipulation"
+                    title="New Chat"
                   >
                     <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -580,8 +711,8 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                   <button
                     onClick={exportConversation}
                     disabled={messages.length === 0}
-                    className="p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Export Conversation"
+                    className="hidden md:block p-2 hover:bg-[#3d6b3d]/30 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                    title="Export"
                   >
                     <svg className="w-5 h-5 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -589,7 +720,7 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                   </button>
                 </>
               )}
-              <kbd className="hidden sm:inline-block px-3 py-1.5 text-xs font-mono bg-[#3d6b3d]/30 text-[#d4b377] rounded-lg border border-[#3d6b3d]/40">
+              <kbd className="hidden lg:inline-block px-3 py-1.5 text-xs font-mono bg-[#3d6b3d]/30 text-[#d4b377] rounded-lg border border-[#3d6b3d]/40">
                 {typeof window !== 'undefined' && navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}K
               </kbd>
             </div>
@@ -616,36 +747,36 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
               )}
 
               {messages.length === 0 ? (
-                <div className="py-8 max-w-3xl mx-auto">
-                  <p className="text-center text-[#a8c4a8] mb-6 text-lg">
-                    Ask me anything about your legal work. I'm aware of your current context and can help with specific tasks.
+                <div className="py-4 md:py-8 max-w-3xl mx-auto px-2">
+                  <p className="text-center text-[#a8c4a8] mb-4 md:mb-6 text-sm md:text-lg">
+                    Ask me anything about your legal work. I'm aware of your current context.
                   </p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
                     {suggestions.map((suggestion, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSend(suggestion)}
-                        className="card-glass p-4 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all hover:scale-105"
+                        className="card-glass p-3 md:p-4 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all active:scale-95 md:hover:scale-105 touch-manipulation min-h-[56px] flex items-start gap-2"
                       >
-                        <svg className="w-4 h-4 mb-2 text-[#d4b377]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#d4b377]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
-                        {suggestion}
+                        <span className="flex-1">{suggestion}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="max-w-4xl mx-auto space-y-4">
+                <div className="max-w-4xl mx-auto space-y-3 md:space-y-4 px-2">
                   {messages.map((msg, idx) => (
                     <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                       {msg.role === 'user' ? (
-                        <div className="card-beige p-4 max-w-[75%] rounded-2xl">
-                          <p className="text-[#1a2e1a] text-sm leading-relaxed">{msg.content}</p>
+                        <div className="card-beige p-3 md:p-4 max-w-[85%] md:max-w-[75%] rounded-2xl">
+                          <p className="text-[#1a2e1a] text-sm md:text-sm leading-relaxed">{msg.content}</p>
                         </div>
                       ) : (
-                        <div className="card-glass p-4 max-w-[85%] rounded-2xl">
-                          <p className="text-[#f5edd8] text-sm whitespace-pre-wrap leading-relaxed">
+                        <div className="card-glass p-3 md:p-4 max-w-[90%] md:max-w-[85%] rounded-2xl">
+                          <p className="text-[#f5edd8] text-sm md:text-sm whitespace-pre-wrap leading-relaxed">
                             {formatCitations(msg.content)}
                             {msg.streaming && <span className="inline-block w-2 h-4 bg-[#d4b377] ml-1 animate-pulse"></span>}
                           </p>
@@ -666,21 +797,21 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
                     </div>
                   )}
 
-                  {/* Smart Follow-up Suggestions */}
+                  {/* Smart Follow-up Suggestions - Mobile optimized */}
                   {followUpQuestions.length > 0 && !isTyping && !loading && (
-                    <div className="mt-6 max-w-4xl mx-auto">
-                      <p className="text-sm text-[#a8c4a8] mb-3 font-semibold">💡 Follow-up questions:</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="mt-4 md:mt-6 max-w-4xl mx-auto px-2">
+                      <p className="text-xs md:text-sm text-[#a8c4a8] mb-2 md:mb-3 font-semibold">💡 Follow-up:</p>
+                      <div className="grid grid-cols-1 gap-2">
                         {followUpQuestions.map((question, idx) => (
                           <button
                             key={idx}
                             onClick={() => handleSend(question)}
-                            className="card-glass p-3 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all hover:scale-105 flex items-center gap-2"
+                            className="card-glass p-3 text-left text-sm text-[#a8c4a8] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30 transition-all active:scale-95 md:hover:scale-105 flex items-center gap-2 touch-manipulation min-h-[48px]"
                           >
                             <svg className="w-4 h-4 text-[#d4b377] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                             </svg>
-                            <span>{question}</span>
+                            <span className="flex-1">{question}</span>
                           </button>
                         ))}
                       </div>
@@ -716,64 +847,73 @@ export function UniversalAskBar({ matterId, matterName }: AskBarProps) {
             </div>
           )}
 
-          {/* Input Bar - Always Visible */}
-          <div className="px-6 py-4 border-t border-[#3d6b3d]/20">
-            <div className="flex gap-3 max-w-4xl mx-auto">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileSelect}
-                className="hidden"
-                accept=".pdf,.docx,.txt"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-colors flex-shrink-0"
-                title="Upload document"
-              >
-                <svg className="w-6 h-6 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                </svg>
-              </button>
-              <button
-                onClick={toggleVoiceRecording}
-                className={`p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-all flex-shrink-0 ${
-                  isRecording ? 'bg-red-500/20 animate-pulse' : ''
-                }`}
-                title={isRecording ? "Stop recording" : "Voice input"}
-              >
-                <svg className={`w-6 h-6 ${isRecording ? 'text-red-500' : 'text-[#a8c4a8]'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
-                </svg>
-              </button>
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                onFocus={() => !isExpanded && setIsExpanded(true)}
-                placeholder="Ask anything... (Cmd/Ctrl+K)"
-                className="flex-1 bg-[#234023]/50 text-[#f5edd8] placeholder-[#a8c4a8] px-6 py-4 rounded-2xl border border-[#3d6b3d]/30 focus:border-[#d4b377] focus:ring-2 focus:ring-[#d4b377]/20 transition-all text-base"
-                disabled={loading}
-              />
-              <button
-                onClick={() => handleSend()}
-                disabled={!inputValue.trim() || loading}
-                className="btn-gold px-8 py-4 rounded-2xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 hover:scale-105 transition-transform"
-              >
-                <span className="font-bold">Send</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-              </button>
-            </div>
+          {/* Input Bar - At BOTTOM when collapsed on mobile, always at bottom on desktop */}
+          <div className={`px-3 md:px-6 py-3 md:py-4 border-t border-[#3d6b3d]/20 pb-safe ${isExpanded ? 'hidden md:block' : 'block'} order-last`}>
+              <div className="flex gap-2 md:gap-3 max-w-4xl mx-auto items-end">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  accept=".pdf,.docx,.txt"
+                />
+
+                {/* Left action buttons - stacked vertically on mobile for better reach */}
+                <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-3 md:p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-colors flex-shrink-0 touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center"
+                    title="Upload"
+                  >
+                    <svg className="w-5 h-5 md:w-6 md:h-6 text-[#a8c4a8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={toggleVoiceRecording}
+                    className={`p-3 md:p-3 hover:bg-[#3d6b3d]/30 rounded-xl transition-all flex-shrink-0 touch-manipulation min-w-[48px] min-h-[48px] flex items-center justify-center ${
+                      isRecording ? 'bg-red-500/20 animate-pulse' : ''
+                    }`}
+                    title={isRecording ? "Stop" : "Voice"}
+                  >
+                    <svg className={`w-5 h-5 md:w-6 md:h-6 ${isRecording ? 'text-red-500' : 'text-[#a8c4a8]'}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Input field - larger touch target on mobile */}
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  onFocus={() => !isExpanded && setIsExpanded(true)}
+                  placeholder="Ask anything..."
+                  className="flex-1 bg-[#234023]/50 text-[#f5edd8] placeholder-[#a8c4a8] px-4 md:px-6 py-3.5 md:py-4 rounded-2xl border border-[#3d6b3d]/30 focus:border-[#d4b377] focus:ring-2 focus:ring-[#d4b377]/20 transition-all text-base md:text-base touch-manipulation min-h-[48px]"
+                  disabled={loading}
+                  style={{ fontSize: '16px' }}
+                />
+
+                {/* Send button - optimized for right-thumb on mobile */}
+                <button
+                  onClick={() => handleSend()}
+                  disabled={!inputValue.trim() || loading}
+                  className="btn-gold px-5 md:px-8 py-3.5 md:py-4 rounded-2xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 hover:scale-105 transition-transform touch-manipulation min-w-[48px] min-h-[48px]"
+                >
+                  <span className="font-bold hidden md:inline">Send</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                  </svg>
+                </button>
+              </div>
           </div>
         </div>
       </div>
 
       {/* Spacer to prevent content from being hidden behind the bar */}
-      <div className="h-20" />
+      <div className="h-[80px] md:h-20" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} />
     </>
   )
 }
