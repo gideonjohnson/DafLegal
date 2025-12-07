@@ -421,7 +421,7 @@ export default function Home() {
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-[1]`}></div>
 
                 {/* Badge */}
-                <div className="absolute top-3 right-3 bg-[#b8965a]/20 text-[#8b7355] text-xs font-semibold px-2.5 py-1 rounded-full z-10">
+                <div className="absolute top-3 right-3 bg-[#b8965a]/20 text-white text-xs font-semibold px-2.5 py-1 rounded-full z-10">
                   {feature.highlight}
                 </div>
 
@@ -429,13 +429,13 @@ export default function Home() {
                   <div className="icon-box-3d w-11 h-11 text-[#f5edd8] mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     {feature.icon}
                   </div>
-                  <h3 className="text-base font-bold text-[#1a2e1a] mb-2 group-hover:text-[#2d5a2d] transition-colors">
+                  <h3 className="text-base font-bold text-white mb-2 group-hover:text-white transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-xs text-[#5c4a3d] leading-relaxed mb-2">
+                  <p className="text-xs text-white leading-relaxed mb-2">
                     {feature.description}
                   </p>
-                  <div className="flex items-center text-sm text-[#2d5a2d] font-semibold group-hover:translate-x-2 transition-transform">
+                  <div className="flex items-center text-sm text-white font-semibold group-hover:translate-x-2 transition-transform">
                     <span>Get Started</span>
                     <svg className="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
