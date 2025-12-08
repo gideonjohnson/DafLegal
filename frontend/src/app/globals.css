@@ -43,6 +43,34 @@
   --shadow-inset: inset 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Dark Mode Variables */
+.dark {
+  --leather-dark: #0a150a;
+  --leather-main: #0f1e0f;
+  --leather-mid: #1a2e1a;
+  --leather-light: #234023;
+  --leather-highlight: #2d5a2d;
+
+  --beige-dark: #3d3425;
+  --beige-main: #2a2418;
+  --beige-light: #201a10;
+  --beige-cream: #1a1510;
+  --beige-white: #0f0d0a;
+
+  --gold-accent: #e8c589;
+  --gold-light: #f4d7a0;
+
+  /* Dark mode specific gradients */
+  --leather-gradient: linear-gradient(145deg, #0a150a 0%, #0f1e0f 50%, #0a150a 100%);
+  --beige-gradient: linear-gradient(145deg, #2a2418 0%, #201a10 100%);
+
+  /* Dark mode shadows */
+  --shadow-leather: 0 20px 60px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 20px 60px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.3);
+  --shadow-gold: 0 4px 20px rgba(232, 197, 137, 0.2);
+}
+
 @layer base {
   body {
     color: #1a2e1a;
