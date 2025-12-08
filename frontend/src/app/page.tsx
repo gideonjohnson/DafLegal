@@ -1,6 +1,8 @@
 'use client'
 
 import { Navigation } from '@/components/Navigation'
+import { FloatingCTA } from '@/components/FloatingCTA'
+import { ExitIntentPopup } from '@/components/ExitIntentPopup'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
@@ -1089,6 +1091,10 @@ export default function Home() {
           transform: translateY(0);
         }
       `}</style>
+
+      {/* Conversion Features */}
+      <FloatingCTA />
+      <ExitIntentPopup />
     </div>
   )
 }
