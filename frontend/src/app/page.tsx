@@ -3,6 +3,10 @@
 import { Navigation } from '@/components/Navigation'
 import { FloatingCTA } from '@/components/FloatingCTA'
 import { ExitIntentPopup } from '@/components/ExitIntentPopup'
+import { Testimonials } from '@/components/Testimonials'
+import { StatsCounter } from '@/components/StatsCounter'
+import { TrustBadges } from '@/components/TrustBadges'
+import { SocialProofNotification } from '@/components/SocialProofNotification'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
@@ -1092,9 +1096,15 @@ export default function Home() {
         }
       `}</style>
 
+      {/* Social Proof Sections */}
+      <StatsCounter />
+      <Testimonials />
+      <TrustBadges />
+
       {/* Conversion Features */}
       <FloatingCTA />
       <ExitIntentPopup />
+      <SocialProofNotification />
     </div>
   )
 }
