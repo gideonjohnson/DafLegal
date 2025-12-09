@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { UniversalAskBar } from '@/components/UniversalAskBar'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { Analytics } from '@/components/Analytics'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -49,6 +50,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
+          <Analytics />
           {children}
           <UniversalAskBar />
         </ThemeProvider>

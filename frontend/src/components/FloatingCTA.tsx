@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { trackCTAClick } from '@/components/Analytics'
 
 export function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false)
@@ -42,6 +43,7 @@ export function FloatingCTA() {
 
           <Link
             href="/analyze"
+            onClick={() => trackCTAClick('floating_cta', 'Start Free Trial')}
             className="block w-full btn-gold text-xs text-center py-2.5 mb-2"
           >
             Start Free Trial →
@@ -56,7 +58,10 @@ export function FloatingCTA() {
         </div>
       ) : (
         <button
-          onClick={() => setIsExpanded(true)}
+          onClick={() => {
+            setIsExpanded(true)
+            trackCTAClick('floating_cta', 'expand')
+          }}
           className="btn-gold px-6 py-4 shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 flex items-center gap-2 group"
           aria-label="Get started"
         >

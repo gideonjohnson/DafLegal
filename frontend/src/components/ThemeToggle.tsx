@@ -1,11 +1,18 @@
 'use client'
 
 import { useTheme } from '@/contexts/ThemeContext'
+import { trackDarkModeToggle } from '@/components/Analytics'
 import { useState, useEffect } from 'react'
 
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false)
   const { theme, toggleTheme } = useTheme()
+
+  const handleToggle = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    toggleTheme()
+    trackDarkModeToggle(newTheme)
+  }
 
   useEffect(() => {
     setMounted(true)
@@ -21,7 +28,7 @@ export function ThemeToggle() {
 
   return (
     <button
-      onClick={toggleTheme}
+      onClick={handleToggle}
       className="relative w-12 h-12 rounded-full glass-leather flex items-center justify-center hover:scale-110 transition-all duration-300 group"
       aria-label="Toggle theme"
     >

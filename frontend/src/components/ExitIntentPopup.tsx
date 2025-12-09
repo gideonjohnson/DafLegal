@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { trackExitIntent } from '@/components/Analytics'
 
 export function ExitIntentPopup() {
   const [isVisible, setIsVisible] = useState(false)
@@ -20,6 +21,7 @@ export function ExitIntentPopup() {
         setIsVisible(true)
         setHasShown(true)
         sessionStorage.setItem('exitIntentShown', 'true')
+        trackExitIntent('shown')
       }
     }
 
@@ -40,7 +42,10 @@ export function ExitIntentPopup() {
       {/* Popup */}
       <div className="relative card-beige p-8 max-w-lg w-full shadow-2xl animate-scale-in">
         <button
-          onClick={() => setIsVisible(false)}
+          onClick={() => {
+            setIsVisible(false)
+            trackExitIntent('dismissed')
+          }}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-[#5c4a3d] hover:text-[#1a2e1a] transition-colors rounded-full hover:bg-[#d4a561]/10"
           aria-label="Close"
         >
@@ -84,14 +89,20 @@ export function ExitIntentPopup() {
         {/* CTA */}
         <Link
           href="/analyze"
-          onClick={() => setIsVisible(false)}
+          onClick={() => {
+            setIsVisible(false)
+            trackExitIntent('clicked')
+          }}
           className="block w-full btn-gold text-center py-3.5 mb-3 text-base font-bold"
         >
           Start My Free Trial →
         </Link>
 
         <button
-          onClick={() => setIsVisible(false)}
+          onClick={() => {
+            setIsVisible(false)
+            trackExitIntent('dismissed')
+          }}
           className="block w-full text-center text-sm text-[#8b7355] hover:text-[#5c4a3d] transition-colors"
         >
           No thanks, I'll browse more
