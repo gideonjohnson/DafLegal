@@ -4,6 +4,7 @@ import './globals.css'
 import { UniversalAskBar } from '@/components/UniversalAskBar'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { Analytics } from '@/components/Analytics'
+import { LiveChat } from '@/components/LiveChat'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -53,6 +54,7 @@ export default function RootLayout({
           <Analytics />
           {children}
           <UniversalAskBar />
+          <LiveChat />
         </ThemeProvider>
       </body>
     </html>

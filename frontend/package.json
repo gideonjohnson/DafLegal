@@ -21,6 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-live-chat-loader": "^2.11.0",
     "reading-time": "^1.5.0",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1"
