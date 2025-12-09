@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Navigation } from '@/components/Navigation'
+import { ABTestAdmin } from '@/components/ABTestAdmin'
 
 interface DashboardMetrics {
   total_users: number
@@ -258,6 +259,12 @@ export default function AdminPage() {
                   </div>
                 </div>
               )}
+
+              {/* A/B Testing */}
+              <div>
+                <h2 className="text-2xl font-bold text-[#3D2F28] mb-6">A/B Testing</h2>
+                <ABTestAdmin />
+              </div>
 
               {/* System Health */}
               <div className="glass rounded-3xl p-8">

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { ThemeToggle } from './ThemeToggle'
 import { UserMenu } from './UserMenu'
+// import { LanguageSwitcher, LanguageSwitcherCompact } from './LanguageSwitcher' // i18n temporarily disabled
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

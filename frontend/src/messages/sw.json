@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "home": "Nyumbani",
+    "features": "Vipengele",
+    "pricing": "Bei",
+    "blog": "Blogu",
+    "signIn": "Ingia",
+    "dashboard": "Dashibodi"
+  },
+  "hero": {
+    "title": "Msaidizi wa Kisheria wa AI kwa Makampuni ya Kisheria ya Kisasa",
+    "subtitle": "Fanya kazi za uchambuzi wa mikataba, ukaguzi wa utii, na mtiririko wa kisheria kwa AI ya juu. Okoa muda, punguza makosa, na zingatia yale yanayohusika zaidi.",
+    "getStarted": "Anza Bure",
+    "bookDemo": "Weka Onyesho",
+    "trustedBy": "Tumeaminika na makampuni ya kisheria 500+ nchini Kenya na Afrika Mashariki"
+  },
+  "features": {
+    "title": "Vipengele Vyenye Nguvu kwa Wataalamu wa Kisheria",
+    "subtitle": "Kila kitu unachohitaji kurahisisha mazoezi yako ya kisheria",
+    "contractAnalysis": {
+      "title": "Uchambuzi wa Mikataba",
+      "description": "Chambua mikataba kwa sekunde kwa uteuzi wa kifungu unaotumia AI, tathmini ya hatari, na ukaguzi wa utii."
+    },
+    "documentCompare": {
+      "title": "Ulinganisho wa Hati",
+      "description": "Linganisha matoleo mawili ya hati kando-kwa-kando na kuangazia kwa akili mabadiliko na tofauti."
+    },
+    "complianceChecker": {
+      "title": "Mkaguzi wa Utii",
+      "description": "Hakikisha utii wa kanuni na ukaguzi wa kiotomatiki dhidi ya mahitaji ya kisheria ya Kenya na kikanda."
+    },
+    "legalDrafting": {
+      "title": "Uandishi wa Kisheria",
+      "description": "Tengeneza dondoo za kwanza za hati za kisheria na violezo vinavyoweza kurekebishwa na msaada wa AI."
+    },
+    "conveyancing": {
+      "title": "Uhamishaji wa Mali",
+      "description": "Rahisisha shughuli za mali na uzalishaji wa hati kiotomatiki na ukaguzi wa utii."
+    },
+    "research": {
+      "title": "Utafiti wa Kisheria",
+      "description": "Pata hifadhidata kamili ya kisheria na utafutaji unaoendeshwa na AI na usimamizi wa nukuu."
+    }
+  },
+  "pricing": {
+    "title": "Bei Rahisi na Wazi",
+    "subtitle": "Chagua mpango unaofaa mahitaji ya kampuni yako",
+    "monthly": "Kila Mwezi",
+    "annually": "Kila Mwaka",
+    "save": "Okoa 20%",
+    "getStarted": "Anza",
+    "contactSales": "Wasiliana na Mauzo",
+    "starter": {
+      "name": "Kianzilishi",
+      "price": "$99",
+      "description": "Kamili kwa wafanyakazi binafsi na makampuni madogo",
+      "features": [
+        "Hadi hati 50 kwa mwezi",
+        "Uchambuzi na ulinganisho wa mikataba",
+        "Ukaguzi wa msingi wa utii",
+        "Msaada wa barua pepe",
+        "Akaunti 2 za watumiaji"
+      ]
+    },
+    "professional": {
+      "name": "Kitaalamu",
+      "price": "$299",
+      "description": "Kwa makampuni yanayokua yenye mahitaji ya juu",
+      "features": [
+        "Hati zisizo na kikomo",
+        "Vipengele vyote vya Kianzilishi",
+        "Utii wa juu na uandishi",
+        "Msaada wa kipaumbele",
+        "Hadi watumiaji 10",
+        "Violezo maalum",
+        "Ufikiaji wa API"
+      ],
+      "popular": "Inayopendelewa Zaidi"
+    },
+    "enterprise": {
+      "name": "Biashara",
+      "price": "Maalum",
+      "description": "Kwa makampuni makubwa yanayohitaji urekebishaji",
+      "features": [
+        "Kila kitu katika Kitaalamu",
+        "Watumiaji wasio na kikomo",
+        "Meneja wa akaunti aliyejitoa",
+        "Ujumuishaji maalum",
+        "Chaguo la uekezaji mahali",
+        "Dhamana ya SLA",
+        "Mafunzo na uingizaji"
+      ]
+    }
+  },
+  "footer": {
+    "product": "Bidhaa",
+    "features": "Vipengele",
+    "pricing": "Bei",
+    "resources": "Rasilimali",
+    "blog": "Blogu",
+    "documentation": "Nyaraka",
+    "company": "Kampuni",
+    "about": "Kuhusu Sisi",
+    "contact": "Wasiliana",
+    "legal": "Kisheria",
+    "privacy": "Sera ya Faragha",
+    "terms": "Masharti ya Huduma",
+    "description": "Msaidizi wa kisheria unaoendeshwa na AI kwa makampuni ya kisheria ya kisasa nchini Kenya na Afrika Mashariki.",
+    "rights": "Haki zote zimehifadhiwa"
+  },
+  "common": {
+    "learnMore": "Jifunze Zaidi",
+    "loading": "Inapakia...",
+    "error": "Hitilafu imetokea",
+    "tryAgain": "Jaribu Tena",
+    "cancel": "Ghairi",
+    "save": "Hifadhi",
+    "delete": "Futa",
+    "edit": "Hariri",
+    "close": "Funga",
+    "next": "Ifuatayo",
+    "previous": "Iliyotangulia",
+    "search": "Tafuta",
+    "filter": "Chuja",
+    "sort": "Panga",
+    "export": "Hamisha",
+    "import": "Ingiza",
+    "submit": "Wasilisha"
+  }
+}

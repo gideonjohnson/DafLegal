@@ -2,15 +2,18 @@
 
 import { Navigation } from '@/components/Navigation'
 import { FloatingCTA } from '@/components/FloatingCTA'
-import { ExitIntentPopup } from '@/components/ExitIntentPopup'
-import { Testimonials } from '@/components/Testimonials'
-import { StatsCounter } from '@/components/StatsCounter'
-import { TrustBadges } from '@/components/TrustBadges'
-import { SocialProofNotification } from '@/components/SocialProofNotification'
-import { NewsletterSignup } from '@/components/NewsletterSignup'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
+import dynamic from 'next/dynamic'
+
+// Lazy load below-the-fold components for better performance
+const ExitIntentPopup = dynamic(() => import('@/components/ExitIntentPopup').then(mod => ({ default: mod.ExitIntentPopup })), { ssr: false })
+const Testimonials = dynamic(() => import('@/components/Testimonials').then(mod => ({ default: mod.Testimonials })))
+const StatsCounter = dynamic(() => import('@/components/StatsCounter').then(mod => ({ default: mod.StatsCounter })))
+const TrustBadges = dynamic(() => import('@/components/TrustBadges').then(mod => ({ default: mod.TrustBadges })))
+const SocialProofNotification = dynamic(() => import('@/components/SocialProofNotification').then(mod => ({ default: mod.SocialProofNotification })), { ssr: false })
+const NewsletterSignup = dynamic(() => import('@/components/NewsletterSignup').then(mod => ({ default: mod.NewsletterSignup })))
 
 export default function Home() {
   const [showVideoModal, setShowVideoModal] = useState(false)

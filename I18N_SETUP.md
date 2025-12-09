@@ -1,0 +1,315 @@
+# Internationalization (i18n) Setup Guide
+
+## Overview
+
+DafLegal now supports multiple languages using `next-intl`. The application is available in:
+
+- **English (en)** - Default language
+- **Kiswahili (sw)** - For Kenyan and East African users
+- **Français (fr)** - For French-speaking users
+
+## Features
+
+- ✅ Automatic locale detection
+- ✅ URL-based locale routing (e.g., `/sw/pricing`, `/fr/blog`)
+- ✅ Language switcher in navigation (desktop & mobile)
+- ✅ SEO-friendly with proper hreflang tags
+- ✅ Persistent locale preference
+- ✅ Analytics tracking for language changes
+
+## Architecture
+
+### Directory Structure
+
+```
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── [locale]/           # Locale-wrapped routes
+│   │   │   ├── layout.tsx      # Root layout with i18n provider
+│   │   │   ├── page.tsx        # Homepage
+│   │   │   ├── blog/           # All routes under locale
+│   │   │   ├── pricing/
+│   │   │   └── ...
+│   │   └── api/                # API routes (no locale prefix)
+│   ├── i18n/
+│   │   └── request.ts          # i18n configuration
+│   ├── messages/               # Translation files
+│   │   ├── en.json
+│   │   ├── sw.json
+│   │   └── fr.json
+│   └── middleware.ts           # Locale routing middleware
+```
+
+### Key Files
+
+#### 1. `src/i18n/request.ts`
+
+Defines available locales and loads translation messages:
+
+```typescript
+import { getRequestConfig } from 'next-intl/server'
+
+export const locales = ['en', 'sw', 'fr'] as const
+export type Locale = (typeof locales)[number]
+export const defaultLocale: Locale = 'en'
+
+export const localeLabels: Record<Locale, string> = {
+  en: 'English',
+  sw: 'Kiswahili',
+  fr: 'Français',
+}
+```
+
+#### 2. `src/middleware.ts`
+
+Handles locale routing and authentication:
+
+```typescript
+import createMiddleware from 'next-intl/middleware'
+import { locales, defaultLocale } from './i18n/request'
+
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: 'as-needed', // Default locale doesn't need prefix
+})
+```
+
+#### 3. `src/app/[locale]/layout.tsx`
+
+Root layout that wraps all pages with i18n provider:
+
+```typescript
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+
+export default async function RootLayout({ children, params: { locale } }) {
+  const messages = await getMessages()
+
+  return (
+    <NextIntlClientProvider messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  )
+}
+```
+
+## Using Translations
+
+### In Server Components
+
+```typescript
+import { useTranslations } from 'next-intl'
+
+export default function Page() {
+  const t = useTranslations('hero')
+
+  return (
+    <h1>{t('title')}</h1>
+    <p>{t('subtitle')}</p>
+  )
+}
+```
+
+### In Client Components
+
+```typescript
+'use client'
+
+import { useTranslations } from 'next-intl'
+
+export function Component() {
+  const t = useTranslations('nav')
+
+  return <button>{t('signIn')}</button>
+}
+```
+
+### With Parameters
+
+```typescript
+// In translation file (en.json)
+{
+  "welcome": "Welcome, {name}!"
+}
+
+// In component
+t('welcome', { name: user.name })
+```
+
+## Translation Files
+
+Translation files are located in `src/messages/*.json`. Each file contains the same structure with translations for each language.
+
+### Structure
+
+```json
+{
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "pricing": "Pricing"
+  },
+  "hero": {
+    "title": "AI Legal Assistant",
+    "subtitle": "Automate legal workflows"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel"
+  }
+}
+```
+
+### Adding New Translations
+
+1. Add the key-value pair to `src/messages/en.json`
+2. Translate to Swahili in `src/messages/sw.json`
+3. Translate to French in `src/messages/fr.json`
+4. Use in components with `t('namespace.key')`
+
+## Language Switcher
+
+The language switcher is available in two variants:
+
+### Desktop Version (`LanguageSwitcher`)
+
+- Dropdown menu with language selection
+- Located in the top navigation bar
+- Shows current language and flag
+- Tracks analytics on language change
+
+### Mobile Version (`LanguageSwitcherCompact`)
+
+- Select dropdown for space efficiency
+- Shown in mobile navigation menu
+- Same functionality as desktop version
+
+## URL Structure
+
+### Default Locale (English)
+
+- Homepage: `/` (no locale prefix)
+- Pricing: `/pricing`
+- Blog: `/blog`
+
+### Other Locales
+
+- Swahili: `/sw/`, `/sw/pricing`, `/sw/blog`
+- French: `/fr/`, `/fr/pricing`, `/fr/blog`
+
+### API Routes
+
+API routes are **NOT** prefixed with locale:
+
+- `/api/newsletter/subscribe`
+- `/api/auth/signin`
+
+## SEO Considerations
+
+### Metadata
+
+Each page should include proper metadata for SEO:
+
+```typescript
+export async function generateMetadata({ params: { locale } }) {
+  const t = await getTranslations({ locale, namespace: 'metadata' })
+
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      languages: {
+        'en': '/pricing',
+        'sw': '/sw/pricing',
+        'fr': '/fr/pricing',
+      },
+    },
+  }
+}
+```
+
+### Hreflang Tags
+
+Automatically generated by next-intl for alternate language versions.
+
+## Analytics
+
+Language changes are tracked with Google Analytics:
+
+```typescript
+trackButtonClick(`language_change_${newLocale}`, 'i18n')
+```
+
+Event format:
+- Category: `i18n`
+- Action: `language_change_en`, `language_change_sw`, `language_change_fr`
+
+## Adding a New Language
+
+1. Add locale code to `src/i18n/request.ts`:
+
+```typescript
+export const locales = ['en', 'sw', 'fr', 'es'] as const
+export const localeLabels = {
+  // ... existing
+  es: 'Español',
+}
+```
+
+2. Create translation file `src/messages/es.json`
+
+3. Copy structure from `en.json` and translate all strings
+
+4. Restart dev server to apply changes
+
+## Common Issues & Solutions
+
+### Issue: Translations not updating
+
+**Solution:** Restart the development server. Translation files are loaded at build time.
+
+### Issue: 404 on locale routes
+
+**Solution:** Ensure the page exists in `src/app/[locale]/` directory, not root `src/app/`.
+
+### Issue: Missing translations show keys
+
+**Solution:** Check that the key exists in all translation files with the same path.
+
+### Issue: Language switcher redirects to wrong page
+
+**Solution:** Verify middleware configuration and locale routing in `src/middleware.ts`.
+
+## Best Practices
+
+1. **Keep keys organized** - Use namespaces like `nav`, `hero`, `footer`
+2. **Avoid hardcoded text** - Always use translation keys
+3. **Use descriptive keys** - `hero.title` instead of `h1`
+4. **Keep translations in sync** - Update all language files together
+5. **Test all languages** - Verify UI doesn't break with longer translations
+6. **Use RTL considerations** - Plan for future RTL languages
+
+## Future Enhancements
+
+- [ ] Add Arabic (RTL support)
+- [ ] Locale-specific date/time formatting
+- [ ] Currency formatting per locale
+- [ ] Locale-specific legal templates
+- [ ] Translation management UI for non-developers
+- [ ] Automatic translation suggestions (AI-powered)
+- [ ] A/B testing different translations
+
+## Resources
+
+- [next-intl Documentation](https://next-intl-docs.vercel.app/)
+- [Next.js i18n Routing](https://nextjs.org/docs/app/building-your-application/routing/internationalization)
+- [ICU Message Format](https://formatjs.io/docs/core-concepts/icu-syntax/)
+
+## Support
+
+For translation requests or issues:
+1. Open a GitHub issue with `i18n` label
+2. Contact the development team
+3. Check the documentation at `/docs/i18n`

@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "blog": "Blog",
+    "signIn": "Se connecter",
+    "dashboard": "Tableau de bord"
+  },
+  "hero": {
+    "title": "Assistant Juridique IA pour Cabinets d'Avocats Modernes",
+    "subtitle": "Automatisez l'analyse de contrats, la vérification de conformité et les flux de travail juridiques avec une IA avancée. Gagnez du temps, réduisez les erreurs et concentrez-vous sur l'essentiel.",
+    "getStarted": "Commencer Gratuitement",
+    "bookDemo": "Réserver une Démo",
+    "trustedBy": "Approuvé par plus de 500 cabinets d'avocats au Kenya et en Afrique de l'Est"
+  },
+  "features": {
+    "title": "Fonctionnalités Puissantes pour Professionnels du Droit",
+    "subtitle": "Tout ce dont vous avez besoin pour rationaliser votre pratique juridique",
+    "contractAnalysis": {
+      "title": "Analyse de Contrats",
+      "description": "Analysez les contrats en quelques secondes avec extraction de clauses alimentée par IA, évaluation des risques et vérification de conformité."
+    },
+    "documentCompare": {
+      "title": "Comparaison de Documents",
+      "description": "Comparez deux versions de documents côte à côte avec mise en évidence intelligente des changements et différences."
+    },
+    "complianceChecker": {
+      "title": "Vérificateur de Conformité",
+      "description": "Assurez la conformité réglementaire avec des vérifications automatisées contre les exigences juridiques kényanes et régionales."
+    },
+    "legalDrafting": {
+      "title": "Rédaction Juridique",
+      "description": "Générez des premiers brouillons de documents juridiques avec des modèles personnalisables et une assistance IA."
+    },
+    "conveyancing": {
+      "title": "Transfert de Propriété",
+      "description": "Rationalisez les transactions immobilières avec génération automatisée de documents et vérification de conformité."
+    },
+    "research": {
+      "title": "Recherche Juridique",
+      "description": "Accédez à une base de données juridique complète avec recherche alimentée par IA et gestion des citations."
+    }
+  },
+  "pricing": {
+    "title": "Tarification Simple et Transparente",
+    "subtitle": "Choisissez le plan qui convient aux besoins de votre cabinet",
+    "monthly": "Mensuel",
+    "annually": "Annuel",
+    "save": "Économisez 20%",
+    "getStarted": "Commencer",
+    "contactSales": "Contacter les Ventes",
+    "starter": {
+      "name": "Démarrage",
+      "price": "$99",
+      "description": "Parfait pour les praticiens solo et les petits cabinets",
+      "features": [
+        "Jusqu'à 50 documents/mois",
+        "Analyse et comparaison de contrats",
+        "Vérification de conformité de base",
+        "Support par email",
+        "2 comptes utilisateurs"
+      ]
+    },
+    "professional": {
+      "name": "Professionnel",
+      "price": "$299",
+      "description": "Pour les cabinets en croissance avec des besoins de volume plus élevés",
+      "features": [
+        "Documents illimités",
+        "Toutes les fonctionnalités Démarrage",
+        "Conformité et rédaction avancées",
+        "Support prioritaire",
+        "Jusqu'à 10 utilisateurs",
+        "Modèles personnalisés",
+        "Accès API"
+      ],
+      "popular": "Le Plus Populaire"
+    },
+    "enterprise": {
+      "name": "Entreprise",
+      "price": "Personnalisé",
+      "description": "Pour les grands cabinets nécessitant une personnalisation",
+      "features": [
+        "Tout dans Professionnel",
+        "Utilisateurs illimités",
+        "Gestionnaire de compte dédié",
+        "Intégrations personnalisées",
+        "Option de déploiement sur site",
+        "Garantie SLA",
+        "Formation et intégration"
+      ]
+    }
+  },
+  "footer": {
+    "product": "Produit",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "documentation": "Documentation",
+    "company": "Entreprise",
+    "about": "À Propos",
+    "contact": "Contact",
+    "legal": "Juridique",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "description": "Assistant juridique alimenté par IA pour cabinets d'avocats modernes au Kenya et en Afrique de l'Est.",
+    "rights": "Tous droits réservés"
+  },
+  "common": {
+    "learnMore": "En Savoir Plus",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "tryAgain": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "export": "Exporter",
+    "import": "Importer",
+    "submit": "Soumettre"
+  }
+}

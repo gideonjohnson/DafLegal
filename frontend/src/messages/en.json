@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "signIn": "Sign In",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "AI Legal Assistant for Modern Law Firms",
+    "subtitle": "Automate contract analysis, compliance checking, and legal workflows with advanced AI. Save time, reduce errors, and focus on what matters most.",
+    "getStarted": "Get Started Free",
+    "bookDemo": "Book a Demo",
+    "trustedBy": "Trusted by 500+ law firms across Kenya and East Africa"
+  },
+  "features": {
+    "title": "Powerful Features for Legal Professionals",
+    "subtitle": "Everything you need to streamline your legal practice",
+    "contractAnalysis": {
+      "title": "Contract Analysis",
+      "description": "Analyze contracts in seconds with AI-powered clause extraction, risk assessment, and compliance checking."
+    },
+    "documentCompare": {
+      "title": "Document Comparison",
+      "description": "Compare two versions of documents side-by-side with intelligent highlighting of changes and differences."
+    },
+    "complianceChecker": {
+      "title": "Compliance Checker",
+      "description": "Ensure regulatory compliance with automated checks against Kenyan and regional legal requirements."
+    },
+    "legalDrafting": {
+      "title": "Legal Drafting",
+      "description": "Generate first drafts of legal documents with customizable templates and AI assistance."
+    },
+    "conveyancing": {
+      "title": "Property Conveyancing",
+      "description": "Streamline property transactions with automated document generation and compliance checking."
+    },
+    "research": {
+      "title": "Legal Research",
+      "description": "Access comprehensive legal database with AI-powered search and citation management."
+    }
+  },
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the plan that fits your firm's needs",
+    "monthly": "Monthly",
+    "annually": "Annually",
+    "save": "Save 20%",
+    "getStarted": "Get Started",
+    "contactSales": "Contact Sales",
+    "starter": {
+      "name": "Starter",
+      "price": "$99",
+      "description": "Perfect for solo practitioners and small firms",
+      "features": [
+        "Up to 50 documents/month",
+        "Contract analysis & comparison",
+        "Basic compliance checking",
+        "Email support",
+        "2 user accounts"
+      ]
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "$299",
+      "description": "For growing firms with higher volume needs",
+      "features": [
+        "Unlimited documents",
+        "All Starter features",
+        "Advanced compliance & drafting",
+        "Priority support",
+        "Up to 10 users",
+        "Custom templates",
+        "API access"
+      ],
+      "popular": "Most Popular"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "description": "For large firms requiring customization",
+      "features": [
+        "Everything in Professional",
+        "Unlimited users",
+        "Dedicated account manager",
+        "Custom integrations",
+        "On-premise deployment option",
+        "SLA guarantee",
+        "Training & onboarding"
+      ]
+    }
+  },
+  "footer": {
+    "product": "Product",
+    "features": "Features",
+    "pricing": "Pricing",
+    "resources": "Resources",
+    "blog": "Blog",
+    "documentation": "Documentation",
+    "company": "Company",
+    "about": "About Us",
+    "contact": "Contact",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "description": "AI-powered legal assistant for modern law firms in Kenya and East Africa.",
+    "rights": "All rights reserved"
+  },
+  "common": {
+    "learnMore": "Learn More",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "tryAgain": "Try Again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "import": "Import",
+    "submit": "Submit"
+  }
+}

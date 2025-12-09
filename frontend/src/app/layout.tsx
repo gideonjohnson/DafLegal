@@ -7,6 +7,7 @@ import { Analytics } from '@/components/Analytics'
 import { LiveChat } from '@/components/LiveChat'
 import { AuthProvider } from '@/components/Providers'
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
+import { SkipLink } from '@/components/SkipLink'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -58,6 +59,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <SkipLink />
         <AuthProvider>
           <ThemeProvider>
             <Analytics />
