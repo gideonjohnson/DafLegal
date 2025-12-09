@@ -79,6 +79,16 @@ export function Navigation() {
                 {feature.label}
               </Link>
             ))}
+            <Link
+              href="/blog"
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                pathname?.startsWith('/blog')
+                  ? 'bg-[#d4a561] text-[#1a2e1a] shadow-sm'
+                  : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+              }`}
+            >
+              Blog
+            </Link>
 
             {/* Tools Dropdown - Cleaner */}
             <div className="relative group">
@@ -169,6 +179,20 @@ export function Navigation() {
 
             {/* 2-3 Column Grid for Features */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+              <Link
+                href="/blog"
+                onClick={() => setIsMenuOpen(false)}
+                className={`px-3 py-4 rounded-lg text-xs font-medium transition-all duration-200 flex flex-col items-center justify-center gap-2 min-h-[80px] ${
+                  pathname?.startsWith('/blog')
+                    ? 'bg-[#d4a561] text-[#1a2e1a] shadow-md scale-105'
+                    : 'glass-leather text-[#1a2e1a] hover:shadow-lg hover:scale-105'
+                }`}
+              >
+                <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+                <span className="text-center leading-tight font-semibold">Blog</span>
+              </Link>
               {[...features, ...moreFeatures].map((feature) => (
                 <Link
                   key={feature.href}
