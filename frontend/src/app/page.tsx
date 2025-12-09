@@ -7,6 +7,7 @@ import { Testimonials } from '@/components/Testimonials'
 import { StatsCounter } from '@/components/StatsCounter'
 import { TrustBadges } from '@/components/TrustBadges'
 import { SocialProofNotification } from '@/components/SocialProofNotification'
+import { NewsletterSignup } from '@/components/NewsletterSignup'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
@@ -1100,6 +1101,9 @@ export default function Home() {
       <StatsCounter />
       <Testimonials />
       <TrustBadges />
+
+      {/* Newsletter Signup */}
+      <NewsletterSignup />
 
       {/* Conversion Features */}
       <FloatingCTA />
