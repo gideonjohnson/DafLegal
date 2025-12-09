@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { ThemeToggle } from './ThemeToggle'
+import { UserMenu } from './UserMenu'
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -135,12 +136,7 @@ export function Navigation() {
           {/* CTA Button & Theme Toggle - Sleeker */}
           <div className="hidden lg:flex items-center gap-3">
             <ThemeToggle />
-            <Link
-              href="/analyze"
-              className="btn-gold text-xs font-bold px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200"
-            >
-              Get Started →
-            </Link>
+            <UserMenu />
           </div>
 
           {/* Mobile Menu Button */}

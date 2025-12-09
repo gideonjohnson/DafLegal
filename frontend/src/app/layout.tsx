@@ -5,6 +5,7 @@ import { UniversalAskBar } from '@/components/UniversalAskBar'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { Analytics } from '@/components/Analytics'
 import { LiveChat } from '@/components/LiveChat'
+import { AuthProvider } from '@/components/Providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -50,12 +51,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
-          <Analytics />
-          {children}
-          <UniversalAskBar />
-          <LiveChat />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <Analytics />
+            {children}
+            <UniversalAskBar />
+            <LiveChat />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )
