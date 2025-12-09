@@ -21,7 +21,7 @@ export function FloatingCTA() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-8 right-8 z-50 animate-fade-in">
+    <div className="fixed bottom-28 right-8 z-40 animate-fade-in">
       {isExpanded ? (
         <div className="card-beige p-4 shadow-2xl w-72 animate-scale-in">
           <button
