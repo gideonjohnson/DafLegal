@@ -90,6 +90,16 @@ export function Navigation() {
             >
               Blog
             </Link>
+            <Link
+              href="/pricing"
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                pathname === '/pricing'
+                  ? 'bg-[#d4a561] text-[#1a2e1a] shadow-sm'
+                  : 'text-[#c4d4c4] hover:text-[#f5edd8] hover:bg-[#3d6b3d]/30'
+              }`}
+            >
+              Pricing
+            </Link>
 
             {/* Tools Dropdown - Cleaner */}
             <div className="relative group">
