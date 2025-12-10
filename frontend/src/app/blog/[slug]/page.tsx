@@ -145,33 +145,24 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Content */}
       <article className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="card-beige p-8 md:p-12">
-            <div className="prose prose-lg dark:prose-invert max-w-none
-              prose-headings:text-[#1a2e1a] dark:prose-headings:text-[#f5edd8]
-              prose-p:text-[#1a2e1a] dark:prose-p:text-[#f5edd8]
-              prose-li:text-[#1a2e1a] dark:prose-li:text-[#f5edd8]
-              prose-a:text-[#d4a561] hover:prose-a:text-[#b8965a]
-              prose-strong:text-[#1a2e1a] dark:prose-strong:text-[#f5edd8]
-              prose-em:text-[#1a2e1a] dark:prose-em:text-[#f5edd8]
-              prose-code:text-[#d4a561] prose-code:bg-[#e8d5b7] dark:prose-code:bg-[#1a2e1a] prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-              prose-pre:bg-[#1a2e1a] dark:prose-pre:bg-[#0f1a0f] prose-pre:text-[#f5edd8]
-              prose-blockquote:border-[#d4a561] prose-blockquote:text-[#1a2e1a] dark:prose-blockquote:text-[#f5edd8]
-              prose-ul:text-[#1a2e1a] dark:prose-ul:text-[#f5edd8]
-              prose-ol:text-[#1a2e1a] dark:prose-ol:text-[#f5edd8]
-              prose-h2:text-[#1a2e1a] dark:prose-h2:text-[#f5edd8]
-              prose-h3:text-[#1a2e1a] dark:prose-h3:text-[#f5edd8]
-              prose-h4:text-[#1a2e1a] dark:prose-h4:text-[#f5edd8]
-            ">
-              <MDXRemote
-                source={post.content}
-                options={{
-                  mdxOptions: {
-                    remarkPlugins: [remarkGfm],
-                    rehypePlugins: [rehypeHighlight],
-                  },
-                }}
-              />
-            </div>
+          <div className="prose prose-lg dark:prose-invert max-w-none
+            prose-headings:text-[#1a2e1a] dark:prose-headings:text-[#f5edd8]
+            prose-p:text-[#5c4a3d] dark:prose-p:text-[#d4c5b0]
+            prose-a:text-[#d4a561] hover:prose-a:text-[#b8965a]
+            prose-strong:text-[#1a2e1a] dark:prose-strong:text-[#f5edd8]
+            prose-code:text-[#d4a561] prose-code:bg-[#f5edd8] dark:prose-code:bg-[#1a2e1a]
+            prose-pre:bg-[#1a2e1a] dark:prose-pre:bg-[#0f1a0f]
+            prose-blockquote:border-[#d4a561] prose-blockquote:text-[#5c4a3d] dark:prose-blockquote:text-[#d4c5b0]
+          ">
+            <MDXRemote
+              source={post.content}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [rehypeHighlight],
+                },
+              }}
+            />
           </div>
 
           {/* Share & CTA */}
