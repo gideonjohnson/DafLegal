@@ -11,11 +11,18 @@ import { SkipLink } from '@/components/SkipLink'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+}
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://daflegal.com'),
   title: 'DafLegal - AI Legal Assistant',
   description: 'AI-powered legal assistant for law firms and legal professionals. Automate contract comparison, clause management, compliance checking, document drafting, and property conveyancing.',
   keywords: 'AI legal assistant, legal automation, contract comparison, compliance checker, legal drafting, conveyancing, Kenya legal tech, law firm software',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes',
   manifest: '/manifest.json',
   icons: {
     icon: '/logo.png',
