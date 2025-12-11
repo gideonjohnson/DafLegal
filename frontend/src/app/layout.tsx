@@ -3,11 +3,13 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { UniversalAskBar } from '@/components/UniversalAskBar'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { ToastProvider } from '@/contexts/ToastContext'
 import { Analytics } from '@/components/Analytics'
 import { LiveChat } from '@/components/LiveChat'
 import { AuthProvider } from '@/components/Providers'
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 import { SkipLink } from '@/components/SkipLink'
+import { ToastContainer } from '@/components/Toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -69,11 +71,14 @@ export default function RootLayout({
         <SkipLink />
         <AuthProvider>
           <ThemeProvider>
-            <Analytics />
-            {children}
-            <UniversalAskBar />
-            <LiveChat />
-            <PWAInstallPrompt />
+            <ToastProvider>
+              <Analytics />
+              {children}
+              <UniversalAskBar />
+              <LiveChat />
+              <PWAInstallPrompt />
+              <ToastContainer />
+            </ToastProvider>
           </ThemeProvider>
         </AuthProvider>
       </body>
