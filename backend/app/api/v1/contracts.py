@@ -1,5 +1,5 @@
 import secrets
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, Request
 from sqlmodel import Session, select
 from typing import List
 from datetime import datetime
@@ -17,18 +17,22 @@ from app.schemas.contract import (
 )
 from app.services.storage import S3Storage
 from app.workers.tasks import process_contract_task
+from app.middleware.rate_limit import limiter
 
 router = APIRouter(prefix="/contracts", tags=["contracts"])
 
 
 @router.post("/analyze", response_model=ContractUploadResponse, status_code=status.HTTP_202_ACCEPTED)
+@limiter.limit("10/minute")  # Limit file uploads to prevent abuse
 async def upload_contract(
+    request: Request,
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
 ):
     """
     Upload a contract for analysis
+    Rate limit: 10 uploads per minute
     """
     # Check quota
     check_quota(current_user)

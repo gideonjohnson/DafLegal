@@ -42,3 +42,6 @@ httpx==0.26.0
 
 # Export/Reporting
 reportlab==4.0.9
+
+# Rate Limiting & Security
+slowapi==0.1.9
