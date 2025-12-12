@@ -103,20 +103,25 @@ export function LiveChat() {
     <>
       {/* Chat Bubble Button */}
       {!isOpen && (
-        <button
-          onClick={handleToggleChat}
-          className="fixed bottom-8 right-8 z-40 btn-gold w-16 h-16 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group"
-          aria-label="Open chat"
-        >
-          <svg className="w-8 h-8 text-[#1a2e1a]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
+        <div className="fixed bottom-8 right-8 z-40 animate-float">
+          {/* Glowing Ring Effect */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#d4a561] to-[#e8c589] opacity-40 blur-xl animate-pulse-slow"></div>
 
-          {/* Notification Pulse */}
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse">
-            1
-          </div>
-        </button>
+          <button
+            onClick={handleToggleChat}
+            className="relative btn-gold w-16 h-16 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group"
+            aria-label="Open chat"
+          >
+            <svg className="w-8 h-8 text-[#1a2e1a] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+
+            {/* Notification Pulse */}
+            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-bounce">
+              1
+            </div>
+          </button>
+        </div>
       )}
 
       {/* Chat Window */}
@@ -244,6 +249,36 @@ export function LiveChat() {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 0.4;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.6;
+            transform: scale(1.1);
+          }
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-slow {
+          animation: pulse-slow 3s ease-in-out infinite;
+        }
+      `}</style>
     </>
   )
 }
