@@ -54,10 +54,10 @@ export function SocialProofNotification() {
           {notification.user.charAt(0)}
         </div>
         <div className="flex-1">
-          <p className="text-sm text-[#1a2e1a] dark:text-[#f5edd8] mb-1">
-            <span className="font-semibold">{notification.user}</span> {notification.action}
+          <p className="text-sm text-[#2d2416] dark:text-[#f5edd8] mb-1 font-medium">
+            <span className="font-bold">{notification.user}</span> {notification.action}
           </p>
-          <div className="flex items-center gap-2 text-xs text-[#8b7355] dark:text-[#d4c5b0]">
+          <div className="flex items-center gap-2 text-xs text-[#6b5947] dark:text-[#d4c5b0] font-medium">
             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -69,7 +69,7 @@ export function SocialProofNotification() {
         </div>
         <button
           onClick={() => setIsVisible(false)}
-          className="text-[#8b7355] hover:text-[#1a2e1a] dark:hover:text-[#f5edd8] transition-colors"
+          className="text-[#6b5947] hover:text-[#2d2416] dark:text-[#c4b59f] dark:hover:text-[#f5edd8] transition-colors"
           aria-label="Close notification"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

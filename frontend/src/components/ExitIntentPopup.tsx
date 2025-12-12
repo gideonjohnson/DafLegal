@@ -61,12 +61,12 @@ export function ExitIntentPopup() {
           </svg>
         </div>
 
-        <h3 className="text-2xl font-bold text-[#1a2e1a] mb-3 text-center">
+        <h3 className="text-2xl font-bold text-[#1a2e1a] dark:text-[#f5edd8] mb-3 text-center">
           Wait! Don't Leave Empty-Handed
         </h3>
 
-        <p className="text-base text-[#5c4a3d] mb-6 text-center">
-          Start your <span className="font-semibold text-[#d4a561]">14-day free trial</span> and discover how DafLegal can transform your legal workflow.
+        <p className="text-base text-[#3d2f28] dark:text-[#e8dcc8] mb-6 text-center leading-relaxed">
+          Start your <span className="font-semibold text-[#b8965a] dark:text-[#d4a561]">14-day free trial</span> and discover how DafLegal can transform your legal workflow.
         </p>
 
         {/* Benefits */}
@@ -81,7 +81,7 @@ export function ExitIntentPopup() {
               <svg className="w-5 h-5 text-[#d4a561] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span className="text-sm text-[#1a2e1a]">{benefit}</span>
+              <span className="text-sm text-[#2d2416] dark:text-[#f5edd8] font-medium">{benefit}</span>
             </div>
           ))}
         </div>
@@ -103,13 +103,13 @@ export function ExitIntentPopup() {
             setIsVisible(false)
             trackExitIntent('dismissed')
           }}
-          className="block w-full text-center text-sm text-[#8b7355] hover:text-[#5c4a3d] transition-colors"
+          className="block w-full text-center text-sm text-[#6b5947] dark:text-[#c4b59f] hover:text-[#3d2f28] dark:hover:text-[#f5edd8] transition-colors font-medium"
         >
           No thanks, I'll browse more
         </button>
 
         {/* Trust Badge */}
-        <div className="mt-6 pt-6 border-t border-[#d4a561]/20 flex items-center justify-center gap-4 text-xs text-[#8b7355]">
+        <div className="mt-6 pt-6 border-t border-[#d4a561]/20 flex items-center justify-center gap-4 text-xs text-[#6b5947] dark:text-[#c4b59f] font-medium">
           <div className="flex items-center gap-1">
             <svg className="w-4 h-4 text-[#d4a561]" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

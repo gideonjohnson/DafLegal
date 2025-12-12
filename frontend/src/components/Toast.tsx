@@ -56,10 +56,10 @@ export function Toast({ toast }: ToastProps) {
   const { removeToast } = useToast()
 
   const colors = {
-    success: 'bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-200 border-green-200 dark:border-green-800',
-    error: 'bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-200 border-red-200 dark:border-red-800',
-    warning: 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border-yellow-200 dark:border-yellow-800',
-    info: 'bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border-blue-200 dark:border-blue-800'
+    success: 'bg-green-50 dark:bg-green-900/40 text-green-900 dark:text-green-100 border-green-300 dark:border-green-700',
+    error: 'bg-red-50 dark:bg-red-900/40 text-red-900 dark:text-red-100 border-red-300 dark:border-red-700',
+    warning: 'bg-yellow-50 dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-100 border-yellow-300 dark:border-yellow-700',
+    info: 'bg-blue-50 dark:bg-blue-900/40 text-blue-900 dark:text-blue-100 border-blue-300 dark:border-blue-700'
   }
 
   const iconColors = {
@@ -82,11 +82,11 @@ export function Toast({ toast }: ToastProps) {
 
       <div className="flex-1 min-w-0">
         {toast.title && (
-          <p className="font-semibold text-sm mb-1">
+          <p className="font-bold text-sm mb-1">
             {toast.title}
           </p>
         )}
-        <p className="text-sm">
+        <p className="text-sm font-medium">
           {toast.message}
         </p>
       </div>
