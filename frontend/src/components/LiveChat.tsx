@@ -105,7 +105,7 @@ export function LiveChat() {
       {!isOpen && (
         <button
           onClick={handleToggleChat}
-          className="fixed bottom-24 left-6 z-40 btn-gold w-16 h-16 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group"
+          className="fixed bottom-8 right-8 z-40 btn-gold w-16 h-16 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group"
           aria-label="Open chat"
         >
           <svg className="w-8 h-8 text-[#1a2e1a]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -121,7 +121,7 @@ export function LiveChat() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className={`fixed bottom-24 left-6 z-40 w-96 transition-all duration-300 ${
+        <div className={`fixed bottom-8 right-8 z-40 w-96 transition-all duration-300 ${
           isMinimized ? 'h-16' : 'h-[600px]'
         }`}>
           <div className="card-beige h-full flex flex-col shadow-2xl overflow-hidden">
