@@ -18,20 +18,20 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str
 
-    # Cloudinary Storage
-    CLOUDINARY_CLOUD_NAME: str
-    CLOUDINARY_API_KEY: str
-    CLOUDINARY_API_SECRET: str
+    # Cloudinary Storage (Optional - file storage)
+    CLOUDINARY_CLOUD_NAME: Optional[str] = None
+    CLOUDINARY_API_KEY: Optional[str] = None
+    CLOUDINARY_API_SECRET: Optional[str] = None
 
-    # OpenAI
+    # OpenAI (Required for AI features)
     OPENAI_API_KEY: str
 
-    # Stripe
-    STRIPE_SECRET_KEY: str
-    STRIPE_WEBHOOK_SECRET: str
-    STRIPE_STARTER_PRICE_ID: str
-    STRIPE_PRO_PRICE_ID: str
-    STRIPE_TEAM_PRICE_ID: str
+    # Stripe (Optional - payment processing)
+    STRIPE_SECRET_KEY: Optional[str] = None
+    STRIPE_WEBHOOK_SECRET: Optional[str] = None
+    STRIPE_STARTER_PRICE_ID: Optional[str] = None
+    STRIPE_PRO_PRICE_ID: Optional[str] = None
+    STRIPE_TEAM_PRICE_ID: Optional[str] = None
 
     # Sentry
     SENTRY_DSN: Optional[str] = None

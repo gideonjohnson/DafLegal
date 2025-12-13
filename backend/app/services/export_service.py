@@ -319,8 +319,15 @@ class ExportService:
                 str(contract.get('risk_score', '')),
                 contract.get('status', '')
             ]
-            # Escape commas and quotes in values
-            row = [f'"{v.replace(\'"\', \'""\'')}"' if ',' in v or '"' in v else v for v in row]
+            # Escape commas and quotes in values (CSV format)
+            escaped_row = []
+            for v in row:
+                if ',' in v or '"' in v:
+                    # Escape quotes by doubling them and wrap in quotes
+                    escaped_row.append(f'"{v.replace(chr(34), chr(34) + chr(34))}"')
+                else:
+                    escaped_row.append(v)
+            row = escaped_row
             output.write(','.join(row).encode('utf-8'))
             output.write(b'\n')
 
