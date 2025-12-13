@@ -85,6 +85,114 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
+  /* FORCE VISIBLE TEXT - Override all dark text colors globally */
+  .text-gray-900,
+  .text-gray-800,
+  .text-gray-700,
+  .text-gray-600,
+  .dark\:text-gray-900,
+  .dark\:text-gray-800,
+  .dark\:text-gray-700,
+  .dark\:text-gray-600 {
+    color: #f5edd8 !important;
+  }
+
+  .text-gray-500 {
+    color: #d4c5b0 !important;
+  }
+
+  .text-gray-400 {
+    color: #b8a89a !important;
+  }
+
+  /* Override dark theme colors that would be invisible */
+  .text-\[\#3D2F28\],
+  .text-\[\#1a2e1a\],
+  .text-\[\#526450\] {
+    color: #f5edd8 !important;
+  }
+
+  /* Ensure card text is visible */
+  .card-beige *,
+  .glass-leather *,
+  .card-3d * {
+    color: #1a2e1a !important;
+  }
+
+  /* Keep white text white */
+  .text-white,
+  .dark\:text-white {
+    color: #ffffff !important;
+  }
+
+  /* Fix gradient text that might be dark */
+  .bg-gradient-to-r.from-\[\#3D2F28\],
+  .bg-gradient-to-r.to-\[\#526450\],
+  .gradient-text {
+    background: linear-gradient(135deg, #d4b377 0%, #e8c589 50%, #d4b377 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  /* Ensure labels and form text are visible */
+  label,
+  .label {
+    color: #f5edd8 !important;
+    font-weight: 600;
+  }
+
+  /* Make sure links are visible */
+  a:not(.btn-gold):not(.btn-primary) {
+    color: #d4b377 !important;
+  }
+
+  a:not(.btn-gold):not(.btn-primary):hover {
+    color: #e8c589 !important;
+  }
+
+  /* Override any remaining dark text in inputs */
+  input:not([type="submit"]):not([type="button"]),
+  textarea,
+  select {
+    background: rgba(250, 247, 240, 0.95) !important;
+    color: #1a2e1a !important;
+  }
+
+  /* List items should be visible */
+  li,
+  ul,
+  ol {
+    color: #e8d5b7 !important;
+  }
+
+  /* Table text */
+  table,
+  th,
+  td {
+    color: #f5edd8 !important;
+  }
+
+  /* Divs and spans inherit proper color */
+  div:not(.card-beige):not(.glass-leather):not(.card-3d):not(.btn-gold):not(.btn-primary),
+  span:not(.card-beige *):not(.glass-leather *):not(.card-3d *) {
+    color: inherit;
+  }
+
+  /* Code blocks */
+  code,
+  pre {
+    color: #e8c589 !important;
+    background: rgba(26, 46, 26, 0.5) !important;
+  }
+
+  /* Strong/bold text */
+  strong,
+  b {
+    color: #f5edd8 !important;
+    font-weight: 700;
+  }
+
   /* Ultra-tight, professional typography scale - Enhanced Visibility */
   h1 {
     font-size: 1.75rem;
