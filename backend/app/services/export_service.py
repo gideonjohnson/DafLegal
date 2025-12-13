@@ -320,7 +320,7 @@ class ExportService:
                 contract.get('status', '')
             ]
             # Escape commas and quotes in values
-            row = [f'"{v.replace(""", """""")}"' if ',' in v or '"' in v else v for v in row]
+            row = [f'"{v.replace(\'"\', \'""\'')}"' if ',' in v or '"' in v else v for v in row]
             output.write(','.join(row).encode('utf-8'))
             output.write(b'\n')
 
