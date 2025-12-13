@@ -13,6 +13,7 @@ from app.api.dependencies import get_current_user
 from app.models.user import User
 from app.services.document_processor import DocumentProcessor
 from app.services.timeline_builder import TimelineBuilder
+from app.services.virus_scanner import get_virus_scanner
 
 router = APIRouter(prefix="/timeline", tags=["timeline"])
 
@@ -216,6 +217,16 @@ async def upload_document(
 
     if len(content) > 25 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large. Maximum size is 25MB.")
+
+    # Scan for viruses
+    scanner = get_virus_scanner()
+    is_clean, virus_name = scanner.scan_bytes(content, file.filename or "document")
+
+    if not is_clean:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File rejected: Virus detected - {virus_name}"
+        )
 
     # Determine file type
     filename = file.filename or "document"

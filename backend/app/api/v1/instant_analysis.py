@@ -12,6 +12,7 @@ from app.api.dependencies import get_current_user, get_session
 from app.models.user import User
 from app.services.document_processor import DocumentProcessor
 from app.services.instant_analyzer import InstantDocumentAnalyzer
+from app.services.virus_scanner import get_virus_scanner
 
 router = APIRouter(prefix="/instant-analysis", tags=["instant-analysis"])
 
@@ -106,6 +107,16 @@ async def analyze_document_instant(
         raise HTTPException(
             status_code=400,
             detail="File too large. Maximum size is 25MB."
+        )
+
+    # Scan for viruses
+    scanner = get_virus_scanner()
+    is_clean, virus_name = scanner.scan_bytes(content, file.filename)
+
+    if not is_clean:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File rejected: Virus detected - {virus_name}"
         )
 
     # Determine file type

@@ -19,6 +19,19 @@ services:
     volumes:
       - redis_data:/data
 
+  clamav:
+    image: clamav/clamav:latest
+    ports:
+      - "3310:3310"
+    volumes:
+      - clamav_data:/var/lib/clamav
+    healthcheck:
+      test: ["CMD", "clamdscan", "--ping", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s  # ClamAV needs time to download virus definitions
+
   backend:
     build:
       context: ./backend
@@ -42,9 +55,13 @@ services:
       STRIPE_PRO_PRICE_ID: ${STRIPE_PRO_PRICE_ID}
       STRIPE_TEAM_PRICE_ID: ${STRIPE_TEAM_PRICE_ID}
       SENTRY_DSN: ${SENTRY_DSN:-}
+      CLAMAV_ENABLED: ${CLAMAV_ENABLED:-true}
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: 3310
     depends_on:
       - postgres
       - redis
+      - clamav
     volumes:
       - ./backend/app:/app/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -69,9 +86,13 @@ services:
       STRIPE_PRO_PRICE_ID: ${STRIPE_PRO_PRICE_ID}
       STRIPE_TEAM_PRICE_ID: ${STRIPE_TEAM_PRICE_ID}
       SENTRY_DSN: ${SENTRY_DSN:-}
+      CLAMAV_ENABLED: ${CLAMAV_ENABLED:-true}
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: 3310
     depends_on:
       - postgres
       - redis
+      - clamav
     volumes:
       - ./backend/app:/app/app
 
@@ -92,3 +113,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  clamav_data:

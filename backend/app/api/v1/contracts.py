@@ -16,6 +16,7 @@ from app.schemas.contract import (
     DetectedClause
 )
 from app.services.storage import S3Storage
+from app.services.virus_scanner import get_virus_scanner
 from app.workers.tasks import process_contract_task
 from app.middleware.rate_limit import limiter
 
@@ -54,6 +55,16 @@ async def upload_contract(
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
             detail=f"File too large. Maximum size: {settings.MAX_FILE_SIZE_MB}MB"
+        )
+
+    # Scan for viruses
+    scanner = get_virus_scanner()
+    is_clean, virus_name = scanner.scan_bytes(file_content, file.filename)
+
+    if not is_clean:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"File rejected: Virus detected - {virus_name}"
         )
 
     # Determine file type

@@ -217,7 +217,7 @@ Authorization: Bearer dfk_xxxxxxxxxxxxx
 - Maximum size: 100MB
 
 ### File Processing
-- Virus scanning (TODO: integrate ClamAV)
+- ✅ Virus scanning with ClamAV (integrated and active)
 - Content-type verification
 - Secure temporary storage
 - Cloudinary upload with transformation
