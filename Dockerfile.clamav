@@ -1,0 +1,8 @@
+FROM clamav/clamav:latest
+
+# Health check - wait for ClamAV to be ready
+HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=120s \
+  CMD clamdscan --ping 1 || exit 1
+
+# Expose ClamAV daemon port
+EXPOSE 3310

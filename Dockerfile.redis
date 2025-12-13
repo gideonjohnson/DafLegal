@@ -1,0 +1,8 @@
+FROM redis:7-alpine
+
+# Health check
+HEALTHCHECK --interval=10s --timeout=5s --retries=5 \
+  CMD redis-cli ping || exit 1
+
+# Expose Redis port
+EXPOSE 6379

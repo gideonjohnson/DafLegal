@@ -1,4 +1,41 @@
 services:
+  # PostgreSQL Database
+  - type: pserv
+    name: daflegal-postgres
+    env: docker
+    dockerfilePath: ./Dockerfile.postgres
+    dockerContext: .
+    disk:
+      name: postgres-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 10
+    envVars:
+      - key: POSTGRES_USER
+        value: daflegal
+      - key: POSTGRES_PASSWORD
+        generateValue: true
+      - key: POSTGRES_DB
+        value: daflegal
+
+  # Redis Cache
+  - type: pserv
+    name: daflegal-redis
+    env: docker
+    dockerfilePath: ./Dockerfile.redis
+    dockerContext: .
+
+  # ClamAV Virus Scanner
+  - type: pserv
+    name: daflegal-clamav
+    env: docker
+    dockerfilePath: ./Dockerfile.clamav
+    dockerContext: .
+    disk:
+      name: clamav-data
+      mountPath: /var/lib/clamav
+      sizeGB: 2
+    healthCheckPath: /
+
   # Backend API Service
   - type: web
     name: daflegal-backend
@@ -7,11 +44,88 @@ services:
     dockerContext: ./backend
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromService:
+          type: pserv
+          name: daflegal-postgres
+          envVarKey: DATABASE_URL
+      - key: REDIS_URL
+        fromService:
+          type: pserv
+          name: daflegal-redis
+          envVarKey: REDIS_URL
       - key: OPENAI_API_KEY
         sync: false
       - key: SECRET_KEY
         sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_STARTER_PRICE_ID
+        sync: false
+      - key: STRIPE_PRO_PRICE_ID
+        sync: false
+      - key: STRIPE_TEAM_PRICE_ID
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: CLAMAV_ENABLED
+        value: true
+      - key: CLAMAV_HOST
+        value: daflegal-clamav
+      - key: CLAMAV_PORT
+        value: 3310
+      - key: CLAMAV_USE_TCP
+        value: true
+      - key: CLAMAV_TIMEOUT
+        value: 30
+    autoDeploy: true
+    branch: main
+    healthCheckPath: /health
+
+  # Celery Worker for Background Jobs
+  - type: worker
+    name: daflegal-worker
+    env: docker
+    dockerfilePath: ./backend/Dockerfile.worker
+    dockerContext: ./backend
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: daflegal-postgres
+          envVarKey: DATABASE_URL
+      - key: REDIS_URL
+        fromService:
+          type: pserv
+          name: daflegal-redis
+          envVarKey: REDIS_URL
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLAMAV_ENABLED
+        value: true
+      - key: CLAMAV_HOST
+        value: daflegal-clamav
+      - key: CLAMAV_PORT
+        value: 3310
     autoDeploy: true
     branch: main
 
