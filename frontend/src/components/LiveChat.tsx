@@ -101,26 +101,36 @@ export function LiveChat() {
 
   return (
     <>
-      {/* Chat Bubble Button */}
+      {/* Chat Bubble Button - ENHANCED VISIBILITY */}
       {!isOpen && (
-        <div className="fixed bottom-8 right-8 z-40 animate-float">
-          {/* Glowing Ring Effect */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#d4a561] to-[#e8c589] opacity-40 blur-xl animate-pulse-slow"></div>
+        <div className="fixed bottom-6 right-6 z-50 animate-float flex flex-col items-end gap-2">
+          {/* "Need Help?" Label - Very Visible */}
+          <div className="bg-gradient-to-r from-[#d4a561] to-[#e8c589] px-6 py-3 rounded-full shadow-2xl animate-pulse-slow">
+            <p className="text-[#1a2e1a] font-bold text-base whitespace-nowrap">
+              💬 Need Help?
+            </p>
+          </div>
 
-          <button
-            onClick={handleToggleChat}
-            className="relative btn-gold w-16 h-16 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group"
-            aria-label="Open chat"
-          >
-            <svg className="w-8 h-8 text-[#1a2e1a] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
+          {/* Main Chat Button - Larger and More Prominent */}
+          <div className="relative">
+            {/* Glowing Ring Effect - More Intense */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#d4a561] to-[#e8c589] opacity-60 blur-2xl animate-pulse-slow scale-125"></div>
 
-            {/* Notification Pulse */}
-            <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-bounce">
-              1
-            </div>
-          </button>
+            <button
+              onClick={handleToggleChat}
+              className="relative btn-gold w-20 h-20 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group ring-4 ring-[#d4a561]/30"
+              aria-label="Open chat"
+            >
+              <svg className="w-10 h-10 text-[#1a2e1a] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+
+              {/* Notification Pulse - More Visible */}
+              <div className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-bold animate-bounce shadow-lg ring-2 ring-white">
+                1
+              </div>
+            </button>
+          </div>
         </div>
       )}
 

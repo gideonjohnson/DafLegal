@@ -73,19 +73,26 @@
 
 @layer base {
   body {
-    color: #1a2e1a;
+    color: #f5edd8;
     background: linear-gradient(145deg, #1a2e1a 0%, #234023 50%, #1a2e1a 100%);
     min-height: 100vh;
     font-size: 15px;
     line-height: 1.5;
   }
 
-  /* Ultra-tight, professional typography scale */
+  /* Ensure all text is visible by default */
+  * {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Ultra-tight, professional typography scale - Enhanced Visibility */
   h1 {
     font-size: 1.75rem;
     line-height: 1.15;
     font-weight: 700;
     letter-spacing: -0.02em;
+    color: #f5edd8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   h2 {
@@ -93,6 +100,8 @@
     line-height: 1.25;
     font-weight: 700;
     letter-spacing: -0.01em;
+    color: #f5edd8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   h3 {
@@ -100,41 +109,60 @@
     line-height: 1.3;
     font-weight: 600;
     letter-spacing: -0.01em;
+    color: #f5edd8;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   h4 {
     font-size: 1rem;
     line-height: 1.35;
     font-weight: 600;
+    color: #f5edd8;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   h5 {
     font-size: 0.9375rem;
     line-height: 1.4;
     font-weight: 600;
+    color: #f5edd8;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   p {
     font-size: 0.875rem;
     line-height: 1.55;
+    color: #e8d5b7;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   }
 
   small {
     font-size: 0.75rem;
     line-height: 1.45;
+    color: #d4c5b0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   }
 
-  /* Tighter button text */
+  /* Tighter button text - Enhanced Visibility */
   button, .btn-gold, .btn-primary {
     font-size: 0.8125rem;
     line-height: 1.35;
     letter-spacing: 0.01em;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
-  /* Tighter input text */
+  /* Tighter input text - Enhanced Visibility */
   input, textarea, select {
     font-size: 0.875rem;
     line-height: 1.45;
+    color: #1a2e1a;
+    font-weight: 500;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #8b7355;
+    font-weight: 400;
   }
 
   /* Tablet adjustments - modest increases */
