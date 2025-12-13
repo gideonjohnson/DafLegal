@@ -10,7 +10,7 @@ import asyncio
 import json
 from datetime import datetime
 
-from app.core.database import get_db
+from app.core.database import get_session
 from app.api.dependencies import get_current_user
 from app.models.user import User
 from app.models.contract import Contract, ContractStatus
@@ -96,7 +96,7 @@ async def contract_status_stream(
     contract_id: str,
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_session)
 ):
     """
     Stream real-time contract analysis status updates via Server-Sent Events
@@ -145,7 +145,7 @@ async def contract_status_stream(
 async def get_contract_status(
     contract_id: str,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_session)
 ):
     """
     Get current contract analysis status (polling endpoint - alternative to SSE)

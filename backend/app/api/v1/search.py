@@ -7,7 +7,7 @@ from sqlmodel import Session, select, or_, col
 from typing import Optional, List
 from datetime import datetime, timedelta
 
-from app.core.database import get_db
+from app.core.database import get_session
 from app.api.dependencies import get_current_user
 from app.models.contract import Contract
 from app.models.clause import Clause
@@ -57,7 +57,7 @@ async def search_contracts(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
     # Dependencies
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -168,7 +168,7 @@ async def search_clauses(
     tags: Optional[str] = Query(None, description="Comma-separated tags"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -249,7 +249,7 @@ async def search_clauses(
 async def quick_search(
     q: str = Query(..., min_length=2, description="Search query (minimum 2 characters)"),
     limit: int = Query(5, ge=1, le=20, description="Maximum results per type"),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """

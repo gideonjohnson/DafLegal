@@ -8,7 +8,7 @@ from typing import List, Optional
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
-from app.core.database import get_db
+from app.core.database import get_session
 from app.api.dependencies import get_current_user
 from app.models.user import User, APIKey
 from app.core.security import (
@@ -95,7 +95,7 @@ async def get_profile(
 @router.put("/profile", response_model=ProfileResponse)
 async def update_profile(
     profile_data: ProfileUpdateRequest,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -139,7 +139,7 @@ async def update_profile(
 @router.post("/password")
 async def change_password(
     password_data: PasswordChangeRequest,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -171,7 +171,7 @@ async def change_password(
 # API Key Management
 @router.get("/api-keys", response_model=List[APIKeyListResponse])
 async def list_api_keys(
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -196,7 +196,7 @@ async def list_api_keys(
 @router.post("/api-keys", response_model=APIKeyResponse)
 async def create_new_api_key(
     key_data: APIKeyCreateRequest,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -245,7 +245,7 @@ async def create_new_api_key(
 @router.delete("/api-keys/{key_id}")
 async def revoke_api_key(
     key_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -278,7 +278,7 @@ async def revoke_api_key(
 @router.post("/api-keys/{key_id}/activate")
 async def activate_api_key(
     key_id: int,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """

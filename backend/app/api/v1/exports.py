@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from sqlmodel import Session, select
 from typing import List
 
-from app.core.database import get_db
+from app.core.database import get_session
 from app.api.dependencies import get_current_user
 from app.models.contract import Contract
 from app.models.user import User
@@ -21,7 +21,7 @@ router = APIRouter()
 @router.get("/contracts/{contract_id}/pdf")
 async def export_contract_pdf(
     contract_id: str,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """Export contract analysis as PDF"""
@@ -67,7 +67,7 @@ async def export_contract_pdf(
 @router.get("/compliance/{check_id}/pdf")
 async def export_compliance_pdf(
     check_id: str,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """Export compliance check as PDF"""
@@ -101,7 +101,7 @@ async def export_compliance_pdf(
 
 @router.get("/clauses/docx")
 async def export_clauses_docx(
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """Export user's clauses as DOCX"""
@@ -138,7 +138,7 @@ async def export_clauses_docx(
 
 @router.get("/contracts/csv")
 async def export_contracts_csv(
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """Export contracts list as CSV"""
@@ -176,7 +176,7 @@ async def export_contracts_csv(
 
 @router.get("/analytics/csv")
 async def export_analytics_csv(
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
     """Export analytics data as CSV (admin only)"""
