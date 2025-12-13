@@ -75,8 +75,8 @@ class Settings(BaseSettings):
     MAX_FILE_SIZE_MB: int = 25
     WORDS_PER_PAGE: int = 800  # Average for page counting
 
-    # ClamAV Virus Scanning
-    CLAMAV_ENABLED: bool = True
+    # ClamAV Virus Scanning (Optional - gracefully degrades if not available)
+    CLAMAV_ENABLED: bool = False  # Disabled by default until ClamAV service is configured
     CLAMAV_USE_TCP: bool = True  # Use TCP connection (True) or Unix socket (False)
     CLAMAV_HOST: str = "clamav"  # Hostname/IP of ClamAV daemon
     CLAMAV_PORT: int = 3310  # ClamAV daemon port
