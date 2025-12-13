@@ -24,17 +24,17 @@ services:
     dockerfilePath: ./Dockerfile.redis
     dockerContext: .
 
-  # ClamAV Virus Scanner
-  - type: pserv
-    name: daflegal-clamav
-    env: docker
-    dockerfilePath: ./Dockerfile.clamav
-    dockerContext: .
-    disk:
-      name: clamav-data
-      mountPath: /var/lib/clamav
-      sizeGB: 2
-    healthCheckPath: /
+  # ClamAV Virus Scanner (Disabled - uncomment to enable)
+  # - type: pserv
+  #   name: daflegal-clamav
+  #   env: docker
+  #   dockerfilePath: ./Dockerfile.clamav
+  #   dockerContext: .
+  #   disk:
+  #     name: clamav-data
+  #     mountPath: /var/lib/clamav
+  #     sizeGB: 2
+  #   healthCheckPath: /
 
   # Backend API Service
   - type: web
@@ -78,15 +78,7 @@ services:
       - key: SENTRY_DSN
         sync: false
       - key: CLAMAV_ENABLED
-        value: true
-      - key: CLAMAV_HOST
-        value: daflegal-clamav
-      - key: CLAMAV_PORT
-        value: 3310
-      - key: CLAMAV_USE_TCP
-        value: true
-      - key: CLAMAV_TIMEOUT
-        value: 30
+        value: false
     autoDeploy: true
     branch: main
     healthCheckPath: /health
@@ -121,11 +113,7 @@ services:
       - key: CLOUDINARY_API_SECRET
         sync: false
       - key: CLAMAV_ENABLED
-        value: true
-      - key: CLAMAV_HOST
-        value: daflegal-clamav
-      - key: CLAMAV_PORT
-        value: 3310
+        value: false
     autoDeploy: true
     branch: main
 
