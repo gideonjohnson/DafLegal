@@ -38,8 +38,28 @@ export default function SignUpPage() {
     setIsLoading(true)
 
     try {
-      // In production, create user in database first
-      // For demo, we'll just sign them in
+      // Register user via backend API
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://daflegal-backend.onrender.com'
+      const registerResponse = await fetch(`${backendUrl}/api/v1/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          full_name: formData.name,
+        }),
+      })
+
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json()
+        setError(errorData.detail || 'Registration failed. Please try again.')
+        setIsLoading(false)
+        return
+      }
+
+      // Registration successful, now sign in
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
@@ -47,13 +67,12 @@ export default function SignUpPage() {
       })
 
       if (result?.error) {
-        // In production, call your signup API
-        // For now, show message about demo mode
-        setError('Demo mode: Use demo@daflegal.com / demo123 to sign in')
+        setError('Registration successful, but sign-in failed. Please try signing in.')
       } else {
         router.push('/dashboard')
       }
     } catch (err) {
+      console.error('Signup error:', err)
       setError('An error occurred. Please try again.')
     } finally {
       setIsLoading(false)

@@ -30,14 +30,14 @@ async def register_user(
             detail="Email already registered"
         )
 
-    # Create user
+    # Create user with FREE plan
     user = User(
         email=user_data.email,
         hashed_password=get_password_hash(user_data.password),
         full_name=user_data.full_name,
-        plan=PlanType.FREE_TRIAL,
+        plan=PlanType.FREE,
         billing_period_start=datetime.utcnow(),
-        billing_period_end=datetime.utcnow() + timedelta(days=30)
+        billing_period_end=datetime.utcnow() + timedelta(days=365)  # Free plan doesn't expire
     )
 
     session.add(user)

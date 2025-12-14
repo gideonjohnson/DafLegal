@@ -19,28 +19,43 @@ export const authConfig: NextAuthConfig = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // In production, validate against your database
-        // This is a demo implementation
         if (!credentials?.email || !credentials?.password) {
           return null
         }
 
-        // Demo user for testing
-        if (credentials.email === 'demo@daflegal.com' && credentials.password === 'demo123') {
-          return {
-            id: '1',
-            name: 'Demo User',
-            email: 'demo@daflegal.com',
-            image: null,
+        try {
+          // Call backend API to authenticate
+          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://daflegal-backend.onrender.com'
+          const response = await fetch(`${backendUrl}/api/v1/auth/token`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              username: credentials.email as string,
+              password: credentials.password as string,
+            }),
+          })
+
+          if (!response.ok) {
+            console.error('Authentication failed:', response.status)
+            return null
           }
+
+          const data = await response.json()
+
+          // Return user object with token
+          return {
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            plan: data.user.plan,
+            accessToken: data.access_token,
+          }
+        } catch (error) {
+          console.error('Authentication error:', error)
+          return null
         }
-
-        // In production, you would:
-        // 1. Query your database for the user
-        // 2. Verify the password using bcrypt
-        // 3. Return the user object or null
-
-        return null
       },
     }),
   ],
@@ -51,15 +66,19 @@ export const authConfig: NextAuthConfig = {
     newUser: '/dashboard',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
+        token.plan = user.plan
+        token.accessToken = user.accessToken
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
+        session.user.plan = token.plan as string
+        session.user.accessToken = token.accessToken as string
       }
       return session
     },

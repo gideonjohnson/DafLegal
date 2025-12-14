@@ -5,10 +5,11 @@ from enum import Enum
 
 
 class PlanType(str, Enum):
-    FREE_TRIAL = "free_trial"
-    STARTER = "starter"
+    FREE = "free"
+    BASIC = "basic"
     PRO = "pro"
-    TEAM = "team"
+    ENTERPRISE = "enterprise"
+    FREE_TRIAL = "free_trial"  # Deprecated, keeping for backward compatibility
 
 
 class User(SQLModel, table=True):
@@ -20,10 +21,15 @@ class User(SQLModel, table=True):
     hashed_password: str
     full_name: Optional[str] = None
 
+    # OAuth identifiers
+    google_id: Optional[str] = Field(default=None, unique=True)
+
     # Plan information
     plan: PlanType = Field(default=PlanType.FREE_TRIAL)
     stripe_customer_id: Optional[str] = Field(default=None, unique=True)
     stripe_subscription_id: Optional[str] = Field(default=None, unique=True)
+    paystack_customer_code: Optional[str] = Field(default=None, unique=True)
+    paystack_subscription_code: Optional[str] = Field(default=None, unique=True)
 
     # Usage tracking
     pages_used_current_period: int = Field(default=0)
