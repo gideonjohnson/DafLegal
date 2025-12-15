@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, Column
+from sqlalchemy import Enum as SQLEnum
 from enum import Enum
 
 
@@ -25,7 +26,10 @@ class User(SQLModel, table=True):
     google_id: Optional[str] = Field(default=None, unique=True)
 
     # Plan information
-    plan: PlanType = Field(default=PlanType.FREE_TRIAL)
+    plan: PlanType = Field(
+        default=PlanType.FREE,
+        sa_column=Column(SQLEnum(PlanType, values_callable=lambda x: [e.value for e in x]))
+    )
     stripe_customer_id: Optional[str] = Field(default=None, unique=True)
     stripe_subscription_id: Optional[str] = Field(default=None, unique=True)
     paystack_customer_code: Optional[str] = Field(default=None, unique=True)
