@@ -1,8 +1,8 @@
-import NextAuth from 'next-auth'
+import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
-const authConfig = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -62,32 +62,21 @@ const authConfig = {
     newUser: '/dashboard',
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.plan = user.plan
-        token.accessToken = user.accessToken
+        token.plan = (user as any).plan
+        token.accessToken = (user as any).accessToken
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string
-        session.user.plan = token.plan as string
-        session.user.accessToken = token.accessToken as string
+        (session.user as any).id = token.id
+        ;(session.user as any).plan = token.plan
+        ;(session.user as any).accessToken = token.accessToken
       }
       return session
-    },
-    async redirect({ url, baseUrl }) {
-      // Redirect to dashboard after sign in
-      if (url.startsWith('/api/auth/callback')) {
-        return `${baseUrl}/dashboard`
-      }
-      // Allows relative callback URLs
-      if (url.startsWith('/')) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
     },
   },
   session: {
@@ -95,8 +84,4 @@ const authConfig = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
-} as any
-
-const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
-
-export { handlers, auth, signIn, signOut }
+}
