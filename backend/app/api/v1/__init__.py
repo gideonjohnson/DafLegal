@@ -1,10 +1,11 @@
 from fastapi import APIRouter
-from app.api.v1 import auth, migrate, debug, contracts, users, billing, comparisons, clauses, compliance, research, drafting, analytics, citations, intake, conveyancing, instant_analysis, timeline, universal_ask, exports, search, settings
+from app.api.v1 import auth, migrate, migrate_enum, debug, contracts, users, billing, comparisons, clauses, compliance, research, drafting, analytics, citations, intake, conveyancing, instant_analysis, timeline, universal_ask, exports, search, settings
 
 api_router = APIRouter()
 
 api_router.include_router(auth.router)
 api_router.include_router(migrate.router)
+api_router.include_router(migrate_enum.router)
 api_router.include_router(debug.router)
 api_router.include_router(contracts.router)
 api_router.include_router(users.router)
