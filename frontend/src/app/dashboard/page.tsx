@@ -244,8 +244,18 @@ export default function DashboardPage() {
                   <Link
                     key={feature.id}
                     href={feature.href}
-                    className="group bg-white/80 dark:bg-[#2d5a2d]/80 backdrop-blur-sm p-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-[#d4a561]/30 hover:border-[#d4a561]"
+                    className="group relative overflow-hidden bg-white/80 dark:bg-[#2d5a2d]/80 backdrop-blur-sm p-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-[#d4a561]/30 hover:border-[#d4a561]"
                   >
+                    {/* Card background image */}
+                    <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <Image
+                        src="/webimg2.jpg"
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
                     <div className="flex items-start justify-between mb-4">
                       <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
                         <svg className="w-7 h-7 text-[#1a2e1a] dark:text-[#f5edd8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
