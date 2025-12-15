@@ -64,19 +64,6 @@ function SignInForm() {
           </p>
         </div>
 
-        {/* Demo Credentials */}
-        <div className="card-beige p-4 border-l-4 border-[#d4a561]">
-          <p className="text-sm font-semibold text-[#1a2e1a] dark:text-[#f5edd8] mb-2">
-            Demo Credentials:
-          </p>
-          <p className="text-xs text-[#5c4a3d] dark:text-[#d4c5b0]">
-            Email: <span className="font-mono bg-[#f5edd8] dark:bg-[#1a2e1a] px-2 py-0.5 rounded">demo@daflegal.com</span>
-          </p>
-          <p className="text-xs text-[#5c4a3d] dark:text-[#d4c5b0] mt-1">
-            Password: <span className="font-mono bg-[#f5edd8] dark:bg-[#1a2e1a] px-2 py-0.5 rounded">demo123</span>
-          </p>
-        </div>
-
         {/* Sign In Form */}
         <div className="card-beige p-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
