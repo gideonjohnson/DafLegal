@@ -1,12 +1,8 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
-import type { NextAuthConfig } from 'next-auth'
 
-// This is a demo configuration. In production, connect to your database
-// and implement proper user authentication with password hashing.
-
-export const authConfig: NextAuthConfig = {
+const authConfig = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -99,6 +95,8 @@ export const authConfig: NextAuthConfig = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
-}
+} as any
 
-export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
+const { handlers, auth, signIn, signOut } = NextAuth(authConfig)
+
+export { handlers, auth, signIn, signOut }
