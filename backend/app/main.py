@@ -59,7 +59,12 @@ app.add_middleware(SecurityHeadersMiddleware)
 # 4. CORS middleware (must be last)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://daflegal.com", "https://www.daflegal.com"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://daflegal.com",
+        "https://www.daflegal.com",
+        "https://daflegal-frontend.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
