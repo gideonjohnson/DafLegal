@@ -23,7 +23,8 @@ def verify_api_key_format(api_key: str) -> bool:
 
 def get_password_hash(password: str) -> str:
     """Hash a password"""
-    return pwd_context.hash(password)
+    # Ensure password is string and hash it
+    return pwd_context.hash(str(password))
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
