@@ -79,8 +79,8 @@ export default function SignUpPage() {
     }
   }
 
-  const handleGoogleSignUp = () => {
-    signIn('google', { callbackUrl: '/dashboard' })
+  const handleSocialSignUp = (provider: string) => {
+    signIn(provider, { callbackUrl: '/dashboard' })
   }
 
   return (
@@ -226,10 +226,10 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-6 space-y-3">
               <button
                 type="button"
-                onClick={handleGoogleSignUp}
+                onClick={() => handleSocialSignUp('google')}
                 className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-[#d4a561]/20 rounded-lg bg-white dark:bg-[#2d5a2d] text-[#1a2e1a] dark:text-[#f5edd8] hover:bg-[#f5edd8] dark:hover:bg-[#1a2e1a] transition-all font-medium"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -238,7 +238,29 @@ export default function SignUpPage() {
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
-                Sign up with Google
+                Continue with Google
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSocialSignUp('facebook')}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-[#d4a561]/20 rounded-lg bg-white dark:bg-[#2d5a2d] text-[#1a2e1a] dark:text-[#f5edd8] hover:bg-[#f5edd8] dark:hover:bg-[#1a2e1a] transition-all font-medium"
+              >
+                <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Continue with Facebook
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSocialSignUp('twitter')}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-[#d4a561]/20 rounded-lg bg-white dark:bg-[#2d5a2d] text-[#1a2e1a] dark:text-[#f5edd8] hover:bg-[#f5edd8] dark:hover:bg-[#1a2e1a] transition-all font-medium"
+              >
+                <svg className="w-5 h-5" fill="#000000" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Continue with X
               </button>
             </div>
           </div>
