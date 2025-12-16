@@ -1,0 +1,17 @@
+            {filteredFeatures.map((feature) => (
+              <Link
+                key={feature.id}
+                href={feature.href}
+                className="group relative overflow-hidden bg-white/70 dark:bg-[#2d5a2d]/70 backdrop-blur-sm p-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-[#d4a561]/10 hover:border-[#d4a561]/50"
+              >
+                {/* Card background image */}
+                <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Image
+                    src="/webimg2.jpeg"
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="flex items-start justify-between mb-4 relative z-10">
