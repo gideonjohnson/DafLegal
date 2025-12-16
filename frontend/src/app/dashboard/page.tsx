@@ -1,6 +1,5 @@
 'use client'
 
-import { Navigation } from '@/components/Navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -160,7 +159,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Navigation />
 
       {/* Background Image with Overlay */}
       <div className="fixed inset-0 z-0">

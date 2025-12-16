@@ -2,7 +2,6 @@
 import Image from 'next/image'
 
 import { useState, useEffect } from 'react'
-import { Navigation } from '@/components/Navigation'
 
 interface CitationIssue {
   issue_id: string
@@ -183,7 +182,6 @@ export default function CitationsPage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">

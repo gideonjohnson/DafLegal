@@ -2,7 +2,6 @@
 import Image from 'next/image'
 
 import { useState } from 'react'
-import { Navigation } from '@/components/Navigation'
 import axios from 'axios'
 
 const API_URL = 'http://localhost:8000'
@@ -167,7 +166,6 @@ export default function IntakePage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">

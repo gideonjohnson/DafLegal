@@ -3,7 +3,6 @@ import Image from 'next/image'
 
 import { useState, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Navigation } from '@/components/Navigation'
 
 interface Matter {
   matter_id: string
@@ -293,7 +292,6 @@ export default function TimelinePage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
       <main className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

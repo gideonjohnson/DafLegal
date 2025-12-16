@@ -2,7 +2,6 @@
 import Image from 'next/image'
 
 import { useState, useRef, useEffect } from 'react'
-import { Navigation } from '@/components/Navigation'
 
 interface Citation {
   id: string
@@ -157,7 +156,6 @@ export default function ResearchPage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
       <main className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

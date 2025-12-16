@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
-import { Navigation } from '@/components/Navigation'
 import { useAskBar } from '@/hooks/useAskBar'
 
 interface ComparisonResult {
@@ -135,7 +134,6 @@ export default function ComparePage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
       <main className="py-8 px-4">
         <div className="container mx-auto max-w-7xl">
           {/* Header */}

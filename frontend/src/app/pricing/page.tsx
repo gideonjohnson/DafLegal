@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Navigation } from '@/components/Navigation'
 import { trackButtonClick, trackCTAClick } from '@/components/Analytics'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -217,7 +216,6 @@ export default function PricingPage() {
 
   return (
     <>
-      <Navigation />
       <div className="min-h-screen pt-20 pb-16">
         {/* Header */}
         <div className="container mx-auto px-4 py-16 text-center">

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { Navigation } from '@/components/Navigation'
 import { ABTestAdmin } from '@/components/ABTestAdmin'
 
 interface DashboardMetrics {
@@ -60,7 +59,6 @@ export default function AdminPage() {
 
   return (
     <div>
-      <Navigation />
       <div className="min-h-screen leather-bg">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

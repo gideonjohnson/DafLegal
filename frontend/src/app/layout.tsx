@@ -10,6 +10,7 @@ import { AuthProvider } from '@/components/Providers'
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 import { SkipLink } from '@/components/SkipLink'
 import { ToastContainer } from '@/components/Toast'
+import { LayoutNav } from '@/components/LayoutNav'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -73,6 +74,7 @@ export default function RootLayout({
           <ThemeProvider>
             <ToastProvider>
               <Analytics />
+          <LayoutNav />
               {children}
               <UniversalAskBar />
               <LiveChat />

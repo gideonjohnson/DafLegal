@@ -3,7 +3,6 @@ import Image from 'next/image'
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Navigation } from '@/components/Navigation'
 import { useAskBar } from '@/hooks/useAskBar'
 
 interface Template {
@@ -165,7 +164,6 @@ export default function DraftingPage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

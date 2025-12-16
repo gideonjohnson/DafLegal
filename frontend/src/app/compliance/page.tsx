@@ -3,7 +3,6 @@ import Image from 'next/image'
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Navigation } from '@/components/Navigation'
 import { useAskBar } from '@/hooks/useAskBar'
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
@@ -208,7 +207,6 @@ export default function CompliancePage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

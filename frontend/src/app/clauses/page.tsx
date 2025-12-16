@@ -3,7 +3,6 @@ import Image from 'next/image'
 
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Navigation } from '@/components/Navigation'
 import { useAskBar } from '@/hooks/useAskBar'
 
 interface Clause {
@@ -147,7 +146,6 @@ export default function ClausesPage() {
       </div>
 
       <div className="relative z-10">
-        <Navigation />
       <main className="py-8 px-4">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
