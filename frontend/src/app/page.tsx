@@ -1,6 +1,5 @@
 'use client'
 
-import { Navigation } from '@/components/Navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
@@ -234,7 +233,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen leather-bg">
-      <Navigation />
 
       {/* Hero Section */}
       <section className="relative container mx-auto px-4 pt-12 pb-10 scroll-animate overflow-hidden">
