@@ -256,7 +256,7 @@ export default function DashboardPage() {
                         sizes="(max-width: 768px) 100vw, 33vw"
                       />
                     </div>
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start justify-between mb-4 relative z-10">
                       <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
                         <svg className="w-7 h-7 text-[#1a2e1a] dark:text-[#f5edd8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
@@ -266,13 +266,13 @@ export default function DashboardPage() {
                         {feature.badge}
                       </span>
                     </div>
-                    <h3 className="text-xl font-bold text-[#1a2e1a] dark:text-[#f5edd8] mb-2 group-hover:text-[#d4a561] transition-colors">
+                    <h3 className="text-xl font-bold relative z-10 text-[#1a2e1a] dark:text-[#f5edd8] mb-2 group-hover:text-[#d4a561] transition-colors">
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-[#8b7355] dark:text-[#d4c5b0] mb-4">
+                    <p className="text-sm text-[#8b7355] relative z-10 dark:text-[#d4c5b0] mb-4">
                       {feature.description}
                     </p>
-                    <div className="flex items-center text-[#d4a561] font-medium text-sm">
+                    <div className="flex items-center text-[#d4a561] relative z-10 font-medium text-sm">
                       <span>Try it now</span>
                       <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -313,9 +313,19 @@ export default function DashboardPage() {
               <Link
                 key={feature.id}
                 href={feature.href}
-                className="group bg-white/70 dark:bg-[#2d5a2d]/70 backdrop-blur-sm p-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-[#d4a561]/10 hover:border-[#d4a561]/50"
+                className="group relative overflow-hidden bg-white/70 dark:bg-[#2d5a2d]/70 backdrop-blur-sm p-6 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-[#d4a561]/10 hover:border-[#d4a561]/50"
               >
-                <div className="flex items-start justify-between mb-4">
+                {/* Card background image */}
+                <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Image
+                    src="/webimg2.jpeg"
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                </div>
+                <div className="flex items-start justify-between mb-4 relative z-10">
                   <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                     <svg className="w-7 h-7 text-[#1a2e1a] dark:text-[#f5edd8]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d={feature.icon} />
@@ -325,13 +335,13 @@ export default function DashboardPage() {
                     {feature.badge}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-[#1a2e1a] dark:text-[#f5edd8] mb-2 group-hover:text-[#d4a561] transition-colors">
+                <h3 className="text-xl font-bold relative z-10 text-[#1a2e1a] dark:text-[#f5edd8] mb-2 group-hover:text-[#d4a561] transition-colors">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-[#8b7355] dark:text-[#d4c5b0] mb-4">
+                <p className="text-sm text-[#8b7355] relative z-10 dark:text-[#d4c5b0] mb-4">
                   {feature.description}
                 </p>
-                <div className="flex items-center text-[#d4a561] font-medium text-sm">
+                <div className="flex items-center text-[#d4a561] relative z-10 font-medium text-sm">
                   <span>Explore</span>
                   <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
