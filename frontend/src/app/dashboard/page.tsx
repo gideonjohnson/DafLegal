@@ -249,7 +249,7 @@ export default function DashboardPage() {
                     {/* Card background image */}
                     <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
                       <Image
-                        src="/webimg2.jpg"
+                        src="/webimg2.jpeg"
                         alt=""
                         fill
                         className="object-cover"
