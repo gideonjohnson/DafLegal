@@ -62,7 +62,7 @@ export default function SignUpPage() {
       if (result?.error) {
         setError('Registration successful, but sign-in failed. Please try signing in.')
       } else {
-        router.push('/dashboard')
+        window.location.href = '/dashboard'
       }
     } catch (err) {
       console.error('Signup error:', err)
