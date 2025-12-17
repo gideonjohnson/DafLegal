@@ -114,7 +114,7 @@ services:
   - key: NEXT_PUBLIC_API_URL
     value: https://daflegal-backend.onrender.com
   - key: NEXTAUTH_URL
-    value: https://daflegal-frontend.onrender.com
+    value: https://daflegal.com
   - key: NEXTAUTH_SECRET
     sync: false
   - key: GOOGLE_CLIENT_ID
