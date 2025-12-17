@@ -38,6 +38,8 @@ services:
       envVarKey: REDIS_URL
   - key: OPENAI_API_KEY
     sync: false
+  - key: OPENAI_MODEL
+    value: gpt-4o-mini
   - key: SECRET_KEY
     sync: false
   - key: ENVIRONMENT
@@ -59,6 +61,8 @@ services:
   - key: STRIPE_TEAM_PRICE_ID
     sync: false
   - key: SENTRY_DSN
+    sync: false
+  - key: HEALTHCHECK_URL
     sync: false
   - key: CLAMAV_ENABLED
     value: false
@@ -83,6 +87,8 @@ services:
       envVarKey: REDIS_URL
   - key: OPENAI_API_KEY
     sync: false
+  - key: OPENAI_MODEL
+    value: gpt-4o-mini
   - key: SECRET_KEY
     sync: false
   - key: ENVIRONMENT

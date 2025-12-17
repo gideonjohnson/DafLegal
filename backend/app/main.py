@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import sentry_sdk
+import asyncio
 
 from app.core.config import settings
 from app.core.database import create_db_and_tables
@@ -10,6 +11,7 @@ from app.middleware.security import SecurityHeadersMiddleware, RequestSizeLimitM
 from app.middleware.rate_limit import limiter, RateLimitMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from app.services.healthcheck_monitor import healthcheck
 
 
 # Initialize Sentry
@@ -21,14 +23,34 @@ if settings.SENTRY_DSN:
     )
 
 
+async def periodic_healthcheck():
+    """Send periodic pings to healthchecks.io"""
+    while True:
+        try:
+            await healthcheck.ping_success()
+            await asyncio.sleep(60)  # Ping every 60 seconds
+        except Exception as e:
+            print(f"Healthcheck error: {e}")
+            await asyncio.sleep(60)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events"""
     # Startup
     create_db_and_tables()
+
+    # Start healthcheck monitoring in background
+    healthcheck_task = asyncio.create_task(periodic_healthcheck())
+
     yield
+
     # Shutdown
-    pass
+    healthcheck_task.cancel()
+    try:
+        await healthcheck_task
+    except asyncio.CancelledError:
+        pass
 
 
 # Create FastAPI app

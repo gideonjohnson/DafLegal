@@ -13,6 +13,7 @@ from openai import OpenAI
 
 from app.models.drafting import ContractTemplate, GeneratedContract, DraftingSession
 from app.models.user import User
+from app.core.config import settings
 
 
 class DraftingService:
@@ -214,7 +215,7 @@ Return a JSON response with:
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-5.1",
+                model=settings.OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a legal contract drafting expert. Return only valid JSON."},
                     {"role": "user", "content": prompt}
@@ -251,7 +252,7 @@ Return:
 
         try:
             response = self.client.chat.completions.create(
-                model="gpt-5.1",
+                model=settings.OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are a legal risk analyst. Return only valid JSON."},
                     {"role": "user", "content": prompt}

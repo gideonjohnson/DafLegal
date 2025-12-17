@@ -49,3 +49,8 @@ slowapi==0.1.9
 
 # Virus Scanning (disabled - uncomment clamd if enabling ClamAV)
 # clamd==1.0.2
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0

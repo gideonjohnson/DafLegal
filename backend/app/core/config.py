@@ -25,6 +25,7 @@ class Settings(BaseSettings):
 
     # OpenAI (Required for AI features)
     OPENAI_API_KEY: str
+    OPENAI_MODEL: str = "gpt-4o-mini"  # Options: gpt-4o-mini, gpt-5.1, gpt-4o
 
     # Stripe (Optional - payment processing)
     STRIPE_SECRET_KEY: Optional[str] = None
@@ -35,6 +36,9 @@ class Settings(BaseSettings):
 
     # Sentry
     SENTRY_DSN: Optional[str] = None
+
+    # Healthchecks.io
+    HEALTHCHECK_URL: Optional[str] = None
 
     # Rate Limiting
     RATE_LIMIT_PER_MINUTE: int = 60

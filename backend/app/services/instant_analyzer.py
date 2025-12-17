@@ -13,7 +13,7 @@ class InstantDocumentAnalyzer:
 
     def __init__(self):
         self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
-        self.model = "gpt-5.1"
+        self.model = settings.OPENAI_MODEL
 
     def analyze(self, text: str, filename: str = "") -> Dict[str, Any]:
         """
