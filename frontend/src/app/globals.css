@@ -1735,3 +1735,262 @@ body {
 .animate-shimmer {
   animation: shimmer 1.5s infinite;
 }
+
+/* Branded Loading Animations */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Enhanced Button Hover Effects */
+button, .btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled), .btn:active:not(:disabled) {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* Ripple effect on click */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+button:active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 0.6s ease-out;
+}
+
+/* Smooth focus ring */
+button:focus-visible, .btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 165, 97, 0.3);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(26, 46, 26, 0.2);
+}
+
+/* Link hover effects */
+a:not(.no-hover) {
+  transition: all 0.2s ease-out;
+}
+
+a:not(.no-hover):hover {
+  transform: translateX(2px);
+}
+
+/* Mobile Touch Target Fixes - WCAG 2.1 (44x44px minimum) */
+
+/* Ensure all interactive elements meet minimum size */
+@media (max-width: 768px) {
+  /* Buttons */
+  button, .btn, a.btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Links */
+  a:not(.no-touch-target) {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px;
+  }
+
+  /* Navigation links */
+  nav a {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Icon buttons */
+  button[aria-label], .icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  /* Form inputs */
+  input, select, textarea {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Checkboxes and radios */
+  input[type="checkbox"], input[type="radio"] {
+    min-width: 24px;
+    min-height: 24px;
+    margin: 10px; /* Extra space around small controls */
+  }
+
+  /* Card links */
+  .card-link {
+    min-height: 44px;
+    padding: 12px;
+  }
+
+  /* Menu items */
+  [role="menuitem"], .menu-item {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+
+  /* Increase spacing between interactive elements */
+  button + button,
+  a + a,
+  .btn + .btn {
+    margin-left: 8px;
+  }
+
+  /* Stack buttons vertically on small screens */
+  .button-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .button-group button,
+  .button-group .btn {
+    width: 100%;
+  }
+
+  /* Larger tap targets for mobile nav */
+  .mobile-nav a,
+  .mobile-menu-item {
+    min-height: 48px;
+    padding: 14px 20px;
+    font-size: 16px;
+  }
+
+  /* Close buttons */
+  button[aria-label*="Close"],
+  button[aria-label*="close"],
+  .close-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 12px;
+  }
+
+  /* Dropdown toggles */
+  [role="button"],
+  .dropdown-toggle {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+}
+
+/* Touch feedback - add visual feedback on tap */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active,
+  .btn:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+/* Utility classes for touch targets */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.touch-target-lg {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.touch-target-xl {
+  min-width: 56px;
+  min-height: 56px;
+}
+
+/* Spacing utilities for mobile */
+.mobile-spacing {
+  padding: 16px;
+}
+
+@media (max-width: 640px) {
+  .mobile-spacing {
+    padding: 12px;
+  }
+}
+
+/* Prevent accidental clicks/taps */
+.safe-area {
+  margin: 8px;
+}
+
+/* Larger font sizes for better readability on mobile */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px; /* Base font size for mobile */
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  /* Readable line height */
+  p {
+    line-height: 1.6;
+  }
+}
