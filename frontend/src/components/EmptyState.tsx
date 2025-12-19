@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ReactNode } from 'react'
 
 interface EmptyStateProps {
@@ -146,9 +147,23 @@ export function EmptyState({
         <div className="relative">
           {/* Background glow */}
           <div className="absolute inset-0 bg-[#d4a561]/20 blur-2xl rounded-full" />
-          {/* Icon */}
-          <div className="relative bg-[#d4a561]/10 rounded-full p-6 backdrop-blur-sm border border-[#d4a561]/20">
-            {icon || config.illustration}
+          {/* Logo with contextual icon overlay */}
+          <div className="relative bg-white rounded-xl p-6 shadow-2xl border border-[#d4a561]/20">
+            <Image
+              src="/logo.png"
+              alt="DafLegal"
+              width={80}
+              height={80}
+              className="object-contain"
+            />
+            {/* Contextual icon overlay */}
+            {!icon && (
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-[#d4a561]">
+                <div className="w-6 h-6">
+                  {config.illustration}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
