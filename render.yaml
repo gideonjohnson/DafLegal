@@ -106,8 +106,9 @@ services:
 - type: web
   name: daflegal-frontend
   env: node
-  buildCommand: chmod +x build.sh && ./build.sh
-  startCommand: chmod +x start.sh && ./start.sh
+  rootDir: frontend
+  buildCommand: npm ci && npm run build
+  startCommand: npm start
   envVars:
   - key: NODE_ENV
     value: production
