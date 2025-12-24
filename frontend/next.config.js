@@ -30,6 +30,15 @@ const nextConfig = {
       },
     ],
   },
+  // Optimize build for Render deployment
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
+  },
+  // Reduce memory usage during build
+  experimental: {
+    optimizePackageImports: ['react-icons', 'lucide-react'],
+  },
 }
 
 module.exports = withMDX(nextConfig)
